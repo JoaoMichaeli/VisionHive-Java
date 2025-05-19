@@ -29,30 +29,30 @@ O **VisionHive** propõe o uso de dispositivos **ESP32** com sensores físicos e
 ### 🏢 Filial (Branch)
 | Verbo | Rota                  | Descrição                        |
 |-------|-----------------------|---------------------------------|
-| GET   | `/api/branch`         | Lista todas as filiais           |
-| GET   | `/api/branch/{id}`    | Detalha uma filial por ID        |
-| POST  | `/api/branch`         | Cadastra uma nova filial         |
-| PUT   | `/api/branch/{id}`    | Atualiza os dados da filial      |
-| DELETE| `/api/branch/{id}`    | Remove uma filial existente      |
+| GET   | `/branch`         | Lista todas as filiais           |
+| GET   | `/branch/{id}`    | Detalha uma filial por ID        |
+| POST  | `/branch`         | Cadastra uma nova filial         |
+| PUT   | `/branch/{id}`    | Atualiza os dados da filial      |
+| DELETE| `/branch/{id}`    | Remove uma filial existente      |
 
 ### 🅿️ Pátio (Patio)
 | Verbo | Rota                  | Descrição                        |
 |-------|-----------------------|---------------------------------|
-| GET   | `/api/patio`          | Lista todos os pátios            |
-| GET   | `/api/patio/{id}`     | Detalha um pátio por ID          |
-| POST  | `/api/patio`          | Cadastra um novo pátio           |
-| PUT   | `/api/patio/{id}`     | Atualiza os dados do pátio       |
-| DELETE| `/api/patio/{id}`     | Remove um pátio existente        |
+| GET   | `/patio`          | Lista todos os pátios            |
+| GET   | `/patio/{id}`     | Detalha um pátio por ID          |
+| POST  | `/patio`          | Cadastra um novo pátio           |
+| PUT   | `/patio/{id}`     | Atualiza os dados do pátio       |
+| DELETE| `/patio/{id}`     | Remove um pátio existente        |
 
 ### 🛵 Motocicleta (Motorcycle)
 | Verbo | Rota                     | Descrição                                      |
 |-------|--------------------------|-----------------------------------------------|
-| GET   | `/api/motorcycle`        | Lista todas as motocicletas cadastradas       |
-| GET   | `/api/motorcycle/{id}`   | Detalha uma motocicleta por ID                 |
-| GET   | `/api/motorcycle/search` | Busca por placa, chassi ou número do motor    |
-| POST  | `/api/motorcycle`        | Cadastra uma nova motocicleta                  |
-| PUT   | `/api/motorcycle/{id}`   | Atualiza os dados da motocicleta               |
-| DELETE| `/api/motorcycle/{id}`   | Remove uma motocicleta existente               |
+| GET   | `/motorcycle`        | Lista todas as motocicletas cadastradas       |
+| GET   | `/motorcycle/{id}`   | Detalha uma motocicleta por ID                 |
+| GET   | `/motorcycle/search` | Busca por placa, chassi ou número do motor    |
+| POST  | `/motorcycle`        | Cadastra uma nova motocicleta                  |
+| PUT   | `/motorcycle/{id}`   | Atualiza os dados da motocicleta               |
+| DELETE| `/motorcycle/{id}`   | Remove uma motocicleta existente               |
 
 ---
 
@@ -71,7 +71,7 @@ O **VisionHive** propõe o uso de dispositivos **ESP32** com sensores físicos e
 
 ### 🔹 Criar Filial
 
-**POST /api/branch**
+**POST /branch**
 
 ```json
 {
@@ -85,7 +85,7 @@ O **VisionHive** propõe o uso de dispositivos **ESP32** com sensores físicos e
 
 ### 🔹 Criar Pátio
 
-**POST /api/patio**
+**POST /patio**
 
 ```json
 {
@@ -100,7 +100,7 @@ O **VisionHive** propõe o uso de dispositivos **ESP32** com sensores físicos e
 
 ### 🔹 Criar Motocicleta
 
-**POST /api/motorcycle**
+**POST /motorcycle**
 
 ```json
 {
@@ -119,13 +119,13 @@ O **VisionHive** propõe o uso de dispositivos **ESP32** com sensores físicos e
 
 ### 🔹 Buscar Motocicleta por Placa
 
-**GET /api/motorcycle/search?placa=ABC1234**
+**GET /motorcycle/search?placa=ABC1234**
 
 ---
 
 ### 🔹 Detalhar Filial com Pátios e Motocicletas
 
-**GET /api/branch/{id}**
+**GET /branch/{id}**
 
 **Resposta esperada:**
 
