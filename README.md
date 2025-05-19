@@ -60,7 +60,7 @@ O **VisionHive** propõe o uso de dispositivos **ESP32** com sensores físicos e
 
 - Java 17+
 - Spring Boot (Web, Data JPA, Validation)
-- Banco de Dados H2 (para desenvolvimento) / Oracle (produção)
+- Banco de Dados H2 (para desenvolvimento)
 - Lombok
 - Swagger (OpenAPI) para documentação automática
 - Maven para gerenciamento de dependências
