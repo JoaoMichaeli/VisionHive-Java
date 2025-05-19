@@ -113,7 +113,7 @@ O **VisionHive** propõe o uso de dispositivos **ESP32** com sensores físicos e
 ```
 
 > Substitua o `patioId` pelo valor real retornado no POST de pátio.
-> > Substitua o `MODELO_MOTO` por algum modelo cadastrado, sendo eles: MottuSport, MottuE ou MottuPop.
+> Substitua o `MODELO_MOTO` por algum modelo cadastrado, sendo eles: MottuSport, MottuE ou MottuPop.
 
 ---
 
