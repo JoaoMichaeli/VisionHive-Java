@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -42,7 +43,7 @@ public class MotorcycleController {
             @RequestParam(required = false) String placa,
             @RequestParam(required = false) String chassi,
             @RequestParam(required = false) String numeracaoMotor,
-            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+            @ParameterObject @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         var filters = new MotorcycleFilters(placa, chassi, numeracaoMotor);
         var specification = MotorcycleSpecification.withFilters(filters);

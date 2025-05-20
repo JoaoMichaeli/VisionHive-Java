@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -42,12 +43,13 @@ public class PatioController {
     public Page<Patio> index(
             @RequestParam(required = false) String nome,
             @RequestParam(required = false) Long branchId,
-            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+            @ParameterObject @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ){
         var filters = new PatioFilters(nome, branchId);
         var specification = PatioSpecification.withFilters(filters);
         return repository.findAll(specification, pageable);
     }
+
 
     @PostMapping
     @CacheEvict(value = "patios", allEntries = true)

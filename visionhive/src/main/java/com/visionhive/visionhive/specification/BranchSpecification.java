@@ -11,7 +11,8 @@ public class BranchSpecification {
     public static Specification<Branch> withFilters(BranchController.BranchFilters filters){
         return (root,query,cb) -> {
 
-            var predicates = new ArrayList<>();
+            var predicates = new ArrayList<Predicate>();
+
             if(filters.nome() != null){
                 predicates.add(
                         cb.like(

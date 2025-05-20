@@ -1,5 +1,6 @@
 package com.visionhive.visionhive.controller;
 
+import com.visionhive.visionhive.dto.BranchCreateDTO;
 import com.visionhive.visionhive.model.Branch;
 import com.visionhive.visionhive.repository.BranchRepository;
 import com.visionhive.visionhive.specification.BranchSpecification;
@@ -7,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -37,8 +39,8 @@ public class BranchController {
             @RequestParam(required = false) String nome,
             @RequestParam(required = false) String bairro,
             @RequestParam(required = false) String cnpj,
-            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)Pageable pageable
-    ){
+            @ParameterObject @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
         var filters = new BranchFilters(nome, bairro, cnpj);
         var specification = BranchSpecification.withFilters(filters);
         return repository.findAll(specification, pageable);
@@ -48,8 +50,14 @@ public class BranchController {
     @CacheEvict(value = "branchs", allEntries = true)
     @Operation(summary = "Inserir filiais", description = "Inserir uma filial nova", responses = @ApiResponse(responseCode = "400", description = "Falha na validação"))
     @ResponseStatus(code = HttpStatus.CREATED)
-    public Branch create(@RequestBody @Valid Branch branch){
-        log.info("Cadastrando filial: " + branch.getNome());
+    public Branch create(@RequestBody @Valid BranchCreateDTO dto) {
+        log.info("Cadastrando filial: " + dto.getNome());
+
+        Branch branch = new Branch();
+        branch.setNome(dto.getNome());
+        branch.setBairro(dto.getBairro());
+        branch.setCnpj(dto.getCnpj());
+
         return repository.save(branch);
     }
 
