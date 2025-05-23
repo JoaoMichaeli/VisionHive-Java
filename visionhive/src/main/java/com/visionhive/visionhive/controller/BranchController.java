@@ -69,6 +69,7 @@ public class BranchController {
     }
 
     @DeleteMapping("{id}")
+    @CacheEvict(value = "branchs", allEntries = true)
     @Operation(summary = "Deletar filial", description = "Deletar a filial escolhida")
     public ResponseEntity<Void> delete(@PathVariable Long id){
         log.info("Deletando filial: " + id);
@@ -77,14 +78,20 @@ public class BranchController {
     }
 
     @PutMapping("{id}")
+    @CacheEvict(value = "branchs", allEntries = true)
     @Operation(summary = "Atualizar filial", description = "Atualizar a filial")
     public ResponseEntity<Branch> update(@PathVariable Long id, @RequestBody @Valid Branch branch){
         log.info("Atualizando filial: " + id + " com " + branch);
         var oldBranch = getBranch(id);
-        BeanUtils.copyProperties(branch, oldBranch, "id");
+
+        oldBranch.setNome(branch.getNome());
+        oldBranch.setBairro(branch.getBairro());
+        oldBranch.setCnpj(branch.getCnpj());
+
         repository.save(oldBranch);
         return ResponseEntity.ok(oldBranch);
     }
+
 
     private Branch getBranch(Long id){
         return repository.findById(id)

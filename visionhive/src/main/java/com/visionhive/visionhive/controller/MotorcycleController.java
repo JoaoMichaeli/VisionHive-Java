@@ -79,6 +79,7 @@ public class MotorcycleController {
     }
 
     @DeleteMapping("{id}")
+    @CacheEvict(value = "motorcycles", allEntries = true)
     @Operation(summary = "Deletar motocicleta", description = "Deleta a moto escolhida")
     public ResponseEntity<Void> delete(@PathVariable Long id){
         log.info("Deletando motocicleta: " + id);
@@ -87,6 +88,7 @@ public class MotorcycleController {
     }
 
     @PutMapping("{id}")
+    @CacheEvict(value = "motorcycles", allEntries = true)
     @Operation(summary = "Atualizar motocicleta", description = "Atualizar os dados da motocicleta")
     public ResponseEntity<Motorcycle> update(@PathVariable Long id, @RequestBody @Valid MotorcycleDTO dto){
         log.info("Atualizando motocicleta: " + id + " com " + dto);

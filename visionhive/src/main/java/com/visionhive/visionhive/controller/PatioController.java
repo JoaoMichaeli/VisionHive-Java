@@ -50,7 +50,6 @@ public class PatioController {
         return repository.findAll(specification, pageable);
     }
 
-
     @PostMapping
     @CacheEvict(value = "patios", allEntries = true)
     @Operation(summary = "Inserir pátios", description = "Inserir um pátio novo", responses = @ApiResponse(responseCode = "400", description = "Validação falhou"))
@@ -77,6 +76,7 @@ public class PatioController {
     }
 
     @DeleteMapping("{id}")
+    @CacheEvict(value = "patios", allEntries = true)
     @Operation(summary = "Deletar pátio", description = "Deleta o pátio escolhido")
     public ResponseEntity<Void> delete(@PathVariable Long id){
         log.info("Deletando pátio: " + id);
@@ -85,6 +85,7 @@ public class PatioController {
     }
 
     @PutMapping("{id}")
+    @CacheEvict(value = "patios", allEntries = true)
     @Operation(summary = "Atualizar pátio", description = "Atualizar o pátio")
     public ResponseEntity<Patio> update(@PathVariable Long id, @RequestBody @Valid PatioDTO dto){
         log.info("Atualizando pátio: " + id + " com " + dto);
