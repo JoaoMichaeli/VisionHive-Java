@@ -8,6 +8,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Data
 @Builder
@@ -24,4 +27,8 @@ public class Patio {
     @ManyToOne
     @JsonIgnore
     private Branch branch;
+
+    @OneToMany(mappedBy = "patio", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Motorcycle> motorcycles = new ArrayList<>();
+
 }

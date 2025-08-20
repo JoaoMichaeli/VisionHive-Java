@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="fragments :: layout">
+<head>
+    <title>Cadastrar Pátio</title>
+</head>
+<body>
+<h2>Cadastrar Pátio para a filial <span th:text="${patio.branch.nome}"></span></h2>
+
+<form th:action="@{/patio/form}" th:object="${patio}" method="post">
+    <input type="hidden" th:field="*{branch.id}"/>
+    <label>Nome:</label>
+    <input type="text" th:field="*{nome}"/>
+    <div th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></div>
+
+    <button type="submit">Salvar</button>
+</form>
+</body>
+</html>

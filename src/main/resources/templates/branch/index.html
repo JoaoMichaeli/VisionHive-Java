@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="fragments :: layout">
+<head>
+    <title>Filiais</title>
+</head>
+<body>
+<h2>Filiais cadastradas</h2>
+<a th:href="@{/branch/form}">Cadastrar nova filial</a>
+
+<form method="get" th:action="@{/branch}">
+    <input type="text" name="nome" placeholder="Nome" th:value="${param.nome}"/>
+    <input type="text" name="bairro" placeholder="Bairro" th:value="${param.bairro}"/>
+    <input type="text" name="cnpj" placeholder="CNPJ" th:value="${param.cnpj}"/>
+    <button type="submit">Filtrar</button>
+</form>
+
+<ul>
+    <li th:each="branch : ${branches}">
+        <a th:href="@{'/branch/' + ${branch.id}}" th:text="${branch.nome}"></a>
+        - <span th:text="${branch.bairro}"></span>
+        - <span th:text="${branch.cnpj}"></span>
+    </li>
+</ul>
+</body>
+</html>

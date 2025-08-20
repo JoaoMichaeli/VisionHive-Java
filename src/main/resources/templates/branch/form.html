@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="fragments :: layout">
+<head>
+    <title>Cadastrar Filial</title>
+</head>
+<body>
+<h2>Cadastrar Filial</h2>
+
+<form th:action="@{/branch/form}" th:object="${branch}" method="post">
+    <label>Nome:</label>
+    <input type="text" th:field="*{nome}"/>
+    <div th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></div>
+
+    <label>Bairro:</label>
+    <input type="text" th:field="*{bairro}"/>
+    <div th:if="${#fields.hasErrors('bairro')}" th:errors="*{bairro}"></div>
+
+    <label>CNPJ:</label>
+    <input type="text" th:field="*{cnpj}"/>
+    <div th:if="${#fields.hasErrors('cnpj')}" th:errors="*{cnpj}"></div>
+
+    <button type="submit">Salvar</button>
+</form>
+</body>
+</html>

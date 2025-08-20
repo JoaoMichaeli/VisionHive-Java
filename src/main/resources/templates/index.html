@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Vision Hive - Home</title>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+<h1>Filiais Cadastradas</h1>
+
+<ul>
+    <li th:each="branch : ${branches}">
+        <a th:href="@{'/branch/' + ${branch.id}}" th:text="${branch.nome}">Nome da Filial</a>
+    </li>
+</ul>
+
+<a th:href="@{/branch/form}">Cadastrar Nova Filial</a>
+</body>
+</html>

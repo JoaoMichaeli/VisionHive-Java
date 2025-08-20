@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${branch.nome} + ' - Detalhes'">Filial Detalhes</title>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+<h1 th:text="${branch.nome}">Filial</h1>
+<p><strong>Bairro:</strong> <span th:text="${branch.bairro}"></span></p>
+<p><strong>CNPJ:</strong> <span th:text="${branch.cnpj}"></span></p>
+
+<h2>Pátios</h2>
+<ul>
+    <li th:each="patio : ${patios}">
+        <a th:href="@{'/patio/' + ${patio.id}}" th:text="${patio.nome}">Nome do Pátio</a>
+    </li>
+</ul>
+
+<a th:href="@{/patio/form(branchId=${branch.id})}">Cadastrar Novo Pátio</a>
+<br/>
+<a th:href="@{/}">Voltar ao Início</a>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${patio.nome} + ' - Detalhes'">Pátio Detalhes</title>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+<h1 th:text="${patio.nome}">Pátio</h1>
+<p><strong>Filial:</strong> <span th:text="${patio.branch.nome}"></span></p>
+
+<h2>Motos</h2>
+<ul>
+    <li th:each="moto : ${motorcycles}">
+        <span th:text="${moto.placa}"></span> -
+        <span th:text="${moto.chassi}"></span> -
+        <span th:text="${#strings.listJoin(moto.motorcycleModels, ', ')}"></span>
+    </li>
+</ul>
+
+<a th:href="@{/motorcycle/form(patioId=${patio.id})}">Cadastrar Nova Moto</a>
+<br/>
+<a th:href="@{'/branch/' + ${patio.branch.id}}">Voltar à Filial</a>
+<br/>
+<a th:href="@{/}">Voltar ao Início</a>
+</body>
+</html>

@@ -18,12 +18,19 @@ public class ValidationHandler {
         }
     }
 
-    @ExceptionHandler(exception = MethodArgumentNotValidException.class)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public List<ValidationError> handler(MethodArgumentNotValidException e){
+    public List<ValidationError> handler(MethodArgumentNotValidException e) {
         return e.getFieldErrors()
                 .stream()
                 .map(ValidationError::new)
                 .toList();
     }
+
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String handler(RuntimeException e) {
+        return e.getMessage();
+    }
+
 }

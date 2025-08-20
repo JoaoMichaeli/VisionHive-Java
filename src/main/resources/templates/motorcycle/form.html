@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Cadastrar Moto</title>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+<h1>Cadastrar Moto</h1>
+
+<form th:action="@{/motorcycle/form}" th:object="${motorcycle}" method="post">
+    <label>Placa:</label>
+    <input type="text" th:field="*{placa}" maxlength="7"/><br/>
+
+    <label>Chassi:</label>
+    <input type="text" th:field="*{chassi}" maxlength="17"/><br/>
+
+    <label>Numeração do Motor:</label>
+    <input type="text" th:field="*{numeracaoMotor}" maxlength="17"/><br/>
+
+    <label>Modelos:</label>
+    <select th:field="*{motorcycleModels}" multiple>
+        <option value="MottuSport">MottuSport</option>
+        <option value="MottuE">MottuE</option>
+        <option value="MottuPop">MottuPop</option>
+    </select><br/>
+
+    <input type="hidden" th:field="*{patio.id}"/>
+    <button type="submit">Salvar</button>
+</form>
+
+<a th:href="@{'/patio/' + ${motorcycle.patio.id}}">Voltar ao Pátio</a>
+</body>
+</html>
