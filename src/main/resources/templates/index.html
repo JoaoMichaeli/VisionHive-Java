@@ -1,18 +1,57 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
 <head>
-    <title>Vision Hive - Home</title>
     <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Vision Hive - Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<h1>Filiais Cadastradas</h1>
+<body class="flex flex-col min-h-screen bg-black font-sans">
 
-<ul>
-    <li th:each="branch : ${branches}">
-        <a th:href="@{'/branch/' + ${branch.id}}" th:text="${branch.nome}">Nome da Filial</a>
-    </li>
-</ul>
+<div th:replace="fragments/header :: header"></div>
 
-<a th:href="@{/branch/form}">Cadastrar Nova Filial</a>
+<section class="bg-gradient-to-r from-[#00b894] to-[#00cec9] text-white py-24 px-6 text-center">
+    <h1 class="text-5xl md:text-6xl font-bold mb-4 drop-shadow-lg">
+        Vision Hive
+    </h1>
+    <p class="text-xl md:text-2xl mb-8 drop-shadow-md">
+        Gerencie suas filiais e pátios de forma eficiente e moderna
+    </p>
+    <a th:href="@{/branch/form}"
+       class="inline-block bg-black text-green-400 font-bold px-8 py-4 rounded-xl shadow-lg hover:scale-105 transition transform text-lg">
+        Cadastrar Nova Filial
+    </a>
+</section>
+
+<main class="flex-1 py-12 px-6">
+    <h2 class="text-3xl text-white font-bold text-center mb-12">Filiais Cadastradas</h2>
+
+    <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <li th:each="branch : ${branches}"
+            class="bg-gray-900 border border-gray-800 rounded-2xl shadow-lg hover:border-green-500 hover:shadow-green-500/30 transition-all duration-300 cursor-pointer flex flex-col items-center p-6">
+
+            <div class="w-full h-48 flex justify-center items-center mb-4 rounded-xl overflow-hidden border border-gray-700">
+                <img th:if="${branch.image != null}"
+                     th:src="'data:image/jpeg;base64,' + ${T(org.apache.tomcat.util.codec.binary.Base64).encodeBase64String(branch.image)}"
+                     alt="Foto da filial"
+                     class="w-full h-full object-cover"/>
+                <span th:if="${branch.image == null}" class="text-gray-400 font-bold">Sem Foto</span>
+            </div>
+
+            <a th:href="@{'/branch/' + ${branch.id}}"
+               th:text="${branch.nome}"
+               class="text-white text-2xl font-semibold mb-2 hover:text-green-400 transition-colors">
+                Nome da Filial
+            </a>
+
+            <span th:text="${branch.bairro}" class="text-gray-300 mb-1 text-sm"></span>
+            <span th:text="${branch.cnpj}" class="text-gray-400 text-sm"></span>
+        </li>
+    </ul>
+</main>
+
+
+<div th:replace="fragments/footer :: footer"></div>
+
 </body>
 </html>

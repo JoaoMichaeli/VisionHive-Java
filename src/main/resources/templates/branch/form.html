@@ -1,26 +1,56 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      th:replace="fragments :: layout">
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastrar Filial</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<h2>Cadastrar Filial</h2>
+<body class="bg-black font-sans min-h-screen flex flex-col">
 
-<form th:action="@{/branch/form}" th:object="${branch}" method="post">
-    <label>Nome:</label>
-    <input type="text" th:field="*{nome}"/>
-    <div th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></div>
+<div th:insert="~{fragments/header :: header}"></div>
 
-    <label>Bairro:</label>
-    <input type="text" th:field="*{bairro}"/>
-    <div th:if="${#fields.hasErrors('bairro')}" th:errors="*{bairro}"></div>
+<main class="flex-1 flex items-center justify-center p-6">
+    <div class="bg-gray-900/90 backdrop-blur-md rounded-xl shadow-xl p-8 w-full max-w-md">
+        <h2 class="text-3xl text-white font-bold mb-6 text-center">Cadastrar Filial</h2>
 
-    <label>CNPJ:</label>
-    <input type="text" th:field="*{cnpj}"/>
-    <div th:if="${#fields.hasErrors('cnpj')}" th:errors="*{cnpj}"></div>
+        <form th:action="@{/branch/form}" th:object="${branch}" method="post" enctype="multipart/form-data" class="space-y-4">
+            <div>
+                <label class="block text-white font-semibold mb-1">Nome:</label>
+                <input type="text" th:field="*{nome}"
+                       class="w-full px-4 py-2 rounded-lg bg-gray-800 text-white border border-gray-700 focus:border-green-500 focus:outline-none"/>
+                <div th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}" class="text-red-500 text-sm mt-1"></div>
+            </div>
 
-    <button type="submit">Salvar</button>
-</form>
+            <div>
+                <label class="block text-white font-semibold mb-1">Bairro:</label>
+                <input type="text" th:field="*{bairro}"
+                       class="w-full px-4 py-2 rounded-lg bg-gray-800 text-white border border-gray-700 focus:border-green-500 focus:outline-none"/>
+                <div th:if="${#fields.hasErrors('bairro')}" th:errors="*{bairro}" class="text-red-500 text-sm mt-1"></div>
+            </div>
+
+            <div>
+                <label class="block text-white font-semibold mb-1">CNPJ:</label>
+                <input type="text" th:field="*{cnpj}"
+                       class="w-full px-4 py-2 rounded-lg bg-gray-800 text-white border border-gray-700 focus:border-green-500 focus:outline-none"/>
+                <div th:if="${#fields.hasErrors('cnpj')}" th:errors="*{cnpj}" class="text-red-500 text-sm mt-1"></div>
+            </div>
+
+            <div>
+                <label class="block text-white font-semibold mb-1">Imagem:</label>
+                <input type="file" name="image" class="w-full text-white"/>
+                <div th:if="${#fields.hasErrors('image')}" th:errors="*{image}" class="text-red-500 text-sm mt-1"></div>
+            </div>
+
+            <button type="submit"
+                    class="w-full bg-green-500 hover:bg-green-600 text-black font-bold py-3 rounded-lg shadow-lg hover:shadow-green-500/30 transition-all duration-300">
+                Salvar
+            </button>
+        </form>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
 </body>
 </html>

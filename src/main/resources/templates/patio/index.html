@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Vision Hive - Pátios</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex flex-col min-h-screen bg-black font-sans">
+
+<div th:replace="fragments/header :: header"></div>
+
+<main class="flex-1 p-8">
+    <h1 class="text-4xl md:text-5xl text-white text-center font-bold mb-12">
+        Pátios Cadastrados
+    </h1>
+
+    <form method="get" th:action="@{/patio}" class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+        <input type="text" name="nome" placeholder="Nome do Pátio" th:value="${param.nome}"
+               class="px-4 py-2 rounded-lg bg-gray-900 text-white border border-gray-700 focus:outline-none focus:border-green-500"/>
+        <input type="text" name="branch" placeholder="Filial" th:value="${param.branch}"
+               class="px-4 py-2 rounded-lg bg-gray-900 text-white border border-gray-700 focus:outline-none focus:border-green-500"/>
+        <button type="submit"
+                class="bg-green-500 hover:bg-green-600 text-black font-bold px-6 py-2 rounded-lg shadow-lg hover:shadow-green-500/30 transition-all duration-300">
+            Filtrar
+        </button>
+    </form>
+
+    <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <li th:each="patio : ${patios}"
+            class="bg-gray-900 border border-gray-800 rounded-xl shadow-lg hover:border-green-500 hover:shadow-green-500/20 transition-all duration-300 cursor-pointer flex flex-col items-center p-6">
+
+            <div class="w-full h-48 bg-gray-800 flex justify-center items-center text-gray-400 font-bold text-lg rounded-lg mb-4 border border-gray-700">
+                Foto
+            </div>
+
+            <a th:href="@{'/patio/' + ${patio.id}}"
+               th:text="${patio.nome}"
+               class="text-white text-xl font-semibold mb-2 hover:text-green-400 transition-colors">
+                Nome do Pátio
+            </a>
+
+            <span th:text="${patio.branch.nome}" class="text-gray-300 mb-1 text-sm">Filial</span>
+        </li>
+    </ul>
+
+    <div class="mt-12 text-center">
+        <a th:href="@{/patio/form}"
+           class="inline-block bg-green-500 hover:bg-green-600 text-black font-bold px-8 py-4 rounded-lg shadow-lg hover:shadow-green-500/30 transition-all duration-300 text-lg">
+            Cadastrar Novo Pátio
+        </a>
+    </div>
+</main>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>

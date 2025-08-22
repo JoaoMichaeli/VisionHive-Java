@@ -1,19 +1,45 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      th:replace="fragments :: layout">
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
 <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Cadastrar Pátio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<h2>Cadastrar Pátio para a filial <span th:text="${patio.branch.nome}"></span></h2>
+<body class="bg-black font-sans min-h-screen flex flex-col">
 
-<form th:action="@{/patio/form}" th:object="${patio}" method="post">
-    <input type="hidden" th:field="*{branch.id}"/>
-    <label>Nome:</label>
-    <input type="text" th:field="*{nome}"/>
-    <div th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></div>
+<div th:insert="~{fragments/header :: header}"></div>
 
-    <button type="submit">Salvar</button>
-</form>
+<main class="flex-1 flex items-center justify-center p-6">
+    <div class="bg-gray-900/90 backdrop-blur-md rounded-xl shadow-xl p-8 w-full max-w-md">
+        <h2 class="text-3xl text-white font-bold mb-6 text-center">
+            Cadastrar Pátio para a filial <span th:text="${patio.branch.nome}"></span>
+        </h2>
+
+        <form th:action="@{/patio/form}" th:object="${patio}" method="post" class="space-y-4">
+            <input type="hidden" th:field="*{branch.id}"/>
+
+            <div>
+                <label class="block text-white font-semibold mb-1">Nome do Pátio:</label>
+                <input type="text" th:field="*{nome}"
+                       class="w-full px-4 py-2 rounded-lg bg-gray-800 text-white border border-gray-700 focus:border-green-500 focus:outline-none"/>
+                <div th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}" class="text-red-500 text-sm mt-1"></div>
+            </div>
+
+            <button type="submit"
+                    class="w-full bg-green-500 hover:bg-green-600 text-black font-bold py-3 rounded-lg shadow-lg hover:shadow-green-500/30 transition-all duration-300">
+                Salvar
+            </button>
+        </form>
+
+        <a th:href="@{'/branch/' + ${patio.branch.id}}"
+           class="block text-center mt-4 text-green-400 hover:text-green-500">
+            Voltar à Filial
+        </a>
+    </div>
+</main>
+
+<div th:replace="fragments/footer :: footer"></div>
+
 </body>
 </html>

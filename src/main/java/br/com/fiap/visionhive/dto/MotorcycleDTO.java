@@ -1,6 +1,5 @@
 package br.com.fiap.visionhive.dto;
 
-import br.com.fiap.visionhive.model.MotorcycleGroup;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -28,7 +27,7 @@ public class MotorcycleDTO {
     String numeracaoMotor;
 
     @NotEmpty(message = "O modelo da moto não pode estar vazio")
-    List<MotorcycleGroup> motorcycleModels;
+    String motorcycleModels;
 
     @NotNull(message = "O ID do pátio não pode ser nulo")
     private Long patioId;

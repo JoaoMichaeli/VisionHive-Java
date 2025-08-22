@@ -12,9 +12,9 @@ public class HomeController {
 
     private final BranchService branchService;
 
-    @GetMapping("/")
+    @GetMapping()
     public String index(Model model) {
-        var branches = branchService.findAllBranches(); // método que retorna todas as filiais
+        var branches = branchService.findAllBranches();
         model.addAttribute("branches", branches);
         return "index";
     }

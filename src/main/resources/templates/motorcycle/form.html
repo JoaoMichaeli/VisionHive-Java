@@ -1,33 +1,68 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
 <head>
-    <title>Cadastrar Moto</title>
     <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Cadastrar Moto</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<h1>Cadastrar Moto</h1>
+<body class="bg-black font-sans min-h-screen flex flex-col">
 
-<form th:action="@{/motorcycle/form}" th:object="${motorcycle}" method="post">
-    <label>Placa:</label>
-    <input type="text" th:field="*{placa}" maxlength="7"/><br/>
+<div th:insert="~{fragments/header :: header}"></div>
 
-    <label>Chassi:</label>
-    <input type="text" th:field="*{chassi}" maxlength="17"/><br/>
+<main class="flex-1 flex items-center justify-center p-6">
+    <div class="bg-gray-900/90 backdrop-blur-md rounded-xl shadow-xl p-8 w-full max-w-md">
+        <h2 class="text-3xl text-white font-bold mb-6 text-center">Cadastrar Moto</h2>
 
-    <label>Numeração do Motor:</label>
-    <input type="text" th:field="*{numeracaoMotor}" maxlength="17"/><br/>
+        <form th:action="@{/motorcycle/form}" th:object="${motorcycle}" method="post" class="space-y-4">
 
-    <label>Modelos:</label>
-    <select th:field="*{motorcycleModels}" multiple>
-        <option value="MottuSport">MottuSport</option>
-        <option value="MottuE">MottuE</option>
-        <option value="MottuPop">MottuPop</option>
-    </select><br/>
+            <div>
+                <label class="block text-white font-semibold mb-1">Placa:</label>
+                <input type="text" th:field="*{placa}" maxlength="7"
+                       class="w-full px-4 py-2 rounded-lg bg-gray-800 text-white border border-gray-700 focus:border-green-500 focus:outline-none"/>
+                <div th:if="${#fields.hasErrors('placa')}" th:errors="*{placa}" class="text-red-500 text-sm mt-1"></div>
+            </div>
 
-    <input type="hidden" th:field="*{patio.id}"/>
-    <button type="submit">Salvar</button>
-</form>
+            <div>
+                <label class="block text-white font-semibold mb-1">Chassi:</label>
+                <input type="text" th:field="*{chassi}" maxlength="17"
+                       class="w-full px-4 py-2 rounded-lg bg-gray-800 text-white border border-gray-700 focus:border-green-500 focus:outline-none"/>
+                <div th:if="${#fields.hasErrors('chassi')}" th:errors="*{chassi}" class="text-red-500 text-sm mt-1"></div>
+            </div>
 
-<a th:href="@{'/patio/' + ${motorcycle.patio.id}}">Voltar ao Pátio</a>
+            <div>
+                <label class="block text-white font-semibold mb-1">Numeração do Motor:</label>
+                <input type="text" th:field="*{numeracaoMotor}" maxlength="17"
+                       class="w-full px-4 py-2 rounded-lg bg-gray-800 text-white border border-gray-700 focus:border-green-500 focus:outline-none"/>
+                <div th:if="${#fields.hasErrors('numeracaoMotor')}" th:errors="*{numeracaoMotor}" class="text-red-500 text-sm mt-1"></div>
+            </div>
+
+            <div>
+                <label class="block text-white font-semibold mb-1">Modelos:</label>
+                <select th:field="*{motorcycleModels}" multiple
+                        class="w-full px-4 py-2 rounded-lg bg-gray-800 text-white border border-gray-700 focus:border-green-500 focus:outline-none">
+                    <option value="MottuSport">MottuSport</option>
+                    <option value="MottuE">MottuE</option>
+                    <option value="MottuPop">MottuPop</option>
+                </select>
+            </div>
+
+            <input type="hidden" th:field="*{patio.id}"/>
+
+            <button type="submit"
+                    class="w-full bg-green-500 hover:bg-green-600 text-black font-bold py-3 rounded-lg shadow-lg hover:shadow-green-500/30 transition-all duration-300">
+                Salvar
+            </button>
+        </form>
+
+        <a th:href="@{'/patio/' + ${motorcycle.patio.id}}"
+           class="block text-center mt-4 text-green-400 hover:text-green-500">
+            Voltar ao Pátio
+        </a>
+    </div>
+</main>
+
+<div th:replace="fragments/footer :: footer"></div>
+
 </body>
 </html>

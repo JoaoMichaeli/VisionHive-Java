@@ -1,26 +1,59 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      th:replace="fragments :: layout">
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Filiais</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<h2>Filiais cadastradas</h2>
-<a th:href="@{/branch/form}">Cadastrar nova filial</a>
+<body class="flex flex-col min-h-screen bg-black font-sans">
 
-<form method="get" th:action="@{/branch}">
-    <input type="text" name="nome" placeholder="Nome" th:value="${param.nome}"/>
-    <input type="text" name="bairro" placeholder="Bairro" th:value="${param.bairro}"/>
-    <input type="text" name="cnpj" placeholder="CNPJ" th:value="${param.cnpj}"/>
-    <button type="submit">Filtrar</button>
-</form>
+<div th:replace="fragments/header :: header"></div>
 
-<ul>
-    <li th:each="branch : ${branches}">
-        <a th:href="@{'/branch/' + ${branch.id}}" th:text="${branch.nome}"></a>
-        - <span th:text="${branch.bairro}"></span>
-        - <span th:text="${branch.cnpj}"></span>
-    </li>
-</ul>
+<main class="flex-1 p-8">
+    <h2 class="text-4xl text-white font-bold mb-8 text-center">Filiais Cadastradas</h2>
+
+    <div class="text-center mb-8">
+        <a th:href="@{/branch/form}"
+           class="inline-block bg-green-500 hover:bg-green-600 text-black font-bold px-6 py-3 rounded-lg shadow-lg hover:shadow-green-500/30 transition-all duration-300">
+            Cadastrar Nova Filial
+        </a>
+    </div>
+
+    <form method="get" th:action="@{/branch}" class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+        <input type="text" name="nome" placeholder="Nome" th:value="${param.nome}"
+               class="px-4 py-2 rounded-lg bg-gray-900 text-white border border-gray-700 focus:outline-none focus:border-green-500"/>
+        <input type="text" name="bairro" placeholder="Bairro" th:value="${param.bairro}"
+               class="px-4 py-2 rounded-lg bg-gray-900 text-white border border-gray-700 focus:outline-none focus:border-green-500"/>
+        <input type="text" name="cnpj" placeholder="CNPJ" th:value="${param.cnpj}"
+               class="px-4 py-2 rounded-lg bg-gray-900 text-white border border-gray-700 focus:outline-none focus:border-green-500"/>
+        <button type="submit"
+                class="bg-green-500 hover:bg-green-600 text-black font-bold px-6 py-2 rounded-lg shadow-lg hover:shadow-green-500/30 transition-all duration-300">
+            Filtrar
+        </button>
+    </form>
+
+    <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <li th:each="branch : ${branches}"
+            class="bg-gray-900 border border-gray-800 rounded-xl shadow-lg hover:border-green-500 hover:shadow-green-500/20 transition-all duration-300 flex flex-col items-center p-6">
+
+            <div class="w-full h-48 bg-gray-800 flex justify-center items-center text-gray-400 font-bold text-lg rounded-lg mb-4 border border-gray-700">
+                Foto
+            </div>
+
+            <a th:href="@{'/branch/' + ${branch.id}}"
+               th:text="${branch.nome}"
+               class="text-white text-xl font-semibold mb-2 hover:text-green-400 transition-colors">
+                Nome da Filial
+            </a>
+
+            <span th:text="${branch.bairro}" class="text-gray-300 mb-1 text-sm"></span>
+            <span th:text="${branch.cnpj}" class="text-gray-400 text-sm"></span>
+        </li>
+    </ul>
+</main>
+
+<div th:replace="fragments/footer :: footer"></div>
+
 </body>
 </html>

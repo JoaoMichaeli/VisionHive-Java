@@ -1,18 +1,21 @@
 package br.com.fiap.visionhive.controller;
 
+import br.com.fiap.visionhive.dto.BranchDTO;
 import br.com.fiap.visionhive.model.Branch;
 import br.com.fiap.visionhive.repository.BranchRepository;
 import br.com.fiap.visionhive.services.BranchService;
 import br.com.fiap.visionhive.specification.BranchSpecification;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.io.IOException;
 
 @Controller
 @RequestMapping("/branch")
@@ -20,7 +23,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class BranchController {
 
     private final BranchRepository branchRepository;
-    private final MessageSource messageSource;
     private final BranchService branchService;
 
     public record BranchFilters(String nome, String bairro, String cnpj) {}
@@ -33,8 +35,8 @@ public class BranchController {
 
         var filters = new BranchFilters(nome, bairro, cnpj);
         var spec = BranchSpecification.withFilters(filters);
-
         var branches = branchRepository.findAll(spec);
+
         model.addAttribute("branches", branches);
         return "branch/index";
     }
@@ -46,15 +48,30 @@ public class BranchController {
     }
 
     @PostMapping("/form")
-    public String create(@Valid Branch branch, BindingResult result, RedirectAttributes redirect) {
+    public String create(@Valid @ModelAttribute BranchDTO branchDTO,
+                         BindingResult result,
+                         RedirectAttributes redirect,
+                         HttpSession session) throws IOException {
 
-        if(result.hasErrors()) return "branch/form";
+        if (result.hasErrors()) return "branch/form";
 
-        var message = messageSource.getMessage("branch.create.success", null, LocaleContextHolder.getLocale());
-        redirect.addFlashAttribute("message", "Pátio cadastrado com sucesso!");
+        MultipartFile imageFile = branchDTO.getImage();
+        if (imageFile == null || imageFile.isEmpty()) {
+            session.setAttribute("errorMessage", "A imagem é obrigatória");
+            return "branch/form";
+        }
 
-        return "redirect:/branch/form?branchId=" + branch.getId();
+        Branch branch = new Branch();
+        branch.setNome(branchDTO.getNome());
+        branch.setBairro(branchDTO.getBairro());
+        branch.setCnpj(branchDTO.getCnpj());
+        branch.setImage(imageFile.getBytes());
+
+        branchService.save(branch);
+        redirect.addFlashAttribute("message", "Filial cadastrada com sucesso!");
+        return "redirect:/branch";
     }
+
 
     @GetMapping("/{id}")
     public String detail(@PathVariable Long id, Model model) {

@@ -3,6 +3,7 @@ package br.com.fiap.visionhive.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,9 +34,12 @@ public class Motorcycle {
     @Size(min = 9, max = 17, message = "A numeração do motor não pode estar em branco")
     private String numeracaoMotor;
 
-    @NotEmpty(message = "O modelo da moto não pode estar vazio")
-    @ElementCollection
-    private List<MotorcycleGroup> motorcycleModels;
+    @NotBlank(message = "O modelo da moto não pode estar vazio")
+    @Pattern(
+            regexp = "MottuSport|MottuE|MottuPop",
+            message = "O modelo da moto deve ser MottuSport, MottuE ou MottuPop"
+    )
+    private String motorcycleModels;
 
     @ManyToOne
     @JoinColumn(name = "patio_id")

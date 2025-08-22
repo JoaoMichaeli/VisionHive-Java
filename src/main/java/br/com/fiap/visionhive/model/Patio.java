@@ -30,5 +30,4 @@ public class Patio {
 
     @OneToMany(mappedBy = "patio", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Motorcycle> motorcycles = new ArrayList<>();
-
 }

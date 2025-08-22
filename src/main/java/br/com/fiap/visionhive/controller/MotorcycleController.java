@@ -43,9 +43,10 @@ public class MotorcycleController {
         var filters = new MotorcycleFilters(placa, chassi, numeracaoMotor);
         var spec = MotorcycleSpecification.withFilters(filters);
 
-        Page<Motorcycle> motorcycles = motorcycleRepository.findAll(spec,pageable);
+        Page<Motorcycle> motorcycles = motorcycleRepository.findAll(spec, pageable);
 
-        model.addAttribute("motorcycles", motorcycles);
+        model.addAttribute("motorcycles", motorcycles.getContent());
+        model.addAttribute("page", motorcycles);
         return "motorcycle/index";
     }
 
