@@ -81,7 +81,6 @@
     </style>
 </head>
 <body class="urban-bg min-h-screen">
-<!-- Adicionando ícones IoT flutuantes -->
 <div class="floating-icon text-2xl" style="top: 10%; left: 5%; animation-delay: 0s;">
     <i class="fas fa-wifi"></i>
 </div>
@@ -103,15 +102,11 @@
 
 <div th:insert="~{fragments/header :: header}"></div>
 
-<!-- Removendo flex items-center justify-center para permitir scroll -->
 <main class="flex-1 p-6">
     <div class="max-w-md mx-auto my-8">
-        <!-- Aplicando glass morphism e estilização Mottu -->
         <div class="glass-card rounded-2xl p-8 relative overflow-hidden">
-            <!-- Adicionando efeito de brilho no canto -->
             <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-green-400/20 to-transparent rounded-bl-full"></div>
 
-            <!-- Melhorando o título com ícone -->
             <div class="text-center mb-8">
                 <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-green-400 to-green-600 rounded-full mb-4">
                     <i class="fas fa-warehouse text-black text-2xl"></i>
@@ -131,7 +126,6 @@
             <form th:action="@{/patio/form}" th:object="${patio}" method="post" class="space-y-6">
                 <input type="hidden" th:field="*{branch.id}"/>
 
-                <!-- Melhorando o campo de input com ícone -->
                 <div class="relative">
                     <label class="block text-white font-semibold mb-2 flex items-center">
                         <i class="fas fa-tag text-green-400 mr-2"></i>
@@ -150,14 +144,12 @@
                     </div>
                 </div>
 
-                <!-- Melhorando o botão com gradiente e efeitos -->
                 <button type="submit" class="mottu-btn w-full text-black font-bold py-4 rounded-lg flex items-center justify-center space-x-2">
                     <i class="fas fa-plus-circle"></i>
                     <span>Criar Pátio IoT</span>
                 </button>
             </form>
 
-            <!-- Melhorando o link de voltar -->
             <div class="mt-6 text-center">
                 <a th:href="@{'/branch/' + ${patio.branch.id}}"
                    class="inline-flex items-center text-green-400 hover:text-green-300 transition-colors duration-300">
@@ -166,7 +158,6 @@
                 </a>
             </div>
 
-            <!-- Adicionando informações IoT -->
             <div class="mt-8 pt-6 border-t border-gray-700/50">
                 <div class="grid grid-cols-3 gap-4 text-center">
                     <div>

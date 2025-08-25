@@ -7,7 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Applied Mottu's black background and green accent colors */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
         body {
@@ -109,7 +108,6 @@
 </head>
 <body class="min-h-screen flex flex-col">
 
-<!-- Added IoT and motorcycle floating icons -->
 <div class="floating-icons">
     <i class="floating-icon fas fa-motorcycle"></i>
     <i class="floating-icon fas fa-wifi"></i>
@@ -122,7 +120,6 @@
     <main class="flex-1 flex items-center justify-center p-6">
         <div class="glass-card rounded-2xl shadow-2xl p-8 w-full max-w-lg">
 
-            <!-- Updated header with Mottu green and IoT theme -->
             <div class="text-center mb-8">
                 <div class="inline-flex items-center justify-center w-16 h-16 mottu-green-bg rounded-full mb-4">
                     <i class="fas fa-plus text-2xl text-black"></i>
@@ -133,7 +130,6 @@
                 <p class="text-gray-300">Adicione uma nova base IoT ao sistema Vision Hive</p>
             </div>
 
-            <!-- Updated form fields with Mottu styling -->
             <form th:action="@{/branch/form}" th:object="${branch}" method="post" class="space-y-6">
                 <div>
                     <label class="flex items-center gap-2 text-white font-semibold mb-3">
@@ -180,7 +176,6 @@
                     </div>
                 </div>
 
-                <!-- Updated button with Mottu green styling -->
                 <button type="submit"
                         class="mottu-button w-full font-bold py-4 rounded-xl shadow-lg transition-all duration-300 mt-8">
                     <i class="fas fa-save mr-2"></i>
@@ -188,7 +183,6 @@
                 </button>
             </form>
 
-            <!-- Updated back button styling -->
             <div class="mt-6">
                 <a th:href="@{/}"
                    class="w-full bg-gray-800 hover:bg-gray-700 text-white font-semibold py-3 rounded-xl shadow-lg transition-all duration-300 text-center border border-gray-600 flex items-center justify-center gap-2">

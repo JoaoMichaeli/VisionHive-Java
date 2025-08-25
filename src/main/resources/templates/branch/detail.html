@@ -13,7 +13,6 @@
 
         .mottu-green { color: #00FF88; }
         .mottu-green-bg { background-color: #00FF88; }
-        .mottu-green-border { border-color: #00FF88; }
 
         .floating-icon {
             position: absolute;
@@ -55,11 +54,6 @@
             box-shadow: 0 0 5px #00FF88, 0 0 10px #00FF88, 0 0 15px #00FF88;
         }
 
-        .metric-card {
-            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(0, 0, 0, 0.8) 100%);
-            border: 1px solid rgba(0, 255, 136, 0.3);
-        }
-
         .pulse-ring {
             animation: pulse-ring 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
         }
@@ -79,7 +73,6 @@
 </head>
 <body class="urban-bg font-sans min-h-screen flex flex-col relative overflow-x-hidden">
 
-<!-- Adicionando ícones flutuantes IoT -->
 <div class="floating-icon top-20 left-10 text-6xl">
     <i class="fas fa-motorcycle mottu-green"></i>
 </div>
@@ -107,7 +100,6 @@
 <main class="flex-1 p-6 relative z-10">
     <div class="glass-card rounded-2xl shadow-2xl p-8 w-full max-w-4xl mx-auto hover-glow transition-all duration-300">
 
-        <!-- Enhanced header with more IoT elements -->
         <div class="text-center mb-8">
             <div class="flex items-center justify-center gap-3 mb-4">
                 <div class="relative">
@@ -126,7 +118,6 @@
             <p class="text-gray-400 text-xs">Sincronização em tempo real</p>
         </div>
 
-        <!-- Enhanced photo area with IoT overlay -->
         <div class="w-full h-48 bg-gray-900 flex flex-col justify-center items-center text-gray-400 font-bold text-lg rounded-xl mb-6 border border-gray-800 relative overflow-hidden">
             <i class="fas fa-camera mottu-green text-4xl mb-2"></i>
             <span>Foto da Base</span>
@@ -137,7 +128,6 @@
             </div>
         </div>
 
-        <!-- Enhanced information grid with more details -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             <div class="glass-card rounded-xl p-4 hover-glow transition-all duration-300">
                 <div class="flex items-center gap-3">
@@ -168,7 +158,6 @@
             </div>
         </div>
 
-        <!-- Enhanced patios section with better IoT indicators -->
         <div class="mb-8">
             <div class="flex items-center gap-3 mb-6">
                 <i class="fas fa-warehouse mottu-green text-2xl"></i>
@@ -212,7 +201,6 @@
                         </div>
                     </div>
 
-                    <!-- Enhanced photo placeholder with IoT overlay -->
                     <div class="w-full h-32 bg-gray-900 flex flex-col justify-center items-center text-gray-500 text-sm rounded-lg border border-gray-800 relative overflow-hidden">
                         <i class="fas fa-image mottu-green text-2xl mb-1"></i>
                         <span>Foto do Pátio</span>
@@ -230,7 +218,6 @@
             </div>
         </div>
 
-        <!-- Enhanced action buttons with better styling -->
         <div class="flex flex-col sm:flex-row gap-4">
             <a th:href="@{/patio/form(branchId=${branch.id})}"
                class="flex-1 mottu-green-bg hover:bg-green-400 text-black font-bold py-4 rounded-xl shadow-lg hover:shadow-green-500/30 transition-all duration-300 text-center flex items-center justify-center gap-3 neon-glow">

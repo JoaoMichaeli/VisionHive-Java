@@ -120,7 +120,6 @@
     </style>
 </head>
 <body class="min-h-screen urban-bg">
-<!-- Added floating IoT icons -->
 <div class="floating-icon text-2xl" style="top: 10%; left: 5%; animation-delay: 0s;">
     <i class="fas fa-motorcycle"></i>
 </div>
@@ -137,12 +136,10 @@
     <i class="fas fa-broadcast-tower"></i>
 </div>
 
-<!-- Added header fragment -->
 <div th:replace="fragments/header :: header"></div>
 
 <main class="container mx-auto px-6 py-8">
     <div class="max-w-2xl mx-auto">
-        <!-- Added IoT status indicator -->
         <div class="text-center mb-8">
             <div class="inline-flex items-center space-x-2 bg-green-500/20 px-4 py-2 rounded-full border border-green-500/30">
                 <div class="w-2 h-2 bg-green-500 rounded-full pulse-ring"></div>
@@ -150,7 +147,6 @@
             </div>
         </div>
 
-        <!-- Styled main card with glass morphism -->
         <div class="glass-card rounded-2xl p-8">
             <div class="text-center mb-8">
                 <div class="inline-flex items-center space-x-3 mb-4">
@@ -162,9 +158,8 @@
                 <p class="text-gray-400">Atualize as informações da moto conectada</p>
             </div>
 
-            <!-- Styled form with icons and improved layout -->
             <form th:action="@{|/motorcycle/edit/${motorcycle.id}|}" th:object="${motorcycle}" method="post" class="space-y-6">
-                <!-- Placa -->
+
                 <div class="space-y-2">
                     <label for="placa" class="flex items-center space-x-2 text-sm font-medium text-gray-300">
                         <i class="fas fa-id-card text-green-500"></i>
@@ -175,7 +170,6 @@
                     <span th:if="${#fields.hasErrors('placa')}" th:errors="*{placa}" class="error"></span>
                 </div>
 
-                <!-- Chassi -->
                 <div class="space-y-2">
                     <label for="chassi" class="flex items-center space-x-2 text-sm font-medium text-gray-300">
                         <i class="fas fa-barcode text-green-500"></i>
@@ -186,7 +180,6 @@
                     <span th:if="${#fields.hasErrors('chassi')}" th:errors="*{chassi}" class="error"></span>
                 </div>
 
-                <!-- Numeração Motor -->
                 <div class="space-y-2">
                     <label for="numeracaoMotor" class="flex items-center space-x-2 text-sm font-medium text-gray-300">
                         <i class="fas fa-cog text-green-500"></i>
@@ -197,7 +190,6 @@
                     <span th:if="${#fields.hasErrors('numeracaoMotor')}" th:errors="*{numeracaoMotor}" class="error"></span>
                 </div>
 
-                <!-- Modelo -->
                 <div class="space-y-2">
                     <label for="motorcycleModels" class="flex items-center space-x-2 text-sm font-medium text-gray-300">
                         <i class="fas fa-motorcycle text-green-500"></i>
@@ -226,7 +218,6 @@
                     </option>
                 </select>
 
-                <!-- Styled action buttons -->
                 <div class="flex space-x-4 pt-6">
                     <button type="submit" class="flex-1 mottu-button py-3 px-6 rounded-xl font-semibold text-center">
                         <i class="fas fa-save mr-2"></i>
@@ -240,7 +231,6 @@
             </form>
         </div>
 
-        <!-- Added IoT connectivity info -->
         <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
             <div class="glass-card rounded-xl p-4 text-center">
                 <div class="text-green-500 text-2xl mb-2">
@@ -267,7 +257,6 @@
     </div>
 </main>
 
-<!-- Added footer fragment -->
 <div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>

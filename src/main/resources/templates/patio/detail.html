@@ -10,7 +10,6 @@
     <style>
         body { font-family: 'Inter', sans-serif; }
 
-        /* Added urban background with animated elements */
         .urban-bg {
             background: linear-gradient(135deg, #000000 0%, #111111 100%);
             position: relative;
@@ -29,7 +28,6 @@
             animation: pulse 4s ease-in-out infinite alternate;
         }
 
-        /* Added floating IoT icons animation */
         .floating-icon {
             position: absolute;
             color: rgba(0, 255, 136, 0.3);
@@ -54,7 +52,6 @@
             100% { opacity: 1; }
         }
 
-        /* Added glass morphism effect */
         .glass-card {
             background: rgba(17, 17, 17, 0.8);
             backdrop-filter: blur(20px);
@@ -62,7 +59,6 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
-        /* Added neon glow effects */
         .neon-glow {
             box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
         }
@@ -71,7 +67,6 @@
             text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
         }
 
-        /* Added motorcycle card hover effects */
         .moto-card {
             transition: all 0.3s ease;
             border: 1px solid rgba(0, 255, 136, 0.2);
@@ -83,7 +78,6 @@
             border-color: rgba(0, 255, 136, 0.4);
         }
 
-        /* Added status indicators */
         .status-online {
             background: linear-gradient(45deg, #00FF88, #00CC6A);
             animation: pulse-green 2s infinite;
@@ -97,7 +91,6 @@
 </head>
 <body class="urban-bg font-sans min-h-screen flex flex-col">
 
-<!-- Added floating IoT icons -->
 <div class="floating-icon text-2xl"><i class="fas fa-motorcycle"></i></div>
 <div class="floating-icon text-xl"><i class="fas fa-wifi"></i></div>
 <div class="floating-icon text-2xl"><i class="fas fa-satellite-dish"></i></div>
@@ -110,7 +103,6 @@
 <main class="flex-1 p-6">
     <div class="glass-card rounded-2xl shadow-2xl p-8 w-full max-w-4xl mx-auto">
 
-        <!-- Enhanced header with IoT status -->
         <div class="text-center mb-8">
             <div class="flex items-center justify-center mb-4">
                 <div class="w-4 h-4 status-online rounded-full mr-3"></div>
@@ -122,7 +114,6 @@
                 </div>
             </div>
 
-            <!-- Added IoT metrics dashboard -->
             <div class="grid grid-cols-3 gap-4 mb-6">
                 <div class="glass-card rounded-lg p-4">
                     <div class="text-green-400 text-2xl font-bold">24/7</div>
@@ -139,7 +130,6 @@
             </div>
         </div>
 
-        <!-- Enhanced branch card with IoT elements -->
         <div class="glass-card rounded-xl p-6 mb-8 neon-glow">
             <div class="flex items-center">
                 <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex items-center justify-center mr-4">
@@ -158,7 +148,6 @@
             </div>
         </div>
 
-        <!-- Enhanced motorcycles section -->
         <div class="mb-8">
             <div class="flex items-center justify-center mb-6">
                 <i class="fas fa-motorcycle text-green-400 text-2xl mr-3"></i>
@@ -172,7 +161,6 @@
                 <div th:each="moto : ${motorcycles}" class="moto-card glass-card rounded-xl p-6">
                     <div class="grid md:grid-cols-3 gap-6 items-center">
 
-                        <!-- Enhanced motorcycle image section -->
                         <div class="relative">
                             <div class="w-full h-48 bg-gradient-to-br from-gray-800 to-gray-900 flex justify-center items-center text-gray-400 font-bold text-lg rounded-xl border border-green-500/20 relative overflow-hidden">
                                 <div class="absolute top-2 right-2 w-3 h-3 status-online rounded-full"></div>
@@ -183,7 +171,6 @@
                             </div>
                         </div>
 
-                        <!-- Enhanced motorcycle info -->
                         <div class="md:col-span-2 space-y-4">
                             <div class="grid md:grid-cols-2 gap-4">
                                 <div class="flex items-center">
@@ -210,7 +197,6 @@
                                 </div>
                             </div>
 
-                            <!-- Added IoT status indicators -->
                             <div class="grid grid-cols-3 gap-3 mt-4">
                                 <div class="text-center">
                                     <div class="text-green-400 font-bold">ONLINE</div>

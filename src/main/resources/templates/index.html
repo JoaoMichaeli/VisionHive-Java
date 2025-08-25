@@ -16,7 +16,6 @@
         }
 
         .mottu-green { color: #00FF88; }
-        .mottu-green-bg { background-color: #00FF88; }
         .mottu-dark { background-color: #000000; }
 
         .urban-glass {
@@ -134,7 +133,7 @@
             VISION <span class="mottu-green mottu-text-glow">HIVE</span>
         </h1>
         <p class="text-2xl md:text-3xl mb-12 drop-shadow-lg font-light max-w-4xl mx-auto leading-relaxed">
-            Gestão inteligente de <span class="font-semibold mottu-green">motos e pátios</span> através de <span class="font-semibold mottu-green">IoT avançado</span>
+            Gestão inteligente de <span class="font-semibold mottu-green">motos e pátios</span>
         </p>
 
         <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -216,76 +215,6 @@
         </div>
     </div>
 </section>
-
-<!--<main class="flex-1 py-16 px-6 relative">-->
-<!--    <div class="max-w-7xl mx-auto">-->
-<!--        <h2 class="text-4xl font-bold text-center mb-16 text-white flex items-center justify-center">-->
-<!--            <i class="fas fa-building mr-4 mottu-green"></i>-->
-<!--            FILIAIS VISION HIVE-->
-<!--        </h2>-->
-
-<!--        <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">-->
-<!--            <li th:each="branch : ${branches}"-->
-<!--                class="group urban-glass rounded-3xl shadow-2xl hover:shadow-green-500/20 transition-all duration-500 cursor-pointer flex flex-col overflow-hidden hover:scale-105 hover:-translate-y-2 mottu-glow">-->
-
-<!--                <div class="relative w-full h-56 mottu-dark flex justify-center items-center overflow-hidden">-->
-<!--                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10"></div>-->
-<!--                    <i class="fas fa-store-alt text-6xl mottu-green z-0 mottu-text-glow"></i>-->
-
-<!--                    <div class="absolute top-4 right-4 z-20">-->
-<!--                        <span class="mottu-green-bg text-black px-3 py-1 rounded-full text-xs font-bold flex items-center">-->
-<!--                            <i class="fas fa-circle text-xs mr-1 street-pulse"></i>-->
-<!--                            ONLINE-->
-<!--                        </span>-->
-<!--                    </div>-->
-
-<!--                    <div class="absolute bottom-4 left-4 z-20">-->
-<!--                        <i class="fas fa-wifi text-2xl mottu-green opacity-60"></i>-->
-<!--                    </div>-->
-<!--                </div>-->
-
-<!--                <div class="p-6 flex-1 flex flex-col">-->
-<!--                    <a th:href="@{'/branch/' + ${branch.id}}"-->
-<!--                       th:text="${branch.nome}"-->
-<!--                       class="text-white text-xl font-bold mb-3 hover:text-green-400 transition-colors group-hover:text-green-300 line-clamp-2">-->
-<!--                        Filial Vision Hive-->
-<!--                    </a>-->
-
-<!--                    <div class="space-y-2 mb-4 flex-1">-->
-<!--                        <div class="flex items-center text-gray-300 text-sm">-->
-<!--                            <i class="fas fa-map-marker-alt mr-2 mottu-green"></i>-->
-<!--                            <span th:text="${branch.bairro}">Localização</span>-->
-<!--                        </div>-->
-<!--                        <div class="flex items-center text-gray-400 text-sm">-->
-<!--                            <i class="fas fa-id-card mr-2 mottu-green"></i>-->
-<!--                            <span th:text="${branch.cnpj}">CNPJ</span>-->
-<!--                        </div>-->
-<!--                        <div class="flex items-center text-gray-400 text-sm">-->
-<!--                            <i class="fas fa-microchip mr-2 mottu-green"></i>-->
-<!--                            <span>IoT Ativo</span>-->
-<!--                        </div>-->
-<!--                    </div>-->
-
-<!--                    <div class="flex gap-2">-->
-<!--                        &lt;!&ndash; Corrigindo link do botão acessar base para usar rota correta &ndash;&gt;-->
-<!--                        <a th:href="@{'/branch/' + ${branch.id}}"-->
-<!--                           class="flex-1 mottu-button text-black font-semibold py-3 px-3 rounded-xl text-center transition-all text-sm">-->
-<!--                            <i class="fas fa-eye mr-1"></i>-->
-<!--                            Acessar Base-->
-<!--                        </a>-->
-
-<!--                        &lt;!&ndash; Melhorando botão de editar com hover mais visível &ndash;&gt;-->
-<!--                        <a th:href="@{'/branch/edit/' + ${branch.id}}"-->
-<!--                           class="bg-gray-800 hover:bg-gray-700 hover:scale-105 transform duration-200 mottu-green py-3 px-3 rounded-xl transition-all border border-green-500/30 flex items-center justify-center">-->
-<!--                            <i class="fas fa-cog text-sm"></i>-->
-<!--                        </a>-->
-<!--                    </div>-->
-
-<!--                </div>-->
-<!--            </li>-->
-<!--        </ul>-->
-<!--    </div>-->
-<!--</main>-->
 
 <div th:replace="fragments/footer :: footer"></div>
 

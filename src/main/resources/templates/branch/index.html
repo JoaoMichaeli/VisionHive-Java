@@ -10,294 +10,246 @@
     <style>
         body { font-family: 'Inter', sans-serif; }
 
-        .mottu-green { color: #00FF88; }
-        .mottu-green-bg { background-color: #00FF88; }
-        .mottu-green-border { border-color: #00FF88; }
-
-        .floating-icon {
-            position: absolute;
-            opacity: 0.08;
-            animation: float 8s ease-in-out infinite;
-            pointer-events: none;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.08; }
-            25% { transform: translateY(-15px) rotate(3deg); opacity: 0.12; }
-            50% { transform: translateY(-30px) rotate(-3deg); opacity: 0.15; }
-            75% { transform: translateY(-15px) rotate(2deg); opacity: 0.12; }
-        }
-
-        .card-hover {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        .urban-bg {
+            background: linear-gradient(135deg, #000000 0%, #111111 50%, #000000 100%);
             position: relative;
-            overflow: hidden;
         }
 
-        .card-hover::before {
+        .urban-bg::before {
             content: '';
-            position: absolute;
+            position: fixed;
             top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.1), transparent);
-            transition: left 0.6s;
-        }
-
-        .card-hover:hover::before {
-            left: 100%;
-        }
-
-        .card-hover:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 25px 50px rgba(0, 255, 136, 0.25);
-        }
-
-        .glow-effect {
-            box-shadow: 0 0 30px rgba(0, 255, 136, 0.4);
-        }
-
-        .pulse-green {
-            animation: pulse-green 2s infinite;
-        }
-
-        @keyframes pulse-green {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.8); }
-            70% { box-shadow: 0 0 0 15px rgba(0, 255, 136, 0); }
-        }
-
-        .urban-grid {
+            left: 0;
+            right: 0;
+            bottom: 0;
             background-image:
-                    linear-gradient(rgba(0, 255, 136, 0.03) 1px, transparent 1px),
-                    linear-gradient(90deg, rgba(0, 255, 136, 0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
+                    radial-gradient(circle at 20% 80%, rgba(0, 255, 136, 0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(0, 255, 136, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
         }
 
         .glass-card {
             background: rgba(17, 17, 17, 0.8);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(0, 255, 136, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(0, 255, 136, 0.5);
+            box-shadow: 0 12px 40px rgba(0, 255, 136, 0.2);
         }
 
         .neon-text {
-            text-shadow: 0 0 10px rgba(0, 255, 136, 0.8), 0 0 20px rgba(0, 255, 136, 0.6), 0 0 30px rgba(0, 255, 136, 0.4);
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
         }
 
-        .mottu-button {
-            background: linear-gradient(135deg, #00FF88 0%, #00CC6A 100%);
-            transition: all 0.3s ease;
+        .neon-border {
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .floating-icon {
+            position: fixed;
+            color: rgba(0, 255, 136, 0.3);
+            animation: float 6s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .floating-icon:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .floating-icon:nth-child(2) { top: 20%; right: 15%; animation-delay: 1s; }
+        .floating-icon:nth-child(3) { bottom: 30%; left: 20%; animation-delay: 2s; }
+        .floating-icon:nth-child(4) { bottom: 20%; right: 10%; animation-delay: 3s; }
+        .floating-icon:nth-child(5) { top: 50%; left: 5%; animation-delay: 4s; }
+        .floating-icon:nth-child(6) { top: 60%; right: 5%; animation-delay: 5s; }
+
+        .pulse-green {
+            animation: pulse-green 2s infinite;
+        }
+
+        @keyframes pulse-green {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(0, 255, 136, 0); }
+        }
+
+        .branch-image {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
             position: relative;
             overflow: hidden;
         }
 
-        .mottu-button::before {
+        .branch-image::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #00FF88 0%, #00CC6A 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .mottu-button:hover::before {
-            left: 100%;
-        }
-
-        .mottu-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 35px rgba(0, 255, 136, 0.4);
+        .branch-image i {
+            position: relative;
+            z-index: 2;
+            color: #000;
+            font-size: 24px;
         }
     </style>
 </head>
-<body class="flex flex-col min-h-screen bg-black font-sans relative overflow-x-hidden urban-grid">
+<body class="flex flex-col min-h-screen urban-bg font-sans">
 
-<div class="floating-icon top-20 left-10 text-7xl mottu-green">
-    <i class="fas fa-motorcycle"></i>
-</div>
-<div class="floating-icon top-32 right-20 text-5xl mottu-green" style="animation-delay: -2s;">
-    <i class="fas fa-wifi"></i>
-</div>
-<div class="floating-icon top-60 left-1/4 text-6xl mottu-green" style="animation-delay: -4s;">
-    <i class="fas fa-satellite-dish"></i>
-</div>
-<div class="floating-icon bottom-40 right-10 text-5xl mottu-green" style="animation-delay: -1s;">
-    <i class="fas fa-microchip"></i>
-</div>
-<div class="floating-icon bottom-60 left-20 text-6xl mottu-green" style="animation-delay: -3s;">
-    <i class="fas fa-network-wired"></i>
-</div>
-<div class="floating-icon top-1/2 right-1/4 text-4xl mottu-green" style="animation-delay: -5s;">
-    <i class="fas fa-broadcast-tower"></i>
-</div>
+<div class="floating-icon"><i class="fas fa-building text-2xl"></i></div>
+<div class="floating-icon"><i class="fas fa-wifi text-xl"></i></div>
+<div class="floating-icon"><i class="fas fa-motorcycle text-2xl"></i></div>
+<div class="floating-icon"><i class="fas fa-microchip text-xl"></i></div>
+<div class="floating-icon"><i class="fas fa-satellite-dish text-2xl"></i></div>
+<div class="floating-icon"><i class="fas fa-broadcast-tower text-xl"></i></div>
 
 <div th:replace="fragments/header :: header"></div>
 
-<main class="flex-1 p-8 relative z-10">
-    <div class="text-center mb-16">
-        <h1 class="text-6xl font-bold text-white mb-6 neon-text">
-            <span class="mottu-green">Vision Hive</span> - Bases IoT
+<main class="flex-1 p-4 md:p-8 relative z-10">
+    <div class="text-center mb-12">
+        <h1 class="text-4xl md:text-6xl text-white font-bold mb-4">
+            <i class="fas fa-building text-green-400 mr-4"></i>
+            Bases Conectadas
         </h1>
-        <p class="text-gray-300 text-xl max-w-3xl mx-auto leading-relaxed">
-            Gerenciamento inteligente de bases e frotas através de tecnologia IoT avançada
-        </p>
-        <div class="mt-8 flex justify-center">
-            <div class="w-24 h-1 mottu-green-bg rounded-full glow-effect"></div>
+        <p class="text-gray-400 text-lg">Gerenciamento inteligente de bases e frotas</p>
+    </div>
+
+    <div class="max-w-7xl mx-auto mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="glass-card rounded-xl p-6 text-center">
+                <div class="text-3xl font-bold text-white neon-text mb-2" th:text="${#lists.size(branches)}">12</div>
+                <div class="text-gray-400 text-sm">Bases Ativas</div>
+                <div class="text-green-400 text-xs mt-1">
+                    <i class="fas fa-arrow-up mr-1"></i>100% Online
+                </div>
+            </div>
+            <div class="glass-card rounded-xl p-6 text-center">
+                <div class="text-3xl font-bold text-white neon-text mb-2">2.4K</div>
+                <div class="text-gray-400 text-sm">Motos Conectadas</div>
+                <div class="text-green-400 text-xs mt-1">
+                    <i class="fas fa-motorcycle mr-1"></i>+12% hoje
+                </div>
+            </div>
+            <div class="glass-card rounded-xl p-6 text-center">
+                <div class="text-3xl font-bold text-white neon-text mb-2">99.8%</div>
+                <div class="text-gray-400 text-sm">Uptime IoT</div>
+                <div class="text-green-400 text-xs mt-1">
+                    <i class="fas fa-signal mr-1"></i>Excelente
+                </div>
+            </div>
+            <div class="glass-card rounded-xl p-6 text-center">
+                <div class="text-3xl font-bold text-white neon-text mb-2">1.2s</div>
+                <div class="text-gray-400 text-sm">Latência Média</div>
+                <div class="text-green-400 text-xs mt-1">
+                    <i class="fas fa-tachometer-alt mr-1"></i>Otimizada
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-16 max-w-6xl mx-auto">
-        <div class="glass-card rounded-2xl p-8 text-center card-hover">
-            <div class="mottu-green text-4xl mb-4">
-                <i class="fas fa-building"></i>
+    <div class="max-w-4xl mx-auto mb-12">
+        <form method="get" th:action="@{/branch}" class="glass-card rounded-2xl p-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="relative">
+                    <i class="fas fa-building absolute left-3 top-1/2 transform -translate-y-1/2 text-green-400"></i>
+                    <input type="text" name="nome" placeholder="Nome da Base" th:value="${param.nome}"
+                           class="w-full pl-10 pr-4 py-3 rounded-lg bg-gray-800/50 text-white border border-gray-600 focus:outline-none focus:border-green-400 focus:ring-2 focus:ring-green-400/20 transition-all"/>
+                </div>
+                <div class="relative">
+                    <i class="fas fa-map-marker-alt absolute left-3 top-1/2 transform -translate-y-1/2 text-green-400"></i>
+                    <input type="text" name="bairro" placeholder="Região" th:value="${param.bairro}"
+                           class="w-full pl-10 pr-4 py-3 rounded-lg bg-gray-800/50 text-white border border-gray-600 focus:outline-none focus:border-green-400 focus:ring-2 focus:ring-green-400/20 transition-all"/>
+                </div>
+                <div class="relative">
+                    <i class="fas fa-id-card absolute left-3 top-1/2 transform -translate-y-1/2 text-green-400"></i>
+                    <input type="text" name="cnpj" placeholder="CNPJ" th:value="${param.cnpj}"
+                           class="w-full pl-10 pr-4 py-3 rounded-lg bg-gray-800/50 text-white border border-gray-600 focus:outline-none focus:border-green-400 focus:ring-2 focus:ring-green-400/20 transition-all"/>
+                </div>
+                <button type="submit" class="md:col-span-3 bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-black font-bold px-6 py-3 rounded-lg neon-border transition-all duration-300 transform hover:scale-105">
+                    <i class="fas fa-search mr-2"></i>Buscar Bases
+                </button>
             </div>
-            <div class="text-3xl font-bold text-white mb-2" th:text="${#lists.size(branches)} + ' Bases'">12 Bases</div>
-            <div class="text-gray-400 text-sm">Conectadas via IoT</div>
-            <div class="mt-3 w-full bg-gray-800 rounded-full h-2">
-                <div class="mottu-green-bg h-2 rounded-full" style="width: 85%"></div>
-            </div>
-        </div>
-        <div class="glass-card rounded-2xl p-8 text-center card-hover">
-            <div class="mottu-green text-4xl mb-4">
-                <i class="fas fa-motorcycle"></i>
-            </div>
-            <div class="text-3xl font-bold text-white mb-2">2.4K Motos</div>
-            <div class="text-gray-400 text-sm">Monitoradas em tempo real</div>
-            <div class="mt-3 w-full bg-gray-800 rounded-full h-2">
-                <div class="mottu-green-bg h-2 rounded-full" style="width: 92%"></div>
-            </div>
-        </div>
-        <div class="glass-card rounded-2xl p-8 text-center card-hover">
-            <div class="mottu-green text-4xl mb-4">
-                <i class="fas fa-signal"></i>
-            </div>
-            <div class="text-3xl font-bold text-white mb-2">99.8%</div>
-            <div class="text-gray-400 text-sm">Uptime de conectividade</div>
-            <div class="mt-3 w-full bg-gray-800 rounded-full h-2">
-                <div class="mottu-green-bg h-2 rounded-full" style="width: 99%"></div>
-            </div>
-        </div>
-        <div class="glass-card rounded-2xl p-8 text-center card-hover">
-            <div class="mottu-green text-4xl mb-4">
-                <i class="fas fa-chart-line"></i>
-            </div>
-            <div class="text-3xl font-bold text-white mb-2">+15%</div>
-            <div class="text-gray-400 text-sm">Crescimento mensal</div>
-            <div class="mt-3 w-full bg-gray-800 rounded-full h-2">
-                <div class="mottu-green-bg h-2 rounded-full" style="width: 78%"></div>
-            </div>
-        </div>
+        </form>
     </div>
 
     <div class="text-center mb-12">
         <a th:href="@{/branch/form}"
-           class="inline-flex items-center gap-4 mottu-button text-black font-bold px-10 py-5 rounded-2xl shadow-lg text-lg pulse-green">
+           class="inline-flex items-center gap-3 bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-black font-bold px-8 py-4 rounded-lg neon-border transition-all duration-300 transform hover:scale-105">
             <i class="fas fa-plus text-xl"></i>
             Cadastrar Nova Base IoT
         </a>
     </div>
 
-    <form method="get" th:action="@{/branch}" class="glass-card rounded-2xl p-8 mb-16 max-w-6xl mx-auto">
-        <div class="flex flex-col lg:flex-row gap-6 items-end">
-            <div class="flex-1">
-                <label class="block text-gray-300 text-sm font-semibold mb-3">
-                    <i class="fas fa-search mr-2 mottu-green"></i>Nome da Base
-                </label>
-                <input type="text" name="nome" placeholder="Digite o nome da base..." th:value="${param.nome}"
-                       class="w-full px-5 py-4 rounded-xl bg-black text-white border border-gray-700 focus:outline-none focus:mottu-green-border focus:ring-2 focus:ring-green-500/30 transition-all"/>
-            </div>
-            <div class="flex-1">
-                <label class="block text-gray-300 text-sm font-semibold mb-3">
-                    <i class="fas fa-map-marker-alt mr-2 mottu-green"></i>Região
-                </label>
-                <input type="text" name="bairro" placeholder="Digite a região..." th:value="${param.bairro}"
-                       class="w-full px-5 py-4 rounded-xl bg-black text-white border border-gray-700 focus:outline-none focus:mottu-green-border focus:ring-2 focus:ring-green-500/30 transition-all"/>
-            </div>
-            <div class="flex-1">
-                <label class="block text-gray-300 text-sm font-semibold mb-3">
-                    <i class="fas fa-id-card mr-2 mottu-green"></i>CNPJ
-                </label>
-                <input type="text" name="cnpj" placeholder="Digite o CNPJ..." th:value="${param.cnpj}"
-                       class="w-full px-5 py-4 rounded-xl bg-black text-white border border-gray-700 focus:outline-none focus:mottu-green-border focus:ring-2 focus:ring-green-500/30 transition-all"/>
-            </div>
-            <button type="submit"
-                    class="mottu-button text-black font-bold px-10 py-4 rounded-xl shadow-lg flex items-center gap-3 text-lg">
-                <i class="fas fa-filter"></i>
-                Filtrar
-            </button>
-        </div>
-    </form>
-
     <div class="max-w-7xl mx-auto">
-        <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+        <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             <li th:each="branch : ${branches}"
-                class="glass-card rounded-2xl shadow-2xl flex flex-col p-6 card-hover relative overflow-hidden">
+                class="glass-card rounded-xl overflow-hidden hover:scale-105 transition-all duration-300 cursor-pointer">
 
-                <div class="absolute top-4 right-4 flex items-center gap-2 z-20">
-                    <div class="w-3 h-3 mottu-green-bg rounded-full pulse-green"></div>
-                    <span class="text-xs mottu-green font-semibold bg-black/50 px-2 py-1 rounded-full">ONLINE</span>
-                </div>
-
-                <div class="w-full h-48 bg-gradient-to-br from-gray-900 to-gray-800 flex justify-center items-center text-gray-400 rounded-xl mb-6 border border-gray-700 relative overflow-hidden">
-                    <div class="text-center z-10">
-                        <i class="fas fa-building text-4xl mottu-green mb-2 neon-text"></i>
-                        <div class="text-xs text-gray-400 font-medium">Base IoT Conectada</div>
+                <div class="branch-image h-48 flex justify-center items-center relative">
+                    <i class="fas fa-building text-2xl"></i>
+                    <div class="absolute top-3 right-3 w-3 h-3 bg-green-400 rounded-full pulse-green"></div>
+                    <div class="absolute top-3 left-3 text-green-400">
+                        <i class="fas fa-wifi text-sm"></i>
                     </div>
-                    <div class="absolute top-3 left-3 text-xs mottu-green opacity-60">
-                        <i class="fas fa-wifi"></i>
-                    </div>
-                    <div class="absolute bottom-3 left-3 text-xs mottu-green opacity-60">
-                        <i class="fas fa-microchip"></i>
-                    </div>
-                    <div class="absolute bottom-3 right-3 text-xs mottu-green opacity-60">
-                        <i class="fas fa-broadcast-tower"></i>
+                    <div class="absolute bottom-3 right-3 text-green-400">
+                        <i class="fas fa-microchip text-sm"></i>
                     </div>
                 </div>
 
-                <div class="flex-1 px-2">
+                <div class="p-6">
                     <a th:href="@{'/branch/' + ${branch.id}}"
                        th:text="${branch.nome}"
-                       class="text-white text-xl font-bold mb-4 hover:mottu-green transition-colors block leading-tight">
+                       class="text-white text-xl font-bold mb-3 hover:text-green-400 transition-colors block neon-text">
                         Nome da Base
                     </a>
 
-                    <div class="space-y-2 mb-5">
-                        <div class="flex items-center gap-2 text-gray-300">
-                            <i class="fas fa-map-marker-alt text-sm mottu-green w-4"></i>
-                            <span th:text="${branch.bairro}" class="text-sm truncate">Região</span>
+                    <div class="space-y-2 mb-4">
+                        <div class="flex items-center text-gray-300 text-sm">
+                            <i class="fas fa-map-marker-alt text-green-400 w-4 mr-2"></i>
+                            <span th:text="${branch.bairro}">Região</span>
                         </div>
-                        <div class="flex items-center gap-2 text-gray-300">
-                            <i class="fas fa-id-card text-sm mottu-green w-4"></i>
-                            <span th:text="${branch.cnpj}" class="text-sm truncate">CNPJ</span>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-3 gap-3 py-4 border-t border-gray-700 mb-4">
-                        <div class="text-center">
-                            <div class="text-lg font-bold mottu-green">24</div>
-                            <div class="text-xs text-gray-400 mt-1">Motos</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="text-lg font-bold mottu-green">98%</div>
-                            <div class="text-xs text-gray-400 mt-1">Uptime</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="text-lg font-bold mottu-green">5.2s</div>
-                            <div class="text-xs text-gray-400 mt-1">Latência</div>
+                        <div class="flex items-center text-gray-300 text-sm">
+                            <i class="fas fa-id-card text-green-400 w-4 mr-2"></i>
+                            <span>CNPJ: </span>
+                            <span th:text="${branch.cnpj}" class="text-green-400 font-mono">00.000.000/0000-00</span>
                         </div>
                     </div>
 
-                    <div class="flex gap-2">
+                    <div class="border-t border-gray-700 pt-4">
+                        <div class="grid grid-cols-3 gap-2 text-center">
+                            <div>
+                                <div class="text-green-400 font-bold text-sm">24</div>
+                                <div class="text-gray-500 text-xs">Motos</div>
+                            </div>
+                            <div>
+                                <div class="text-green-400 font-bold text-sm">ONLINE</div>
+                                <div class="text-gray-500 text-xs">Status</div>
+                            </div>
+                            <div>
+                                <div class="text-green-400 font-bold text-sm">2.1s</div>
+                                <div class="text-gray-500 text-xs">Ping</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-4 border-t border-gray-700">
                         <a th:href="@{'/branch/' + ${branch.id}}"
-                           class="flex-1 mottu-button text-black font-semibold py-3 px-3 rounded-xl text-center transition-all text-sm">
-                            <i class="fas fa-eye mr-1"></i>
-                            Acessar Base
+                           class="w-full bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-black font-bold py-2 px-4 rounded-lg transition-all duration-300 text-center block">
+                            <i class="fas fa-eye mr-2"></i>Acessar Base
                         </a>
-                        <button class="bg-gray-800 hover:bg-gray-700 mottu-green py-3 px-3 rounded-xl transition-colors border border-green-500/30">
-                            <i class="fas fa-cog text-sm"></i>
-                        </button>
                     </div>
                 </div>
             </li>

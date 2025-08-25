@@ -11,11 +11,9 @@
 </head>
 <body class="bg-black font-sans min-h-screen flex flex-col relative" style="font-family: 'Inter', sans-serif;">
 
-<!-- Adicionando fundo urbano com elementos IoT flutuantes -->
 <div class="urban-bg fixed inset-0 z-0">
     <div class="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black"></div>
 
-    <!-- Elementos IoT flutuantes -->
     <div class="floating-icons">
         <i class="fas fa-motorcycle absolute text-green-500/20 text-2xl animate-pulse" style="top: 10%; left: 5%; animation-delay: 0s;"></i>
         <i class="fas fa-wifi absolute text-green-500/30 text-lg animate-bounce" style="top: 20%; right: 10%; animation-delay: 1s;"></i>
@@ -25,7 +23,6 @@
         <i class="fas fa-broadcast-tower absolute text-green-500/25 text-xl animate-bounce" style="top: 70%; left: 20%; animation-delay: 5s;"></i>
     </div>
 
-    <!-- Grid pattern -->
     <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 1px 1px, #00FF88 1px, transparent 0); background-size: 50px 50px;"></div>
 </div>
 
@@ -34,7 +31,6 @@
 <main class="flex-1 py-8 px-6 relative z-10">
     <div class="max-w-6xl mx-auto">
 
-        <!-- Header melhorado com status IoT -->
         <div class="text-center mb-8">
             <h2 class="text-4xl font-bold text-white flex items-center justify-center mb-4">
                 <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-green-400 rounded-xl flex items-center justify-center mr-4 shadow-lg shadow-green-500/30">
@@ -52,7 +48,6 @@
             </div>
         </div>
 
-        <!-- Dashboard de métricas IoT -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             <div class="bg-gray-900/60 backdrop-blur-sm border border-green-500/20 rounded-2xl p-6 text-center hover:border-green-500/40 transition-all duration-300">
                 <div class="text-3xl font-bold text-green-400 mb-2">98%</div>
@@ -82,15 +77,12 @@
             </div>
         </div>
 
-        <!-- Card principal melhorado com glass morphism -->
         <div class="bg-gray-900/40 backdrop-blur-xl border border-green-500/30 rounded-3xl shadow-2xl p-8 mb-8 hover:border-green-500/50 transition-all duration-500">
             <div class="flex flex-col lg:flex-row gap-8">
 
-                <!-- FOTO melhorada -->
                 <div class="relative w-full lg:w-1/3 h-80 bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm flex justify-center items-center overflow-hidden rounded-2xl border border-green-500/20 group">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-green-500/10 z-10"></div>
 
-                    <!-- Ícones IoT nos cantos -->
                     <div class="absolute top-4 left-4 z-20">
                         <i class="fas fa-wifi text-green-500 text-lg animate-pulse"></i>
                     </div>
@@ -104,13 +96,11 @@
                         <i class="fas fa-broadcast-tower text-green-500 text-lg animate-bounce" style="animation-delay: 3s;"></i>
                     </div>
 
-                    <!-- Moto central -->
                     <div class="relative z-15 text-center">
                         <i class="fas fa-motorcycle text-8xl text-green-500 group-hover:scale-110 transition-transform duration-300" style="filter: drop-shadow(0 0 20px #00FF88);"></i>
                         <div class="text-green-400 text-sm mt-2 font-medium">Moto IoT</div>
                     </div>
 
-                    <!-- Status online -->
                     <div class="absolute top-4 left-1/2 transform -translate-x-1/2 z-20">
                         <div class="bg-green-500/20 backdrop-blur-sm border border-green-500/50 rounded-full px-3 py-1 text-xs text-green-400 font-medium">
                             <div class="w-2 h-2 bg-green-500 rounded-full inline-block mr-2 animate-pulse"></div>
@@ -119,7 +109,6 @@
                     </div>
                 </div>
 
-                <!-- INFORMAÇÕES melhoradas -->
                 <div class="flex-1 flex flex-col justify-between">
                     <div class="space-y-6">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -160,7 +149,6 @@
                         </div>
                     </div>
 
-                    <!-- BOTÕES melhorados -->
                     <div class="flex flex-col sm:flex-row gap-4 mt-8">
                         <a th:href="@{'/motorcycle/edit/' + ${motorcycle.id}}"
                            class="flex-1 bg-gradient-to-r from-green-500 to-green-400 hover:from-green-600 hover:to-green-500 text-black py-4 px-6 rounded-xl transition-all duration-300 text-center font-bold text-lg shadow-lg shadow-green-500/30 hover:shadow-green-500/50 hover:scale-105 flex items-center justify-center">
@@ -177,7 +165,6 @@
             </div>
         </div>
 
-        <!-- Seção de gráfico de performance -->
         <div class="bg-gray-900/40 backdrop-blur-xl border border-green-500/30 rounded-3xl shadow-2xl p-8 mb-8">
             <h3 class="text-2xl font-bold text-white mb-6 flex items-center">
                 <i class="fas fa-chart-line mr-3 text-green-500"></i>
@@ -188,7 +175,6 @@
             </div>
         </div>
 
-        <!-- Histórico de atividades -->
         <div class="bg-gray-900/40 backdrop-blur-xl border border-green-500/30 rounded-3xl shadow-2xl p-8">
             <h3 class="text-2xl font-bold text-white mb-6 flex items-center">
                 <i class="fas fa-history mr-3 text-green-500"></i>
@@ -226,7 +212,6 @@
 
 <div th:replace="fragments/footer :: footer"></div>
 
-<!-- Script para gráfico de performance -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const ctx = document.getElementById('performanceChart').getContext('2d');

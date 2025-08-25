@@ -10,7 +10,6 @@
     <style>
         body { font-family: 'Inter', sans-serif; }
 
-        /* Added urban background with IoT floating elements */
         .urban-bg {
             background: linear-gradient(135deg, #000000 0%, #111111 50%, #000000 100%);
             position: relative;
@@ -30,7 +29,6 @@
             z-index: 0;
         }
 
-        /* Added glass morphism effect for cards */
         .glass-card {
             background: rgba(17, 17, 17, 0.8);
             backdrop-filter: blur(20px);
@@ -43,7 +41,6 @@
             box-shadow: 0 12px 40px rgba(0, 255, 136, 0.2);
         }
 
-        /* Added neon glow effects */
         .neon-text {
             text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
         }
@@ -52,7 +49,6 @@
             box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
         }
 
-        /* Added floating IoT icons animation */
         .floating-icon {
             position: fixed;
             color: rgba(0, 255, 136, 0.3);
@@ -73,7 +69,6 @@
         .floating-icon:nth-child(5) { top: 50%; left: 5%; animation-delay: 4s; }
         .floating-icon:nth-child(6) { top: 60%; right: 5%; animation-delay: 5s; }
 
-        /* Added pulse animation for online status */
         .pulse-green {
             animation: pulse-green 2s infinite;
         }
@@ -83,7 +78,6 @@
             70% { box-shadow: 0 0 0 10px rgba(0, 255, 136, 0); }
         }
 
-        /* Added motorcycle image styling */
         .moto-image {
             background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
             position: relative;
@@ -115,7 +109,6 @@
 </head>
 <body class="flex flex-col min-h-screen urban-bg font-sans">
 
-<!-- Added floating IoT icons -->
 <div class="floating-icon"><i class="fas fa-motorcycle text-2xl"></i></div>
 <div class="floating-icon"><i class="fas fa-wifi text-xl"></i></div>
 <div class="floating-icon"><i class="fas fa-satellite-dish text-2xl"></i></div>
@@ -126,7 +119,13 @@
 <div th:replace="fragments/header :: header"></div>
 
 <main class="flex-1 p-4 md:p-8 relative z-10">
-    <!-- Added dashboard statistics section -->
+    <div class="text-center mb-12">
+        <h1 class="text-4xl md:text-6xl text-white font-bold mb-4">
+            <i class="fas fa-motorcycle text-green-400 mr-4"></i>
+            Frota <span class="neon-text">IoT</span> Conectada
+        </h1>
+        <p class="text-gray-400 text-lg">Monitoramento inteligente em tempo real</p>
+    </div>
     <div class="max-w-7xl mx-auto mb-8">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             <div class="glass-card rounded-xl p-6 text-center">
@@ -160,16 +159,6 @@
         </div>
     </div>
 
-    <!-- Enhanced title with IoT branding -->
-    <div class="text-center mb-12">
-        <h1 class="text-4xl md:text-6xl text-white font-bold mb-4">
-            <i class="fas fa-motorcycle text-green-400 mr-4"></i>
-            Frota <span class="neon-text">IoT</span> Conectada
-        </h1>
-        <p class="text-gray-400 text-lg">Monitoramento inteligente em tempo real</p>
-    </div>
-
-    <!-- Enhanced search form with better styling -->
     <div class="max-w-4xl mx-auto mb-12">
         <form method="get" th:action="@{/motorcycle}" class="glass-card rounded-2xl p-6">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -196,18 +185,14 @@
         </form>
     </div>
 
-    <!-- Enhanced motorcycle grid with IoT metrics -->
     <div class="max-w-7xl mx-auto">
         <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             <li th:each="motorcycle : ${motorcycles}"
                 class="glass-card rounded-xl overflow-hidden hover:scale-105 transition-all duration-300 cursor-pointer">
 
-                <!-- Enhanced motorcycle image with IoT icon -->
                 <div class="moto-image h-48 flex justify-center items-center relative">
                     <i class="fas fa-motorcycle text-2xl"></i>
-                    <!-- Added online status indicator -->
                     <div class="absolute top-3 right-3 w-3 h-3 bg-green-400 rounded-full pulse-green"></div>
-                    <!-- Added IoT connectivity icons -->
                     <div class="absolute top-3 left-3 text-green-400">
                         <i class="fas fa-wifi text-sm"></i>
                     </div>
@@ -217,7 +202,6 @@
                 </div>
 
                 <div class="p-6">
-                    <!-- Enhanced motorcycle info with better typography -->
                     <a th:href="@{'/motorcycle/' + ${motorcycle.id}}"
                        th:text="${motorcycle.placa}"
                        class="text-white text-xl font-bold mb-3 hover:text-green-400 transition-colors block neon-text">
@@ -243,7 +227,6 @@
                         </div>
                     </div>
 
-                    <!-- Added IoT metrics section -->
                     <div class="border-t border-gray-700 pt-4">
                         <div class="grid grid-cols-3 gap-2 text-center">
                             <div>
@@ -261,7 +244,6 @@
                         </div>
                     </div>
 
-                    <!-- Added access button -->
                     <div class="mt-4 pt-4 border-t border-gray-700">
                         <a th:href="@{'/motorcycle/' + ${motorcycle.id}}"
                            class="w-full bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-black font-bold py-2 px-4 rounded-lg transition-all duration-300 text-center block">
@@ -272,6 +254,8 @@
             </li>
         </ul>
     </div>
+
+
 </main>
 
 <div th:replace="fragments/footer :: footer"></div>
