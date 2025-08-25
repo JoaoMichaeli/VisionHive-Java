@@ -48,24 +48,11 @@ public class BranchController {
     }
 
     @PostMapping("/form")
-    public String create(@Valid @ModelAttribute BranchDTO branchDTO,
+    public String create(@Valid Branch branch,
                          BindingResult result,
-                         RedirectAttributes redirect,
-                         HttpSession session) throws IOException {
+                         RedirectAttributes redirect) {
 
         if (result.hasErrors()) return "branch/form";
-
-        MultipartFile imageFile = branchDTO.getImage();
-        if (imageFile == null || imageFile.isEmpty()) {
-            session.setAttribute("errorMessage", "A imagem é obrigatória");
-            return "branch/form";
-        }
-
-        Branch branch = new Branch();
-        branch.setNome(branchDTO.getNome());
-        branch.setBairro(branchDTO.getBairro());
-        branch.setCnpj(branchDTO.getCnpj());
-        branch.setImage(imageFile.getBytes());
 
         branchService.save(branch);
         redirect.addFlashAttribute("message", "Filial cadastrada com sucesso!");

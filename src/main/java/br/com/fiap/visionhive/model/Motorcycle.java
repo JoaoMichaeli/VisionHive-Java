@@ -44,5 +44,4 @@ public class Motorcycle {
     @ManyToOne
     @JoinColumn(name = "patio_id")
     private Patio patio;
-
 }

@@ -19,6 +19,4 @@ public class BranchDTO {
 
     @NotBlank(message = "O CNPJ da filial não pode estar em branco")
     private String cnpj;
-
-    private MultipartFile image;
 }

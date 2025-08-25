@@ -1,26 +1,270 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
 <head>
-    <title th:text="${patio.nome} + ' - Detalhes'">Pátio Detalhes</title>
     <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title th:text="${patio.nome} + ' - Detalhes'">Pátio Detalhes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+
+        /* Added urban background with animated elements */
+        .urban-bg {
+            background: linear-gradient(135deg, #000000 0%, #111111 100%);
+            position: relative;
+        }
+
+        .urban-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                    radial-gradient(circle at 20% 80%, rgba(0, 255, 136, 0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(0, 255, 136, 0.05) 0%, transparent 50%);
+            animation: pulse 4s ease-in-out infinite alternate;
+        }
+
+        /* Added floating IoT icons animation */
+        .floating-icon {
+            position: absolute;
+            color: rgba(0, 255, 136, 0.3);
+            animation: float 6s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .floating-icon:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .floating-icon:nth-child(2) { top: 20%; right: 15%; animation-delay: 1s; }
+        .floating-icon:nth-child(3) { bottom: 30%; left: 20%; animation-delay: 2s; }
+        .floating-icon:nth-child(4) { bottom: 20%; right: 10%; animation-delay: 3s; }
+        .floating-icon:nth-child(5) { top: 50%; left: 5%; animation-delay: 4s; }
+        .floating-icon:nth-child(6) { top: 60%; right: 5%; animation-delay: 5s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.3; }
+            50% { transform: translateY(-20px) rotate(180deg); opacity: 0.6; }
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        /* Added glass morphism effect */
+        .glass-card {
+            background: rgba(17, 17, 17, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Added neon glow effects */
+        .neon-glow {
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .neon-text {
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+
+        /* Added motorcycle card hover effects */
+        .moto-card {
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+        }
+
+        .moto-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.2);
+            border-color: rgba(0, 255, 136, 0.4);
+        }
+
+        /* Added status indicators */
+        .status-online {
+            background: linear-gradient(45deg, #00FF88, #00CC6A);
+            animation: pulse-green 2s infinite;
+        }
+
+        @keyframes pulse-green {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+    </style>
 </head>
-<body>
-<h1 th:text="${patio.nome}">Pátio</h1>
-<p><strong>Filial:</strong> <span th:text="${patio.branch.nome}"></span></p>
+<body class="urban-bg font-sans min-h-screen flex flex-col">
 
-<h2>Motos</h2>
-<ul>
-    <li th:each="moto : ${motorcycles}">
-        <span th:text="${moto.placa}"></span> -
-        <span th:text="${moto.chassi}"></span> -
-        <span th:text="${#strings.listJoin(moto.motorcycleModels, ', ')}"></span>
-    </li>
-</ul>
+<!-- Added floating IoT icons -->
+<div class="floating-icon text-2xl"><i class="fas fa-motorcycle"></i></div>
+<div class="floating-icon text-xl"><i class="fas fa-wifi"></i></div>
+<div class="floating-icon text-2xl"><i class="fas fa-satellite-dish"></i></div>
+<div class="floating-icon text-xl"><i class="fas fa-microchip"></i></div>
+<div class="floating-icon text-2xl"><i class="fas fa-broadcast-tower"></i></div>
+<div class="floating-icon text-xl"><i class="fas fa-network-wired"></i></div>
 
-<a th:href="@{/motorcycle/form(patioId=${patio.id})}">Cadastrar Nova Moto</a>
-<br/>
-<a th:href="@{'/branch/' + ${patio.branch.id}}">Voltar à Filial</a>
-<br/>
-<a th:href="@{/}">Voltar ao Início</a>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="flex-1 p-6">
+    <div class="glass-card rounded-2xl shadow-2xl p-8 w-full max-w-4xl mx-auto">
+
+        <!-- Enhanced header with IoT status -->
+        <div class="text-center mb-8">
+            <div class="flex items-center justify-center mb-4">
+                <div class="w-4 h-4 status-online rounded-full mr-3"></div>
+                <h2 th:text="${patio.nome}" class="text-4xl text-white font-bold neon-text">
+                    Nome do Pátio
+                </h2>
+                <div class="ml-4 px-3 py-1 bg-green-500/20 rounded-full">
+                    <span class="text-green-400 text-sm font-semibold">CONECTADO</span>
+                </div>
+            </div>
+
+            <!-- Added IoT metrics dashboard -->
+            <div class="grid grid-cols-3 gap-4 mb-6">
+                <div class="glass-card rounded-lg p-4">
+                    <div class="text-green-400 text-2xl font-bold">24/7</div>
+                    <div class="text-gray-300 text-sm">Monitoramento</div>
+                </div>
+                <div class="glass-card rounded-lg p-4">
+                    <div class="text-green-400 text-2xl font-bold">99.9%</div>
+                    <div class="text-gray-300 text-sm">Uptime</div>
+                </div>
+                <div class="glass-card rounded-lg p-4">
+                    <div class="text-green-400 text-2xl font-bold">2.1s</div>
+                    <div class="text-gray-300 text-sm">Latência</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enhanced branch card with IoT elements -->
+        <div class="glass-card rounded-xl p-6 mb-8 neon-glow">
+            <div class="flex items-center">
+                <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex items-center justify-center mr-4">
+                    <i class="fas fa-building text-black text-xl"></i>
+                </div>
+                <div>
+                    <p class="text-gray-300 text-lg">
+                        <span class="font-semibold text-green-400">Base IoT Conectada:</span>
+                        <span th:text="${patio.branch.nome}" class="text-white font-medium ml-2"></span>
+                    </p>
+                    <div class="flex items-center mt-2">
+                        <i class="fas fa-satellite text-green-400 mr-2"></i>
+                        <span class="text-gray-400 text-sm">Sincronização em tempo real</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enhanced motorcycles section -->
+        <div class="mb-8">
+            <div class="flex items-center justify-center mb-6">
+                <i class="fas fa-motorcycle text-green-400 text-2xl mr-3"></i>
+                <h3 class="text-3xl text-white font-semibold neon-text">Motos Conectadas</h3>
+                <div class="ml-4 px-3 py-1 bg-green-500/20 rounded-full">
+                    <span class="text-green-400 text-sm font-semibold" th:text="${#lists.size(motorcycles)} + ' ATIVAS'">0 ATIVAS</span>
+                </div>
+            </div>
+
+            <div class="grid gap-6">
+                <div th:each="moto : ${motorcycles}" class="moto-card glass-card rounded-xl p-6">
+                    <div class="grid md:grid-cols-3 gap-6 items-center">
+
+                        <!-- Enhanced motorcycle image section -->
+                        <div class="relative">
+                            <div class="w-full h-48 bg-gradient-to-br from-gray-800 to-gray-900 flex justify-center items-center text-gray-400 font-bold text-lg rounded-xl border border-green-500/20 relative overflow-hidden">
+                                <div class="absolute top-2 right-2 w-3 h-3 status-online rounded-full"></div>
+                                <div class="text-center">
+                                    <i class="fas fa-motorcycle text-4xl text-green-400 mb-2"></i>
+                                    <div class="text-sm">Moto IoT</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Enhanced motorcycle info -->
+                        <div class="md:col-span-2 space-y-4">
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div class="flex items-center">
+                                    <i class="fas fa-id-card text-green-400 mr-3"></i>
+                                    <div>
+                                        <span class="text-gray-400 text-sm">Placa</span>
+                                        <div class="text-white font-semibold" th:text="${moto.placa}">ABC-1234</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-barcode text-green-400 mr-3"></i>
+                                    <div>
+                                        <span class="text-gray-400 text-sm">Chassi</span>
+                                        <div class="text-white font-semibold" th:text="${moto.chassi}">123456789</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center">
+                                <i class="fas fa-cogs text-green-400 mr-3"></i>
+                                <div>
+                                    <span class="text-gray-400 text-sm">Modelos</span>
+                                    <div class="text-white font-semibold" th:text="${#strings.listJoin(moto.motorcycleModels, ', ')}">Modelo</div>
+                                </div>
+                            </div>
+
+                            <!-- Added IoT status indicators -->
+                            <div class="grid grid-cols-3 gap-3 mt-4">
+                                <div class="text-center">
+                                    <div class="text-green-400 font-bold">ONLINE</div>
+                                    <div class="text-gray-400 text-xs">Status</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-green-400 font-bold">98%</div>
+                                    <div class="text-gray-400 text-xs">Bateria</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-green-400 font-bold">1.2s</div>
+                                    <div class="text-gray-400 text-xs">Ping</div>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-end mt-4">
+                                <a th:href="@{/motorcycle/{id}(id=${moto.id})}"
+                                   class="bg-green-500 hover:bg-green-600 text-black font-bold py-2 px-4 rounded-lg shadow-md transition-all duration-300 flex items-center">
+                                    <i class="fas fa-info-circle mr-2"></i> Detalhes
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div th:if="${#lists.isEmpty(motorcycles)}" class="glass-card rounded-xl p-8 text-center">
+                    <i class="fas fa-motorcycle text-gray-500 text-4xl mb-4"></i>
+                    <p class="text-gray-400 text-lg">Nenhuma moto conectada</p>
+                    <p class="text-gray-500 text-sm mt-2">Cadastre motos para monitoramento IoT</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-4">
+            <a th:href="@{/motorcycle/form(patioId=${patio.id})}"
+               class="group bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-black font-bold py-4 px-6 rounded-xl shadow-lg hover:shadow-green-500/30 transition-all duration-300 text-center flex items-center justify-center">
+                <i class="fas fa-plus mr-2 group-hover:rotate-90 transition-transform"></i>
+                Conectar Nova Moto
+            </a>
+            <a th:href="@{'/branch/' + ${patio.branch.id}}"
+               class="bg-gray-700/50 hover:bg-gray-600/50 text-white font-semibold py-4 px-6 rounded-xl shadow-lg transition-all duration-300 text-center flex items-center justify-center border border-gray-600">
+                <i class="fas fa-arrow-left mr-2"></i>
+                Voltar à Base
+            </a>
+            <a th:href="@{/}"
+               class="bg-gray-700/50 hover:bg-gray-600/50 text-white font-semibold py-4 px-6 rounded-xl shadow-lg transition-all duration-300 text-center flex items-center justify-center border border-gray-600">
+                <i class="fas fa-home mr-2"></i>
+                Dashboard Principal
+            </a>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
 </body>
 </html>

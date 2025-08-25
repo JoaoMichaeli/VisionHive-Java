@@ -3,43 +3,190 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Cadastrar Pátio</title>
+    <title>Cadastrar Pátio IoT - Vision Hive</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+
+        .urban-bg {
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            position: relative;
+        }
+
+        .urban-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                    radial-gradient(circle at 20% 80%, rgba(0, 255, 136, 0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(0, 255, 136, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .glass-card {
+            background: rgba(17, 25, 40, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 255, 136, 0.1);
+        }
+
+        .input-field {
+            background: rgba(31, 41, 55, 0.8);
+            border: 1px solid rgba(75, 85, 99, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            border-color: #00FF88;
+            box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.1);
+            background: rgba(31, 41, 55, 0.9);
+        }
+
+        .mottu-btn {
+            background: linear-gradient(135deg, #00FF88 0%, #00CC6A 100%);
+            box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .mottu-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.4);
+        }
+
+        .floating-icon {
+            position: absolute;
+            color: rgba(0, 255, 136, 0.3);
+            animation: float 6s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .pulse-dot {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
 </head>
-<body class="bg-black font-sans min-h-screen flex flex-col">
+<body class="urban-bg min-h-screen">
+<!-- Adicionando ícones IoT flutuantes -->
+<div class="floating-icon text-2xl" style="top: 10%; left: 5%; animation-delay: 0s;">
+    <i class="fas fa-wifi"></i>
+</div>
+<div class="floating-icon text-xl" style="top: 20%; right: 10%; animation-delay: 1s;">
+    <i class="fas fa-satellite-dish"></i>
+</div>
+<div class="floating-icon text-lg" style="bottom: 30%; left: 8%; animation-delay: 2s;">
+    <i class="fas fa-microchip"></i>
+</div>
+<div class="floating-icon text-2xl" style="bottom: 15%; right: 15%; animation-delay: 3s;">
+    <i class="fas fa-network-wired"></i>
+</div>
+<div class="floating-icon text-xl" style="top: 60%; left: 15%; animation-delay: 4s;">
+    <i class="fas fa-broadcast-tower"></i>
+</div>
+<div class="floating-icon text-lg" style="top: 40%; right: 5%; animation-delay: 5s;">
+    <i class="fas fa-router"></i>
+</div>
 
 <div th:insert="~{fragments/header :: header}"></div>
 
-<main class="flex-1 flex items-center justify-center p-6">
-    <div class="bg-gray-900/90 backdrop-blur-md rounded-xl shadow-xl p-8 w-full max-w-md">
-        <h2 class="text-3xl text-white font-bold mb-6 text-center">
-            Cadastrar Pátio para a filial <span th:text="${patio.branch.nome}"></span>
-        </h2>
+<!-- Removendo flex items-center justify-center para permitir scroll -->
+<main class="flex-1 p-6">
+    <div class="max-w-md mx-auto my-8">
+        <!-- Aplicando glass morphism e estilização Mottu -->
+        <div class="glass-card rounded-2xl p-8 relative overflow-hidden">
+            <!-- Adicionando efeito de brilho no canto -->
+            <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-green-400/20 to-transparent rounded-bl-full"></div>
 
-        <form th:action="@{/patio/form}" th:object="${patio}" method="post" class="space-y-4">
-            <input type="hidden" th:field="*{branch.id}"/>
-
-            <div>
-                <label class="block text-white font-semibold mb-1">Nome do Pátio:</label>
-                <input type="text" th:field="*{nome}"
-                       class="w-full px-4 py-2 rounded-lg bg-gray-800 text-white border border-gray-700 focus:border-green-500 focus:outline-none"/>
-                <div th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}" class="text-red-500 text-sm mt-1"></div>
+            <!-- Melhorando o título com ícone -->
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-green-400 to-green-600 rounded-full mb-4">
+                    <i class="fas fa-warehouse text-black text-2xl"></i>
+                </div>
+                <h2 class="text-3xl text-white font-bold mb-2">
+                    Novo Pátio IoT
+                </h2>
+                <p class="text-gray-300 text-sm">
+                    Base: <span class="text-green-400 font-semibold" th:text="${patio.branch.nome}">Nome da Base</span>
+                </p>
+                <div class="flex items-center justify-center mt-2">
+                    <div class="pulse-dot w-2 h-2 bg-green-400 rounded-full mr-2"></div>
+                    <span class="text-green-400 text-xs font-medium">CONECTADO</span>
+                </div>
             </div>
 
-            <button type="submit"
-                    class="w-full bg-green-500 hover:bg-green-600 text-black font-bold py-3 rounded-lg shadow-lg hover:shadow-green-500/30 transition-all duration-300">
-                Salvar
-            </button>
-        </form>
+            <form th:action="@{/patio/form}" th:object="${patio}" method="post" class="space-y-6">
+                <input type="hidden" th:field="*{branch.id}"/>
 
-        <a th:href="@{'/branch/' + ${patio.branch.id}}"
-           class="block text-center mt-4 text-green-400 hover:text-green-500">
-            Voltar à Filial
-        </a>
+                <!-- Melhorando o campo de input com ícone -->
+                <div class="relative">
+                    <label class="block text-white font-semibold mb-2 flex items-center">
+                        <i class="fas fa-tag text-green-400 mr-2"></i>
+                        Nome do Pátio IoT:
+                    </label>
+                    <div class="relative">
+                        <input type="text" th:field="*{nome}"
+                               placeholder="Ex: Pátio Central SP"
+                               class="input-field w-full px-4 py-3 pl-12 rounded-lg text-white placeholder-gray-400 focus:outline-none"/>
+                        <i class="fas fa-warehouse absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                    <div th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"
+                         class="text-red-400 text-sm mt-2 flex items-center">
+                        <i class="fas fa-exclamation-triangle mr-1"></i>
+                        <span th:text="${#fields.errors('nome')[0]}"></span>
+                    </div>
+                </div>
+
+                <!-- Melhorando o botão com gradiente e efeitos -->
+                <button type="submit" class="mottu-btn w-full text-black font-bold py-4 rounded-lg flex items-center justify-center space-x-2">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Criar Pátio IoT</span>
+                </button>
+            </form>
+
+            <!-- Melhorando o link de voltar -->
+            <div class="mt-6 text-center">
+                <a th:href="@{'/branch/' + ${patio.branch.id}}"
+                   class="inline-flex items-center text-green-400 hover:text-green-300 transition-colors duration-300">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Voltar à Base IoT
+                </a>
+            </div>
+
+            <!-- Adicionando informações IoT -->
+            <div class="mt-8 pt-6 border-t border-gray-700/50">
+                <div class="grid grid-cols-3 gap-4 text-center">
+                    <div>
+                        <div class="text-green-400 text-lg font-bold">24/7</div>
+                        <div class="text-gray-400 text-xs">Monitoramento</div>
+                    </div>
+                    <div>
+                        <div class="text-green-400 text-lg font-bold">IoT</div>
+                        <div class="text-gray-400 text-xs">Conectividade</div>
+                    </div>
+                    <div>
+                        <div class="text-green-400 text-lg font-bold">Real</div>
+                        <div class="text-gray-400 text-xs">Tempo Real</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </main>
 
 <div th:replace="fragments/footer :: footer"></div>
-
 </body>
 </html>

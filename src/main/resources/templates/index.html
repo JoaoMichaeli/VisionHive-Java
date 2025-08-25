@@ -3,55 +3,364 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Vision Hive - Home</title>
+    <title>Vision Hive - Gestão Inteligente de Motos</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #000000;
+        }
+
+        .mottu-green { color: #00FF88; }
+        .mottu-green-bg { background-color: #00FF88; }
+        .mottu-dark { background-color: #000000; }
+
+        .urban-glass {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        .mottu-glow {
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .mottu-button {
+            background: #00FF88;
+            color: #000000;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .mottu-button:hover {
+            background: #00CC6A;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 255, 136, 0.4);
+            cursor: pointer;
+        }
+
+        .street-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .street-element {
+            position: absolute;
+            opacity: 0.1;
+            animation: streetFloat 25s infinite linear;
+            color: #00FF88;
+        }
+
+        .street-element:nth-child(1) { top: 10%; left: 5%; animation-delay: 0s; font-size: 3rem; }
+        .street-element:nth-child(2) { top: 70%; left: 85%; animation-delay: 8s; font-size: 2.5rem; }
+        .street-element:nth-child(3) { top: 40%; left: 15%; animation-delay: 15s; font-size: 4rem; }
+        .street-element:nth-child(4) { top: 20%; right: 10%; animation-delay: 5s; font-size: 2rem; }
+        .street-element:nth-child(5) { bottom: 30%; left: 70%; animation-delay: 12s; font-size: 3.5rem; }
+
+        @keyframes streetFloat {
+            0% { transform: translateY(0px) rotate(0deg); opacity: 0.1; }
+            25% { opacity: 0.2; }
+            50% { transform: translateY(-30px) rotate(180deg); opacity: 0.15; }
+            75% { opacity: 0.1; }
+            100% { transform: translateY(0px) rotate(360deg); opacity: 0.1; }
+        }
+
+        .street-pulse {
+            animation: streetPulse 2.5s infinite;
+        }
+
+        @keyframes streetPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+
+        .mottu-text-glow {
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+    </style>
 </head>
-<body class="flex flex-col min-h-screen bg-black font-sans">
+<body class="flex flex-col min-h-screen mottu-dark font-sans relative overflow-x-hidden">
+
+<div class="street-elements">
+    <div class="street-element">
+        <i class="fas fa-motorcycle"></i>
+    </div>
+    <div class="street-element">
+        <i class="fas fa-wifi"></i>
+    </div>
+    <div class="street-element">
+        <i class="fas fa-microchip"></i>
+    </div>
+    <div class="street-element">
+        <i class="fas fa-satellite-dish"></i>
+    </div>
+    <div class="street-element">
+        <i class="fas fa-shipping-fast"></i>
+    </div>
+</div>
 
 <div th:replace="fragments/header :: header"></div>
 
-<section class="bg-gradient-to-r from-[#00b894] to-[#00cec9] text-white py-24 px-6 text-center">
-    <h1 class="text-5xl md:text-6xl font-bold mb-4 drop-shadow-lg">
-        Vision Hive
-    </h1>
-    <p class="text-xl md:text-2xl mb-8 drop-shadow-md">
-        Gerencie suas filiais e pátios de forma eficiente e moderna
-    </p>
-    <a th:href="@{/branch/form}"
-       class="inline-block bg-black text-green-400 font-bold px-8 py-4 rounded-xl shadow-lg hover:scale-105 transition transform text-lg">
-        Cadastrar Nova Filial
-    </a>
+<section class="relative mottu-dark text-white py-32 px-6 text-center overflow-hidden">
+    <div class="absolute top-10 left-10 text-6xl opacity-20 street-pulse mottu-green">
+        <i class="fas fa-motorcycle"></i>
+    </div>
+    <div class="absolute top-20 right-20 text-4xl opacity-20 street-pulse mottu-green" style="animation-delay: 1s;">
+        <i class="fas fa-satellite-dish"></i>
+    </div>
+    <div class="absolute bottom-20 left-20 text-5xl opacity-20 street-pulse mottu-green" style="animation-delay: 2s;">
+        <i class="fas fa-microchip"></i>
+    </div>
+    <div class="absolute bottom-10 right-10 text-3xl opacity-20 street-pulse mottu-green" style="animation-delay: 1.5s;">
+        <i class="fas fa-wifi"></i>
+    </div>
+
+    <div class="relative z-10">
+        <div class="mb-6">
+            <i class="fas fa-eye text-8xl mb-4 drop-shadow-lg mottu-green mottu-text-glow"></i>
+        </div>
+        <h1 class="text-6xl md:text-7xl font-black mb-6 drop-shadow-2xl tracking-tight">
+            VISION <span class="mottu-green mottu-text-glow">HIVE</span>
+        </h1>
+        <p class="text-2xl md:text-3xl mb-12 drop-shadow-lg font-light max-w-4xl mx-auto leading-relaxed">
+            Gestão inteligente de <span class="font-semibold mottu-green">motos e pátios</span> através de <span class="font-semibold mottu-green">IoT avançado</span>
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <a th:href="@{/branch/form}"
+               class="group inline-flex items-center mottu-button px-10 py-5 rounded-2xl shadow-2xl hover:scale-105 transition-all duration-300 text-lg font-semibold">
+                <i class="fas fa-plus-circle mr-3 text-xl group-hover:rotate-90 transition-transform duration-300"></i>
+                NOVA FILIAL
+            </a>
+            <a th:href="@{/branch}"
+               class="group inline-flex items-center mottu-button px-10 py-5 rounded-2xl shadow-2xl hover:scale-105 transition-all duration-300 text-lg font-semibold">
+                <i class="fas fa-th-list mr-3 text-xl group-hover:rotate-90 transition-transform duration-300"></i>
+                LISTAR FILIAIS
+            </a>
+            <a href="#dashboard" class="inline-flex items-center urban-glass text-white font-semibold px-8 py-4 rounded-xl hover:bg-black/40 transition-all duration-300">
+                <i class="fas fa-chart-line mr-2 mottu-green"></i>
+                PAINEL DE CONTROLE
+            </a>
+        </div>
+    </div>
 </section>
 
-<main class="flex-1 py-12 px-6">
-    <h2 class="text-3xl text-white font-bold text-center mb-12">Filiais Cadastradas</h2>
+<section id="dashboard" class="py-16 px-6 relative">
+    <div class="max-w-7xl mx-auto">
+        <h2 class="text-4xl font-bold text-center mb-16 text-white">
+            <i class="fas fa-network-wired mr-4 mottu-green"></i>
+            CENTRO DE COMANDO IoT
+        </h2>
 
-    <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-        <li th:each="branch : ${branches}"
-            class="bg-gray-900 border border-gray-800 rounded-2xl shadow-lg hover:border-green-500 hover:shadow-green-500/30 transition-all duration-300 cursor-pointer flex flex-col items-center p-6">
-
-            <div class="w-full h-48 flex justify-center items-center mb-4 rounded-xl overflow-hidden border border-gray-700">
-                <img th:if="${branch.image != null}"
-                     th:src="'data:image/jpeg;base64,' + ${T(org.apache.tomcat.util.codec.binary.Base64).encodeBase64String(branch.image)}"
-                     alt="Foto da filial"
-                     class="w-full h-full object-cover"/>
-                <span th:if="${branch.image == null}" class="text-gray-400 font-bold">Sem Foto</span>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+            <div class="urban-glass rounded-2xl p-8 text-center hover:scale-105 transition-all duration-300 mottu-glow">
+                <div class="text-5xl mottu-green mb-4">
+                    <i class="fas fa-store-alt"></i>
+                </div>
+                <h3 class="text-3xl font-bold text-white mb-2" th:text="${#lists.size(branches)} ?: '12'">12</h3>
+                <p class="text-gray-300 font-medium">Filiais Conectadas</p>
             </div>
 
-            <a th:href="@{'/branch/' + ${branch.id}}"
-               th:text="${branch.nome}"
-               class="text-white text-2xl font-semibold mb-2 hover:text-green-400 transition-colors">
-                Nome da Filial
-            </a>
+            <div class="urban-glass rounded-2xl p-8 text-center hover:scale-105 transition-all duration-300 mottu-glow">
+                <div class="text-5xl mottu-green mb-4">
+                    <i class="fas fa-motorcycle"></i>
+                </div>
+                <h3 class="text-3xl font-bold text-white mb-2">1,247</h3>
+                <p class="text-gray-300 font-medium">Motos Monitoradas</p>
+            </div>
 
-            <span th:text="${branch.bairro}" class="text-gray-300 mb-1 text-sm"></span>
-            <span th:text="${branch.cnpj}" class="text-gray-400 text-sm"></span>
-        </li>
-    </ul>
-</main>
+            <div class="urban-glass rounded-2xl p-8 text-center hover:scale-105 transition-all duration-300 mottu-glow">
+                <div class="text-5xl mottu-green mb-4">
+                    <i class="fas fa-wifi"></i>
+                </div>
+                <h3 class="text-3xl font-bold text-white mb-2">98.7%</h3>
+                <p class="text-gray-300 font-medium">Conectividade IoT</p>
+            </div>
 
+            <div class="urban-glass rounded-2xl p-8 text-center hover:scale-105 transition-all duration-300 mottu-glow">
+                <div class="text-5xl mottu-green mb-4">
+                    <i class="fas fa-satellite-dish"></i>
+                </div>
+                <h3 class="text-3xl font-bold text-white mb-2">24/7</h3>
+                <p class="text-gray-300 font-medium">Monitoramento</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+            <div class="urban-glass rounded-2xl p-8">
+                <h3 class="text-2xl font-bold text-white mb-6 flex items-center">
+                    <i class="fas fa-chart-bar mr-3 mottu-green"></i>
+                    Performance por Filial
+                </h3>
+                <canvas id="branchChart" width="400" height="200"></canvas>
+            </div>
+
+            <div class="urban-glass rounded-2xl p-8">
+                <h3 class="text-2xl font-bold text-white mb-6 flex items-center">
+                    <i class="fas fa-microchip mr-3 mottu-green"></i>
+                    Status dos Sensores IoT
+                </h3>
+                <canvas id="regionChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--<main class="flex-1 py-16 px-6 relative">-->
+<!--    <div class="max-w-7xl mx-auto">-->
+<!--        <h2 class="text-4xl font-bold text-center mb-16 text-white flex items-center justify-center">-->
+<!--            <i class="fas fa-building mr-4 mottu-green"></i>-->
+<!--            FILIAIS VISION HIVE-->
+<!--        </h2>-->
+
+<!--        <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">-->
+<!--            <li th:each="branch : ${branches}"-->
+<!--                class="group urban-glass rounded-3xl shadow-2xl hover:shadow-green-500/20 transition-all duration-500 cursor-pointer flex flex-col overflow-hidden hover:scale-105 hover:-translate-y-2 mottu-glow">-->
+
+<!--                <div class="relative w-full h-56 mottu-dark flex justify-center items-center overflow-hidden">-->
+<!--                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10"></div>-->
+<!--                    <i class="fas fa-store-alt text-6xl mottu-green z-0 mottu-text-glow"></i>-->
+
+<!--                    <div class="absolute top-4 right-4 z-20">-->
+<!--                        <span class="mottu-green-bg text-black px-3 py-1 rounded-full text-xs font-bold flex items-center">-->
+<!--                            <i class="fas fa-circle text-xs mr-1 street-pulse"></i>-->
+<!--                            ONLINE-->
+<!--                        </span>-->
+<!--                    </div>-->
+
+<!--                    <div class="absolute bottom-4 left-4 z-20">-->
+<!--                        <i class="fas fa-wifi text-2xl mottu-green opacity-60"></i>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                <div class="p-6 flex-1 flex flex-col">-->
+<!--                    <a th:href="@{'/branch/' + ${branch.id}}"-->
+<!--                       th:text="${branch.nome}"-->
+<!--                       class="text-white text-xl font-bold mb-3 hover:text-green-400 transition-colors group-hover:text-green-300 line-clamp-2">-->
+<!--                        Filial Vision Hive-->
+<!--                    </a>-->
+
+<!--                    <div class="space-y-2 mb-4 flex-1">-->
+<!--                        <div class="flex items-center text-gray-300 text-sm">-->
+<!--                            <i class="fas fa-map-marker-alt mr-2 mottu-green"></i>-->
+<!--                            <span th:text="${branch.bairro}">Localização</span>-->
+<!--                        </div>-->
+<!--                        <div class="flex items-center text-gray-400 text-sm">-->
+<!--                            <i class="fas fa-id-card mr-2 mottu-green"></i>-->
+<!--                            <span th:text="${branch.cnpj}">CNPJ</span>-->
+<!--                        </div>-->
+<!--                        <div class="flex items-center text-gray-400 text-sm">-->
+<!--                            <i class="fas fa-microchip mr-2 mottu-green"></i>-->
+<!--                            <span>IoT Ativo</span>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    <div class="flex gap-2">-->
+<!--                        &lt;!&ndash; Corrigindo link do botão acessar base para usar rota correta &ndash;&gt;-->
+<!--                        <a th:href="@{'/branch/' + ${branch.id}}"-->
+<!--                           class="flex-1 mottu-button text-black font-semibold py-3 px-3 rounded-xl text-center transition-all text-sm">-->
+<!--                            <i class="fas fa-eye mr-1"></i>-->
+<!--                            Acessar Base-->
+<!--                        </a>-->
+
+<!--                        &lt;!&ndash; Melhorando botão de editar com hover mais visível &ndash;&gt;-->
+<!--                        <a th:href="@{'/branch/edit/' + ${branch.id}}"-->
+<!--                           class="bg-gray-800 hover:bg-gray-700 hover:scale-105 transform duration-200 mottu-green py-3 px-3 rounded-xl transition-all border border-green-500/30 flex items-center justify-center">-->
+<!--                            <i class="fas fa-cog text-sm"></i>-->
+<!--                        </a>-->
+<!--                    </div>-->
+
+<!--                </div>-->
+<!--            </li>-->
+<!--        </ul>-->
+<!--    </div>-->
+<!--</main>-->
 
 <div th:replace="fragments/footer :: footer"></div>
+
+<script>
+    const branchCtx = document.getElementById('branchChart').getContext('2d');
+    new Chart(branchCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Filial Norte', 'Filial Sul', 'Filial Leste', 'Filial Oeste', 'Filial Centro'],
+            datasets: [{
+                label: 'Motos Conectadas',
+                data: [85, 92, 78, 96, 88],
+                backgroundColor: 'rgba(0, 255, 136, 0.8)',
+                borderColor: 'rgba(0, 255, 136, 1)',
+                borderWidth: 2,
+                borderRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: 'white',
+                        font: { family: 'Inter' }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { color: 'white' },
+                    grid: { color: 'rgba(0, 255, 136, 0.1)' }
+                },
+                x: {
+                    ticks: { color: 'white' },
+                    grid: { color: 'rgba(0, 255, 136, 0.1)' }
+                }
+            }
+        }
+    });
+
+    const regionCtx = document.getElementById('regionChart').getContext('2d');
+    new Chart(regionCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Sensores Ativos', 'GPS Tracking', 'Telemetria', 'Conectividade', 'Bateria'],
+            datasets: [{
+                data: [95, 98, 87, 92, 89],
+                backgroundColor: [
+                    'rgba(0, 255, 136, 0.9)',
+                    'rgba(0, 255, 136, 0.7)',
+                    'rgba(0, 255, 136, 0.5)',
+                    'rgba(0, 255, 136, 0.3)',
+                    'rgba(0, 255, 136, 0.1)'
+                ],
+                borderColor: 'rgba(0, 255, 136, 1)',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        color: 'white',
+                        padding: 20,
+                        font: { family: 'Inter' }
+                    }
+                }
+            }
+        }
+    });
+</script>
 
 </body>
 </html>

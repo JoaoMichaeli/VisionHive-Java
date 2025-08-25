@@ -14,10 +14,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
@@ -75,4 +72,49 @@ public class MotorcycleController {
 
         return "redirect:/motorcycle";
     }
+
+    @GetMapping("/{id}")
+    public String detail(@PathVariable Long id, Model model) {
+        var motorcycle = motorcycleService.findById(id);
+        model.addAttribute("motorcycle", motorcycle);
+        return "motorcycle/detail";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String edit(@PathVariable Long id, Model model) {
+        var motorcycle = motorcycleService.findById(id);
+        model.addAttribute("motorcycle", motorcycle);
+
+        var patios = patioService.findAllPatios();
+        model.addAttribute("patios", patios);
+
+        return "motorcycle/edit";
+    }
+
+    @PostMapping("/edit/{id}")
+    public String update(
+            @PathVariable Long id,
+            @Valid Motorcycle motorcycle,
+            BindingResult bindingResult,
+            Model model,
+            RedirectAttributes redirect
+    ) {
+        if (bindingResult.hasErrors()) {
+            var patios = patioService.findAllPatios();
+            model.addAttribute("patios", patios);
+            return "motorcycle/edit";
+        }
+
+        motorcycle.setId(id);
+        motorcycleService.save(motorcycle);
+
+        redirect.addFlashAttribute("message", "Moto atualizada com sucesso!");
+
+        if (motorcycle.getPatio() != null) {
+            return "redirect:/patio/" + motorcycle.getPatio().getId();
+        }
+
+        return "redirect:/motorcycle";
+    }
+
 }
