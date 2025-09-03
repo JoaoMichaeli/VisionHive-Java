@@ -238,12 +238,22 @@
                                 </div>
                             </div>
 
-                            <div class="flex justify-end mt-4">
+                            <div class="flex justify-end mt-4 space-x-3">
+                                <!-- Botão Detalhes -->
                                 <a th:href="@{/motorcycle/{id}(id=${moto.id})}"
-                                   class="bg-green-500 hover:bg-green-600 text-black font-bold py-2 px-4 rounded-lg shadow-md transition-all duration-300 flex items-center">
-                                    <i class="fas fa-info-circle mr-2"></i> Detalhes
+                                   class="bg-green-500 hover:bg-green-600 text-black font-bold py-2 px-5 rounded-xl shadow-md transition-all duration-300 flex items-center gap-2">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span>Detalhes</span>
+                                </a>
+
+                                <!-- Botão Localizar -->
+                                <a class="bg-green-500 hover:bg-green-600 text-black font-bold py-2 px-5 rounded-xl shadow-md transition-all duration-300 flex items-center gap-2 cursor-pointer"
+                                   onclick="abrirModal()">
+                                    <i class="fa-regular fa-bell"></i>
+                                    <span>Localizar</span>
                                 </a>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -276,7 +286,26 @@
     </div>
 </main>
 
+<div id="modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center hidden z-50">
+    <div class="bg-gray-900 text-green-400 rounded-2xl shadow-xl p-6 w-80 text-center border border-green-500/40">
+        <h2 class="text-xl font-bold mb-4">Localizando moto...</h2>
+        <p class="mb-6">Estamos processando sua solicitação.</p>
+        <button onclick="fecharModal()" class="bg-green-500/20 hover:bg-green-500/30 text-green-300 font-semibold py-2 px-4 rounded-lg border border-green-400/40 transition-all">
+            Fechar
+        </button>
+    </div>
+</div>
+
 <div th:replace="~{fragments/footer :: footer}"></div>
+
+<script>
+    function abrirModal() {
+        document.getElementById('modal').classList.remove('hidden');
+    }
+    function fecharModal() {
+        document.getElementById('modal').classList.add('hidden');
+    }
+</script>
 
 </body>
 </html>
