@@ -1,9 +1,11 @@
 package br.com.fiap.visionhive.controller;
 
 import br.com.fiap.visionhive.model.Patio;
+import br.com.fiap.visionhive.repository.MotorcycleRepository;
 import br.com.fiap.visionhive.repository.PatioRepository;
 import br.com.fiap.visionhive.services.BranchService;
 import br.com.fiap.visionhive.services.PatioService;
+import br.com.fiap.visionhive.specification.MotorcycleSpecification;
 import br.com.fiap.visionhive.specification.PatioSpecification;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,7 @@ public class PatioController {
     private final PatioService patioService;
     private final BranchService branchService;
     private final PatioRepository patioRepository;
+    private final MotorcycleRepository motorcycleRepository;
 
     public record PatioFilters(String nome, String branchNome) {}
 
@@ -61,10 +64,25 @@ public class PatioController {
     }
 
     @GetMapping("/{id}")
-    public String detail(@PathVariable Long id, Model model) {
+    public String detail(
+            @PathVariable Long id,
+            @RequestParam(required = false) String placa,
+            @RequestParam(required = false) String chassi,
+            @RequestParam(required = false) String numeracaoMotor,
+            Model model) {
+
         var patio = patioService.findById(id);
+
+        var filters = new MotorcycleController.MotorcycleFilters(placa, chassi, numeracaoMotor);
+
+        var spec = MotorcycleSpecification.withFilters(filters)
+                .and((root, query, cb) -> cb.equal(root.get("patio").get("id"), id));
+
+        var motorcycles = motorcycleRepository.findAll(spec);
+
         model.addAttribute("patio", patio);
-        model.addAttribute("motorcycles", patio.getMotorcycles());
+        model.addAttribute("motorcycles", motorcycles);
+
         return "patio/detail";
     }
 }

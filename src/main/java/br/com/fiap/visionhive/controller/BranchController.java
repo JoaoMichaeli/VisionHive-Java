@@ -59,7 +59,6 @@ public class BranchController {
         return "redirect:/branch";
     }
 
-
     @GetMapping("/{id}")
     public String detail(@PathVariable Long id, Model model) {
         var branch = branchService.findById(id);
