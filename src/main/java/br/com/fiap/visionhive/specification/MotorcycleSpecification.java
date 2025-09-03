@@ -36,6 +36,14 @@ public class MotorcycleSpecification {
                 );
             }
 
+            if(filters.situacao() != null){
+                predicates.add(
+                        cb.like(
+                                cb.lower(root.get("situacao")), "%" + filters.situacao().toLowerCase() + "%"
+                        )
+                );
+            }
+
             var arrayPredicates = predicates.toArray(new Predicate[0]);
             return cb.and(arrayPredicates);
         };

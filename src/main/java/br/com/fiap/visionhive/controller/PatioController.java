@@ -69,11 +69,12 @@ public class PatioController {
             @RequestParam(required = false) String placa,
             @RequestParam(required = false) String chassi,
             @RequestParam(required = false) String numeracaoMotor,
+            @RequestParam(required = false) String situacao,
             Model model) {
 
         var patio = patioService.findById(id);
 
-        var filters = new MotorcycleController.MotorcycleFilters(placa, chassi, numeracaoMotor);
+        var filters = new MotorcycleController.MotorcycleFilters(placa, chassi, numeracaoMotor, situacao);
 
         var spec = MotorcycleSpecification.withFilters(filters)
                 .and((root, query, cb) -> cb.equal(root.get("patio").get("id"), id));

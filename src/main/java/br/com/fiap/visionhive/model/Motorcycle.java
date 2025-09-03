@@ -41,6 +41,9 @@ public class Motorcycle {
     )
     private String motorcycleModels;
 
+    @NotBlank(message = "A situação da moto não pode estar vazio")
+    private String situacao;
+
     @ManyToOne
     @JoinColumn(name = "patio_id")
     private Patio patio;

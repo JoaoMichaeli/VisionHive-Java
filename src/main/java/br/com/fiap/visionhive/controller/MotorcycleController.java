@@ -17,7 +17,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-
 @Controller
 @RequestMapping("/motorcycle")
 @RequiredArgsConstructor
@@ -27,17 +26,18 @@ public class MotorcycleController {
     private final PatioService patioService;
     private final MotorcycleRepository motorcycleRepository;
 
-    public record MotorcycleFilters (String placa, String chassi, String numeracaoMotor){}
+    public record MotorcycleFilters (String placa, String chassi, String numeracaoMotor, String situacao){}
 
     @GetMapping
     public String index(
             @RequestParam(required = false) String placa,
             @RequestParam(required = false) String chassi,
             @RequestParam(required = false) String numeracaoMotor,
+            @RequestParam(required = false) String situacao,
             @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
             Model model) {
 
-        var filters = new MotorcycleFilters(placa, chassi, numeracaoMotor);
+        var filters = new MotorcycleFilters(placa, chassi, numeracaoMotor, situacao);
         var spec = MotorcycleSpecification.withFilters(filters);
 
         Page<Motorcycle> motorcycles = motorcycleRepository.findAll(spec, pageable);

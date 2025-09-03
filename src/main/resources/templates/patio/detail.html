@@ -214,12 +214,20 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="flex items-center">
-                                <i class="fas fa-cogs text-green-400 mr-3"></i>
-                                <div>
-                                    <span class="text-gray-400 text-sm">Modelos</span>
-                                    <div class="text-white font-semibold" th:text="${#strings.listJoin(moto.motorcycleModels, ', ')}">Modelo</div>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div class="flex items-center">
+                                    <i class="fas fa-cogs text-green-400 mr-3"></i>
+                                    <div>
+                                        <span class="text-gray-400 text-sm">Modelos</span>
+                                        <div class="text-white font-semibold" th:text="${#strings.listJoin(moto.motorcycleModels, ', ')}">Modelo</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fa-solid fa-business-time text-green-400 mr-3"></i>
+                                    <div>
+                                        <span class="text-gray-400 text-sm">Situação</span>
+                                        <div class="text-white font-semibold" th:text="${moto.situacao}"></div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -239,14 +247,11 @@
                             </div>
 
                             <div class="flex justify-end mt-4 space-x-3">
-                                <!-- Botão Detalhes -->
                                 <a th:href="@{/motorcycle/{id}(id=${moto.id})}"
                                    class="bg-green-500 hover:bg-green-600 text-black font-bold py-2 px-5 rounded-xl shadow-md transition-all duration-300 flex items-center gap-2">
                                     <i class="fas fa-info-circle"></i>
                                     <span>Detalhes</span>
                                 </a>
-
-                                <!-- Botão Localizar -->
                                 <a class="bg-green-500 hover:bg-green-600 text-black font-bold py-2 px-5 rounded-xl shadow-md transition-all duration-300 flex items-center gap-2 cursor-pointer"
                                    onclick="abrirModal()">
                                     <i class="fa-regular fa-bell"></i>

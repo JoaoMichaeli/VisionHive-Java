@@ -19,6 +19,7 @@ CREATE TABLE motorcycle (
                             numeracao_motor VARCHAR(17) NOT NULL,
                             motorcycle_models VARCHAR(255) NOT NULL,
                             patio_id BIGINT,
+                            situacao VARCHAR(255) NOT NULL,
                             CONSTRAINT fk_motorcycle_patio FOREIGN KEY (patio_id) REFERENCES patio (id) ON DELETE SET NULL
 );
 
