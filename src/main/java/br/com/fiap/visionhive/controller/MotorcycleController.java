@@ -60,8 +60,8 @@ public class MotorcycleController {
     }
 
     @PostMapping("/form")
-    public String create(@Valid Motorcycle motorcycle, BindingResult bindingResult, RedirectAttributes redirect) {
-        if (bindingResult.hasErrors()) return "motorcycle/form";
+    public String create(@Valid Motorcycle motorcycle, BindingResult result, RedirectAttributes redirect) {
+        if (result.hasErrors()) return "motorcycle/form";
 
         motorcycleService.save(motorcycle);
         redirect.addFlashAttribute("message", "Moto cadastrada com sucesso!");

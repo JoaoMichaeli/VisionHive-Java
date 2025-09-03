@@ -151,9 +151,14 @@
 
                     <div class="flex flex-col sm:flex-row gap-4 mt-8">
                         <a th:href="@{'/motorcycle/edit/' + ${motorcycle.id}}"
-                           class="flex-1 bg-gradient-to-r from-green-500 to-green-400 hover:from-green-600 hover:to-green-500 text-black py-4 px-6 rounded-xl transition-all duration-300 text-center font-bold text-lg shadow-lg shadow-green-500/30 hover:shadow-green-500/50 hover:scale-105 flex items-center justify-center">
+                           class="flex-1 bg-gray-800/50 backdrop-blur-sm hover:bg-gray-700/50 text-green-400 py-4 px-6 rounded-xl transition-all duration-300 border border-green-500/30 hover:border-green-500/50 text-center font-bold text-lg flex items-center justify-center cursor-pointer">
                             <i class="fas fa-edit mr-3"></i>
                             EDITAR MOTO
+                        </a>
+                        <a class="flex-1 bg-gradient-to-r from-green-500 to-green-400 hover:from-green-600 hover:to-green-500 text-black py-4 px-6 rounded-xl transition-all duration-300 text-center font-bold text-lg shadow-lg shadow-green-500/30 hover:shadow-green-500/50 hover:scale-105 flex items-center justify-center"
+                           onclick="abrirModal()">
+                            <i class="fa-regular fa-bell mr-3"></i>
+                            LOCALIZAR
                         </a>
                         <a th:href="@{'/patio/' + ${motorcycle.patio.id}}"
                            class="flex-1 bg-gray-800/50 backdrop-blur-sm hover:bg-gray-700/50 text-green-400 py-4 px-6 rounded-xl transition-all duration-300 border border-green-500/30 hover:border-green-500/50 text-center font-bold text-lg flex items-center justify-center">
@@ -210,7 +215,26 @@
     </div>
 </main>
 
+<div id="modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center hidden z-50">
+    <div class="bg-gray-900 text-green-400 rounded-2xl shadow-xl p-6 w-80 text-center border border-green-500/40">
+        <h2 class="text-xl font-bold mb-4">Localizando moto...</h2>
+        <p class="mb-6">Estamos processando sua solicitação.</p>
+        <button onclick="fecharModal()" class="bg-green-500/20 hover:bg-green-500/30 text-green-300 font-semibold py-2 px-4 rounded-lg border border-green-400/40 transition-all">
+            Fechar
+        </button>
+    </div>
+</div>
+
 <div th:replace="fragments/footer :: footer"></div>
+
+<script>
+    function abrirModal() {
+        document.getElementById('modal').classList.remove('hidden');
+    }
+    function fecharModal() {
+        document.getElementById('modal').classList.add('hidden');
+    }
+</script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

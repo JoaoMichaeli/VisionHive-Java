@@ -167,6 +167,7 @@
                         CNPJ:
                     </label>
                     <input type="text" th:field="*{cnpj}"
+                           maxlength="14"
                            class="form-field w-full px-4 py-3 rounded-xl text-white focus:outline-none"
                            placeholder="00.000.000/0001-00"/>
                     <div th:if="${#fields.hasErrors('cnpj')}" th:errors="*{cnpj}"
