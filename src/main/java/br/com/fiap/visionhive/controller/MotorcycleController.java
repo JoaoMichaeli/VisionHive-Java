@@ -117,4 +117,10 @@ public class MotorcycleController {
         return "redirect:/motorcycle";
     }
 
+    @DeleteMapping("/delete/{id}")
+    public String delete(@PathVariable Long id) {
+        motorcycleService.deleteById(id);
+        return "motorcycle/index";
+    }
+
 }

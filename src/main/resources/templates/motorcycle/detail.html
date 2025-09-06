@@ -168,6 +168,11 @@
                             <i class="fa-regular fa-bell mr-3"></i>
                             LOCALIZAR
                         </a>
+                        <a th:href="@{'/motorcycle/delete/' + ${motorcycle.id}}"
+                           class="flex-1 bg-gradient-to-r from-green-500 to-green-400 hover:from-green-600 hover:to-green-500 text-black py-4 px-6 rounded-xl transition-all duration-300 text-center font-bold text-lg shadow-lg shadow-green-500/30 hover:shadow-green-500/50 hover:scale-105 flex items-center justify-center">
+                            <i class="fa-regular fa-bell mr-3"></i>
+                            DESATIVAR
+                        </a>
                         <a th:href="@{'/patio/' + ${motorcycle.patio.id}}"
                            class="flex-1 bg-gray-800/50 backdrop-blur-sm hover:bg-gray-700/50 text-green-400 py-4 px-6 rounded-xl transition-all duration-300 border border-green-500/30 hover:border-green-500/50 text-center font-bold text-lg flex items-center justify-center">
                             <i class="fas fa-arrow-left mr-3"></i>

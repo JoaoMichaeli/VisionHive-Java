@@ -25,4 +25,8 @@ public class MotorcycleService {
         return motorcycleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Motocicleta não encontrada"));
     }
+
+    public void deleteById(Long id) {
+        motorcycleRepository.deleteById(id);
+    }
 }
