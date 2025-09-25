@@ -118,10 +118,6 @@ public class MotorcycleController {
 
         redirect.addFlashAttribute("message", "Moto atualizada com sucesso!");
 
-        if (motorcycle.getPatio() != null) {
-            return "redirect:/patio/" + motorcycle.getPatio().getId();
-        }
-
         return "redirect:/motorcycle";
     }
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
 </head>
@@ -32,14 +32,17 @@
             </a>
 
             <nav class="hidden md:flex items-center space-x-8">
-                <a href="/branch" class="flex items-center gap-2 text-white hover:text-green-400 transition-colors duration-300 font-medium group">
+                <a href="/branch" class="flex items-center gap-2 text-white hover:text-green-400 transition-colors duration-300 font-medium group"
+                   sec:authorize="hasRole('ADMIN')">
                     <i class="fas fa-building text-sm group-hover:scale-110 transition-transform duration-300"></i>
                     Bases
                 </a>
-                <a href="/patio" class="flex items-center gap-2 text-white hover:text-green-400 transition-colors duration-300 font-medium group">
+                <a href="/patio" class="flex items-center gap-2 text-white hover:text-green-400 transition-colors duration-300 font-medium group"
+                   sec:authorize="hasRole('ADMIN')">
                     <i class="fas fa-warehouse text-sm group-hover:scale-110 transition-transform duration-300"></i>
                     Pátios
                 </a>
+
                 <a href="/motorcycle" class="flex items-center gap-2 text-white hover:text-green-400 transition-colors duration-300 font-medium group">
                     <i class="fas fa-motorcycle text-sm group-hover:scale-110 transition-transform duration-300"></i>
                     Motos
@@ -53,47 +56,11 @@
                     <span class="text-green-400 text-xs font-medium">IoT Online</span>
                 </div>
             </nav>
-
-            <button class="md:hidden text-white hover:text-green-400 transition-colors duration-300" onclick="toggleMobileMenu()">
-                <i class="fas fa-bars text-xl"></i>
-            </button>
         </div>
-
-        <nav id="mobileMenu" class="md:hidden mt-4 pb-4 border-t border-gray-800 hidden">
-            <div class="flex flex-col space-y-4 pt-4">
-                <a href="/branch" class="flex items-center gap-3 text-white hover:text-green-400 transition-colors duration-300 font-medium">
-                    <i class="fas fa-building text-sm"></i>
-                    Bases
-                </a>
-                <a href="/patio" class="flex items-center gap-3 text-white hover:text-green-400 transition-colors duration-300 font-medium">
-                    <i class="fas fa-warehouse text-sm"></i>
-                    Pátios
-                </a>
-                <a href="/motorcycle" class="flex items-center gap-3 text-white hover:text-green-400 transition-colors duration-300 font-medium">
-                    <i class="fas fa-motorcycle text-sm"></i>
-                    Motos
-                </a>
-                <a href="/profile" class="flex items-center gap-3 text-white hover:text-green-400 transition-colors duration-300 font-medium">
-                    <i class="fas fa-user text-sm"></i>
-                    Perfil
-                </a>
-                <div class="flex items-center gap-2 px-3 py-2 bg-gray-900 rounded-lg border border-gray-700 w-fit">
-                    <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                    <span class="text-green-400 text-sm font-medium">IoT Online</span>
-                </div>
-            </div>
-        </nav>
     </div>
 
     <div class="h-px bg-gradient-to-r from-transparent via-green-400 to-transparent opacity-30"></div>
 </header>
-
-<script>
-    function toggleMobileMenu() {
-        const menu = document.getElementById('mobileMenu');
-        menu.classList.toggle('hidden');
-    }
-</script>
 
 </body>
 </html>
