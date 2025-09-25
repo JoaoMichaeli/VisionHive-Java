@@ -26,15 +26,4 @@ public class BranchService {
         return branchRepository.findAll();
     }
 
-    public void deactivateBranch(Long branchId) {
-        Branch branch = findById(branchId);
-
-        if (!branch.getPatios().isEmpty()) {
-            throw new IllegalStateException("Não é possível desativar uma filial com pátios vinculados.");
-        }
-
-        branch.setAtivo(false);
-        save(branch);
-    }
-
 }
