@@ -47,6 +47,35 @@ O **VisionHive** propõe o uso de dispositivos **ESP32** com sensores físicos e
 
 ---
 
+## 📸 Imagens do Projeto
+
+### 🏢 Bases  
+- **Cadastro de Bases**  
+  ![Cadastro de Bases](imagens/cadastro_base.png)
+
+- **Bases Cadastradas**  
+  ![Bases Cadastradas](imagens/bases.png)
+
+---
+
+### 🛵 Motocicletas  
+- **Cadastro de Motos**  
+  ![Cadastro de Motos](imagens/cadastro_moto.png)
+
+- **Motos Cadastradas**  
+  ![Motos Cadastradas](imagens/motos.png)
+
+---
+
+### 🅿️ Pátios  
+- **Cadastro de Pátios**  
+  ![Cadastro de Pátios](imagens/cadastro_patio.png)
+
+- **Pátios Cadastrados**  
+  ![Pátios Cadastrados](imagens/patios.png)
+
+---
+
 ## 🛠 Tecnologias Utilizadas
 
 - Java 17+
