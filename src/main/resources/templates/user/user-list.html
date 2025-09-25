@@ -2,38 +2,150 @@
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Lista de Usuários</title>
+    <title>Lista de Usuários - Vision Hive</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        html, body { height: 100%; margin: 0; font-family: 'Inter', sans-serif; }
+        body {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            display: flex;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .mottu-green { color: #00FF88; }
+        .urban-glass {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(0,255,136,0.2);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,255,136,0.15);
+            width: 100%;
+            max-width: 1200px;
+            padding: 2rem;
+        }
+        .mottu-button {
+            background: #00FF88;
+            color: #000;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: inline-block;
+            text-decoration: none;
+        }
+        .mottu-button:hover {
+            background: #00CC6A;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,255,136,0.4);
+        }
+
+        table {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+            color: #ffffff;
+        }
+        th {
+            background: rgba(0,255,136,0.1);
+            text-align: left;
+            padding: 12px;
+            font-weight: 600;
+        }
+        td {
+            padding: 12px;
+            border-top: 1px solid rgba(0,255,136,0.2);
+        }
+        tr:hover {
+            background: rgba(0,255,136,0.05);
+            transition: background 0.3s;
+        }
+        a.action-link, button.action-link { font-weight: 600; background: none; border: none; cursor: pointer; }
+        a.action-link:hover, button.action-link:hover { color: #00FF88; }
+
+        /* Modal centralizado */
+        #deleteModal {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+        }
+    </style>
 </head>
-<body class="p-8 bg-gray-100">
-<div class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
-    <h2 class="text-2xl font-bold mb-4">Usuários Cadastrados</h2>
+<body>
 
-    <a href="/admin/users/new" class="mb-4 inline-block bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Novo Usuário</a>
+<div class="urban-glass">
+    <h2 class="text-4xl font-bold mb-6 mottu-green">
+        <i class="fas fa-users mr-2"></i> Usuários Cadastrados
+    </h2>
 
-    <table class="w-full table-auto border-collapse border border-gray-300">
-        <thead>
-        <tr class="bg-gray-200">
-            <th class="border px-4 py-2">ID</th>
-            <th class="border px-4 py-2">Usuário</th>
-            <th class="border px-4 py-2">Roles</th>
-            <th class="border px-4 py-2">Ações</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="user : ${users}" class="hover:bg-gray-50">
-            <td class="border px-4 py-2" th:text="${user.id}"></td>
-            <td class="border px-4 py-2" th:text="${user.username}"></td>
-            <td class="border px-4 py-2" th:text="${user.roles}"></td>
-            <td class="border px-4 py-2">
-                <a th:href="@{'/admin/users/edit/' + ${user.id}}" class="text-blue-500 hover:underline mr-2">Editar</a>
-                <a th:href="@{'/admin/users/delete/' + ${user.id}}" class="text-red-500 hover:underline">Excluir</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <a href="/admin/create-operator" class="mottu-button px-6 py-3 rounded-xl text-lg font-semibold mb-6 inline-block">
+        <i class="fas fa-plus-circle mr-2"></i> Novo Usuário
+    </a>
+    <a href="/profile" class="mottu-button mt-6 inline-block px-6 py-3 rounded-xl text-lg font-semibold">
+        <i class="fas fa-arrow-left mr-2"></i> Voltar ao perfil
+    </a>
 
-    <a href="/dashboard" class="block mt-4 text-blue-500 hover:underline">Voltar ao Dashboard</a>
+    <div class="overflow-x-auto rounded-lg">
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Usuário</th>
+                <th>Roles</th>
+                <th>Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${users}" class="hover:bg-green-900/30 transition-colors duration-200">
+                <td th:text="${user.id}"></td>
+                <td th:text="${user.username}"></td>
+                <td th:text="${user.roles}"></td>
+                <td>
+                    <button class="action-link text-red-500"
+                            th:onclick="'openDeleteModal(' + ${user.id} + ')'">
+                        Excluir
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
+
+<!-- Modal de Exclusão -->
+<div id="deleteModal">
+    <div class="bg-white rounded-2xl p-8 max-w-md w-full shadow-lg">
+        <h3 class="text-xl font-semibold mb-4 text-gray-800">Confirmar Exclusão</h3>
+        <p class="mb-6 text-gray-600">Tem certeza que deseja excluir este usuário?</p>
+        <div class="flex justify-end gap-4">
+            <button onclick="closeDeleteModal()" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400">Cancelar</button>
+            <form id="deleteForm" method="post" th:action="@{'/admin/users/delete/' + 0}">
+                <input type="hidden" name="_method" value="delete">
+                <button type="submit" class="px-4 py-2 rounded bg-red-500 text-white hover:bg-red-600">Excluir</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openDeleteModal(userId) {
+        const modal = document.getElementById('deleteModal');
+        const form = document.getElementById('deleteForm');
+        form.setAttribute('action', '/admin/users/delete/' + userId);
+        modal.style.display = 'flex';
+    }
+
+    function closeDeleteModal() {
+        const modal = document.getElementById('deleteModal');
+        modal.style.display = 'none';
+    }
+</script>
+
 </body>
 </html>

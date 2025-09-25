@@ -125,11 +125,11 @@ public class MotorcycleController {
         return "redirect:/motorcycle";
     }
 
-    @DeleteMapping("/delete/{id}")
+    @PostMapping("/delete/{id}")
     @Operation(summary = "Deletar motocicleta", description = "Remove uma motocicleta do sistema")
     public String delete(@PathVariable Long id) {
         motorcycleService.deleteById(id);
-        return "motorcycle/index";
+        return "redirect:/motorcycle";
     }
 
 }

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Criar Operador - Vision Hive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        body { font-family: 'Inter', sans-serif; background: #000000; }
+        .mottu-green { color: #00FF88; }
+        .mottu-dark { background-color: #000000; }
+        .urban-glass {
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+        }
+        .mottu-button {
+            background: #00FF88;
+            color: #000000;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: inline-block;
+            text-decoration: none;
+        }
+        .mottu-button:hover {
+            background: #00CC6A;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,255,136,0.4);
+        }
+        .error-text { color: #FF4C4C; font-size: 0.875rem; margin-top: 0.25rem; }
+        .input-error { border-color: #FF4C4C !important; }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen mottu-dark font-sans relative overflow-x-hidden">
+
+<section class="flex justify-center items-center py-32 px-6">
+    <div sec:authorize="hasRole('ADMIN')" class="urban-glass rounded-2xl p-10 w-full max-w-md">
+        <h2 class="text-3xl font-bold mb-8 text-center text-white">Criar Operador</h2>
+
+        <form th:action="@{/admin/create-operator}" th:object="${createUserDTO}" method="post" class="space-y-6">
+            <div>
+                <label class="block mb-2 text-white font-semibold">Usuário</label>
+                <input type="text" th:field="*{username}" placeholder="Nome do operador"
+                       th:classappend="${#fields.hasErrors('username')} ? 'input-error' : ''"
+                       class="w-full p-3 rounded bg-black/40 text-white border border-green-400 focus:outline-none focus:ring-2 focus:ring-green-400">
+                <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="error-text"></p>
+            </div>
+
+            <div>
+                <label class="block mb-2 text-white font-semibold">Senha</label>
+                <input type="password" th:field="*{password}" placeholder="Senha do operador"
+                       th:classappend="${#fields.hasErrors('password')} ? 'input-error' : ''"
+                       class="w-full p-3 rounded bg-black/40 text-white border border-green-400 focus:outline-none focus:ring-2 focus:ring-green-400">
+                <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error-text"></p>
+            </div>
+
+            <button type="submit" class="w-full mottu-button py-3 text-lg font-semibold rounded-xl">Criar Operador</button>
+        </form>
+
+        <a href="/admin/users" class="block mt-6 text-center text-green-400 hover:underline">Acessar lista de usuários</a>
+        <a href="/profile" class="block mt-6 text-center text-green-400 hover:underline">Voltar ao perfil</a>
+    </div>
+
+    <div sec:authorize="!hasRole('ADMIN')" class="text-white text-center text-xl">
+        Você não tem permissão para acessar esta página.
+    </div>
+</section>
+
+</body>
+</html>

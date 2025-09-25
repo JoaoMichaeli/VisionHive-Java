@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="pt-BR">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -54,12 +54,18 @@
             <span th:each="role : ${user.roles}" th:text="${role} + ' '" class="text-white text-xl"></span>
         </div>
 
-        <div class="flex justify-center mt-6 gap-4">
+        <div class="flex flex-col sm:flex-row justify-center mt-6 gap-4">
             <a th:href="@{/}" class="mottu-button px-6 py-3 rounded-xl text-lg font-semibold">Voltar à Home</a>
+            <a th:href="@{/admin/create-operator}"
+               sec:authorize="hasAuthority('ROLE_ADMIN')"
+               class="mottu-button px-6 py-3 rounded-xl text-lg font-semibold">
+                Criar Operador
+            </a>
             <a th:href="@{/logout}" class="mottu-button px-6 py-3 rounded-xl text-lg font-semibold">Sair</a>
         </div>
     </div>
 </section>
+
 
 <div th:replace="fragments/footer :: footer"></div>
 
