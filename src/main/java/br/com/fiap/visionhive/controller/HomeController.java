@@ -16,7 +16,6 @@ public class HomeController {
 
     @GetMapping()
     @Operation(summary = "Página inicial", description = "Exibe a página inicial com a lista de filiais")
-    @Cacheable("branchHome")
     public String index(Model model) {
         var branches = branchService.findAllBranches();
         model.addAttribute("branches", branches);

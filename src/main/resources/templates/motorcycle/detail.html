@@ -158,26 +158,37 @@
                     </div>
 
                     <div class="flex flex-col sm:flex-row gap-4 mt-8">
-                        <a th:href="@{'/motorcycle/edit/' + ${motorcycle.id}}"
-                           class="flex-1 bg-gray-800/50 backdrop-blur-sm hover:bg-gray-700/50 text-green-400 py-4 px-6 rounded-xl transition-all duration-300 border border-green-500/30 hover:border-green-500/50 text-center font-bold text-lg flex items-center justify-center cursor-pointer">
-                            <i class="fas fa-edit mr-3"></i>
-                            EDITAR MOTO
-                        </a>
-                        <a class="flex-1 bg-gradient-to-r from-green-500 to-green-400 hover:from-green-600 hover:to-green-500 text-black py-4 px-6 rounded-xl transition-all duration-300 text-center font-bold text-lg shadow-lg shadow-green-500/30 hover:shadow-green-500/50 hover:scale-105 flex items-center justify-center"
-                           onclick="abrirModal()">
-                            <i class="fa-regular fa-bell mr-3"></i>
-                            LOCALIZAR
-                        </a>
-                        <a th:href="@{'/motorcycle/delete/' + ${motorcycle.id}}"
-                           class="flex-1 bg-gradient-to-r from-green-500 to-green-400 hover:from-green-600 hover:to-green-500 text-black py-4 px-6 rounded-xl transition-all duration-300 text-center font-bold text-lg shadow-lg shadow-green-500/30 hover:shadow-green-500/50 hover:scale-105 flex items-center justify-center">
-                            <i class="fa-regular fa-bell mr-3"></i>
-                            DESATIVAR
-                        </a>
-                        <a th:href="@{'/patio/' + ${motorcycle.patio.id}}"
-                           class="flex-1 bg-gray-800/50 backdrop-blur-sm hover:bg-gray-700/50 text-green-400 py-4 px-6 rounded-xl transition-all duration-300 border border-green-500/30 hover:border-green-500/50 text-center font-bold text-lg flex items-center justify-center">
-                            <i class="fas fa-arrow-left mr-3"></i>
-                            VOLTAR AO PÁTIO
-                        </a>
+                        <form th:action="@{'/motorcycle/edit/' + ${motorcycle.id}}" method="get" class="flex-1">
+                            <button type="submit"
+                                    class="w-full bg-gray-800/50 backdrop-blur-sm hover:bg-gray-700/50 text-green-400 py-4 px-6 rounded-xl transition-all duration-300 border border-green-500/30 hover:border-green-500/50 text-center font-bold text-lg flex items-center justify-center cursor-pointer">
+                                <i class="fas fa-edit mr-3"></i>
+                                EDITAR
+                            </button>
+                        </form>
+
+                        <form onsubmit="abrirModal(); return false;" class="flex-1">
+                            <button type="submit"
+                                    class="w-full bg-gradient-to-r from-green-500 to-green-400 hover:from-green-600 hover:to-green-500 text-black py-4 px-6 rounded-xl transition-all duration-300 text-center font-bold text-lg shadow-lg shadow-green-500/30 hover:shadow-green-500/50 hover:scale-105 flex items-center justify-center">
+                                <i class="fa-regular fa-bell mr-3"></i>
+                                LOCALIZAR
+                            </button>
+                        </form>
+
+                        <form th:action="@{'/motorcycle/delete/' + ${motorcycle.id}}" method="post" class="flex-1">
+                            <button type="submit"
+                                    class="w-full bg-gradient-to-r from-red-400 to-red-300 hover:from-red-500 hover:to-red-400 text-black py-4 px-6 rounded-xl transition-all duration-300 text-center font-bold text-lg shadow-lg shadow-red-400/30 hover:shadow-red-400/50 hover:scale-105 flex items-center justify-center">
+                                <i class="fa-regular fa-eye-slash mr-3"></i>
+                                DESATIVAR
+                            </button>
+                        </form>
+
+                        <form th:action="@{'/patio/' + ${motorcycle.patio.id}}" method="get" class="flex-1">
+                            <button type="submit"
+                                    class="w-full bg-gray-800/50 backdrop-blur-sm hover:bg-gray-700/50 text-green-400 py-4 px-6 rounded-xl transition-all duration-300 border border-green-500/30 hover:border-green-500/50 text-center font-bold text-lg flex items-center justify-center">
+                                <i class="fas fa-arrow-left mr-3"></i>
+                                VOLTAR
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -238,6 +249,24 @@
     </div>
 </div>
 
+<div id="confirm-modal" class="fixed inset-0 bg-black/50 flex items-center justify-center hidden z-50">
+    <div class="bg-gray-900 rounded-xl shadow-lg p-6 max-w-sm w-full text-center">
+        <h2 class="text-lg font-bold text-white mb-4">Confirmar Desativação</h2>
+        <p class="text-gray-300 mb-6">Tem certeza que deseja desativar esta moto?</p>
+        <div class="flex justify-between">
+            <button id="cancel-btn"
+                    class="bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
+                Cancelar
+            </button>
+            <button id="confirm-btn"
+                    class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+                Confirmar
+            </button>
+        </div>
+    </div>
+</div>
+
+
 <div th:replace="fragments/footer :: footer"></div>
 
 <script>
@@ -247,6 +276,28 @@
     function fecharModal() {
         document.getElementById('modal').classList.add('hidden');
     }
+</script>
+
+<script>
+    const modal = document.getElementById('confirm-modal');
+    const cancelBtn = document.getElementById('cancel-btn');
+    const confirmBtn = document.getElementById('confirm-btn');
+
+    document.querySelectorAll('.desativar-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            modal.dataset.formId = this.closest('form').dataset.formId;
+            modal.form = this.closest('form');
+            modal.classList.remove('hidden');
+        });
+    });
+
+    cancelBtn.addEventListener('click', () => {
+        modal.classList.add('hidden');
+    });
+
+    confirmBtn.addEventListener('click', () => {
+        modal.form.submit();
+    });
 </script>
 
 <script>

@@ -46,7 +46,6 @@ public class PatioController {
 
     @PostMapping("/form")
     @Operation(summary = "Cadastrar pátio", description = "Salva um novo pátio no sistema")
-    @CacheEvict(value = "patios", allEntries = true)
     public String create(@Valid Patio patio, BindingResult result, RedirectAttributes redirect) {
         if (result.hasErrors()) return "patio/form";
 
@@ -58,7 +57,6 @@ public class PatioController {
 
     @GetMapping()
     @Operation(summary = "Listar pátios", description = "Retorna um array com todos os pátios de uma filial")
-    @Cacheable("patios")
     public String patios(@RequestParam(required = false) String nome,
                          @RequestParam(required = false) String branchNome,
                          @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
@@ -73,7 +71,6 @@ public class PatioController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Detalhar pátio", description = "Exibe os detalhes de um pátio e suas motocicletas vinculadas")
-    @Cacheable(value = "patio", key = "#id")
     public String detail(
             @PathVariable Long id,
             @RequestParam(required = false) String placa,

@@ -1,4 +1,4 @@
-INSERT INTO patio (id, nome, branch_id) VALUES
-    (1, 'Pátio Aguardo Peças', 1),
-    (2, 'Pátio Emplacamento', 2),
-    (3, 'Pátio Triagem', 3);
+INSERT INTO patio (nome, branch_id) VALUES
+    ('Pátio Aguardo Peças', 1),
+    ('Pátio Emplacamento', 2),
+    ('Pátio Triagem', 3);

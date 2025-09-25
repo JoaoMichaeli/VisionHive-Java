@@ -29,7 +29,6 @@ public class BranchController {
 
     @GetMapping
     @Operation(summary = "Listar filiais", description = "Retorna um array com todas as filiais")
-    @Cacheable("branch")
     public String index(@RequestParam(required = false) String nome,
                         @RequestParam(required = false) String bairro,
                         @RequestParam(required = false) String cnpj,
@@ -66,7 +65,6 @@ public class BranchController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Detalhar filial", description = "Retorna os detalhes de uma filial específica pelo ID")
-    @Cacheable(value = "branch", key = "#id")
     public String detail(@PathVariable Long id, Model model) {
         var branch = branchService.findById(id);
         model.addAttribute("branch", branch);

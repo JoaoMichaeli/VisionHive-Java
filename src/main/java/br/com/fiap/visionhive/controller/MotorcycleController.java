@@ -33,7 +33,6 @@ public class MotorcycleController {
 
     @GetMapping
     @Operation(summary = "Listar todas as motocicletas com filtros e paginação", description = "Retorna uma lista paginada de motocicletas com filtros opcionais")
-    @Cacheable("motorcycles")
     public String index(
             @RequestParam(required = false) String placa,
             @RequestParam(required = false) String chassi,
@@ -66,7 +65,6 @@ public class MotorcycleController {
 
     @PostMapping("/form")
     @Operation(summary = "Cadastrar motocicleta", description = "Salva uma nova motocicleta no sistema")
-    @CacheEvict(value = "motorcycles", allEntries = true)
     public String create(@Valid Motorcycle motorcycle, BindingResult result, RedirectAttributes redirect) {
         if (result.hasErrors()) return "motorcycle/form";
 
@@ -82,7 +80,6 @@ public class MotorcycleController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Detalhar motocicleta", description = "Exibe os detalhes de uma motocicleta específica")
-    @Cacheable(value = "motorcycle", key = "#id")
     public String detail(@PathVariable Long id, Model model) {
         var motorcycle = motorcycleService.findById(id);
         model.addAttribute("motorcycle", motorcycle);
@@ -103,7 +100,6 @@ public class MotorcycleController {
 
     @PostMapping("/edit/{id}")
     @Operation(summary = "Atualizar motocicleta", description = "Atualiza os dados de uma motocicleta existente")
-    @CacheEvict(value = {"motorcycles", "motorcycle"}, allEntries = true)
     public String update(
             @PathVariable Long id,
             @Valid Motorcycle motorcycle,
@@ -131,7 +127,6 @@ public class MotorcycleController {
 
     @DeleteMapping("/delete/{id}")
     @Operation(summary = "Deletar motocicleta", description = "Remove uma motocicleta do sistema")
-    @CacheEvict(value = {"motorcycles", "motorcycle"}, allEntries = true)
     public String delete(@PathVariable Long id) {
         motorcycleService.deleteById(id);
         return "motorcycle/index";
