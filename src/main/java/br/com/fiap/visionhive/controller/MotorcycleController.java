@@ -5,8 +5,11 @@ import br.com.fiap.visionhive.repository.MotorcycleRepository;
 import br.com.fiap.visionhive.services.MotorcycleService;
 import br.com.fiap.visionhive.services.PatioService;
 import br.com.fiap.visionhive.specification.MotorcycleSpecification;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +32,8 @@ public class MotorcycleController {
     public record MotorcycleFilters (String placa, String chassi, String numeracaoMotor, String situacao){}
 
     @GetMapping
+    @Operation(summary = "Listar todas as motocicletas com filtros e paginação", description = "Retorna uma lista paginada de motocicletas com filtros opcionais")
+    @Cacheable("motorcycles")
     public String index(
             @RequestParam(required = false) String placa,
             @RequestParam(required = false) String chassi,
@@ -47,8 +52,8 @@ public class MotorcycleController {
         return "motorcycle/index";
     }
 
-
     @GetMapping("/form")
+    @Operation(summary = "Exibir formulário de cadastro", description = "Mostra o formulário para cadastrar uma nova motocicleta")
     public String form(@RequestParam(required = false) Long patioId, Model model) {
         var moto = new Motorcycle();
         if (patioId != null) {
@@ -60,6 +65,8 @@ public class MotorcycleController {
     }
 
     @PostMapping("/form")
+    @Operation(summary = "Cadastrar motocicleta", description = "Salva uma nova motocicleta no sistema")
+    @CacheEvict(value = "motorcycles", allEntries = true)
     public String create(@Valid Motorcycle motorcycle, BindingResult result, RedirectAttributes redirect) {
         if (result.hasErrors()) return "motorcycle/form";
 
@@ -74,6 +81,8 @@ public class MotorcycleController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Detalhar motocicleta", description = "Exibe os detalhes de uma motocicleta específica")
+    @Cacheable(value = "motorcycle", key = "#id")
     public String detail(@PathVariable Long id, Model model) {
         var motorcycle = motorcycleService.findById(id);
         model.addAttribute("motorcycle", motorcycle);
@@ -81,6 +90,7 @@ public class MotorcycleController {
     }
 
     @GetMapping("/edit/{id}")
+    @Operation(summary = "Exibir formulário de edição", description = "Mostra o formulário para editar uma motocicleta existente")
     public String edit(@PathVariable Long id, Model model) {
         var motorcycle = motorcycleService.findById(id);
         model.addAttribute("motorcycle", motorcycle);
@@ -92,6 +102,8 @@ public class MotorcycleController {
     }
 
     @PostMapping("/edit/{id}")
+    @Operation(summary = "Atualizar motocicleta", description = "Atualiza os dados de uma motocicleta existente")
+    @CacheEvict(value = {"motorcycles", "motorcycle"}, allEntries = true)
     public String update(
             @PathVariable Long id,
             @Valid Motorcycle motorcycle,
@@ -118,6 +130,8 @@ public class MotorcycleController {
     }
 
     @DeleteMapping("/delete/{id}")
+    @Operation(summary = "Deletar motocicleta", description = "Remove uma motocicleta do sistema")
+    @CacheEvict(value = {"motorcycles", "motorcycle"}, allEntries = true)
     public String delete(@PathVariable Long id) {
         motorcycleService.deleteById(id);
         return "motorcycle/index";
