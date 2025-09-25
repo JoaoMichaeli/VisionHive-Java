@@ -31,7 +31,4 @@ public class Patio {
     @OneToMany(mappedBy = "patio", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Motorcycle> motorcycles = new ArrayList<>();
 
-    @Column(nullable = false)
-    private boolean ativo = true;
-
 }

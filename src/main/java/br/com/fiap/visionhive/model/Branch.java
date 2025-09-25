@@ -34,7 +34,4 @@ public class Branch {
     @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Patio> patios = new ArrayList<>();
 
-    @Column(nullable = false)
-    private boolean ativo = true;
-
 }
