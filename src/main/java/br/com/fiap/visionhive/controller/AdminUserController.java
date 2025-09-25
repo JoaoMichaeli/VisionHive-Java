@@ -4,6 +4,7 @@ import br.com.fiap.visionhive.dto.CreateUserDTO;
 import br.com.fiap.visionhive.model.Role;
 import br.com.fiap.visionhive.model.User;
 import br.com.fiap.visionhive.repository.UserRepository;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,12 +25,14 @@ public class AdminUserController {
     private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/admin/create-operator")
+    @Operation(summary = "Exibir formulário de criação de operador", description = "Retorna o formulário para criar um novo usuário operador")
     public String createOperatorForm(Model model) {
         model.addAttribute("createUserDTO", new CreateUserDTO());
         return "admin/create-operator";
     }
 
     @PostMapping("/admin/create-operator")
+    @Operation(summary = "Criar operador", description = "Cria um novo usuário operador no sistema")
     public String createOperator(
             @Valid @ModelAttribute("createUserDTO") CreateUserDTO createUserDTO,
             BindingResult bindingResult) {

@@ -7,7 +7,6 @@ import br.com.fiap.visionhive.specification.BranchSpecification;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -71,17 +70,4 @@ public class BranchController {
         model.addAttribute("patios", branch.getPatios());
         return "branch/detail";
     }
-
-    @PostMapping("/{id}/deactivate")
-    @Operation(summary = "Desativar filial", description = "Desativa uma filial específica")
-    public String deactivate(@PathVariable Long id, RedirectAttributes redirect) {
-        try {
-            branchService.deactivateBranch(id);
-            redirect.addFlashAttribute("message", "Filial desativada com sucesso!");
-        } catch (IllegalStateException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
-        }
-        return "redirect:/branch";
-    }
-
 }

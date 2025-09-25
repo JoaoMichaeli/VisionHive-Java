@@ -10,8 +10,6 @@ import br.com.fiap.visionhive.specification.PatioSpecification;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -93,18 +91,6 @@ public class PatioController {
         model.addAttribute("motorcycles", motorcycles);
 
         return "patio/detail";
-    }
-
-    @PostMapping("/{id}/deactivate")
-    @Operation(summary = "Desativar pátio", description = "Desativa um pátio específico")
-    public String deactivate(@PathVariable Long id, RedirectAttributes redirect) {
-        try {
-            patioService.deactivatePatio(id);
-            redirect.addFlashAttribute("message", "Pátio desativado com sucesso!");
-        } catch (IllegalStateException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
-        }
-        return "redirect:/patio";
     }
 
 }
