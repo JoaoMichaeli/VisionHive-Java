@@ -2,6 +2,10 @@
 
 **Vision Hive** é uma API RESTful desenvolvida para a empresa Mottu com o objetivo de facilitar o gerenciamento e localização de motocicletas nos pátios operacionais. A aplicação permite o cadastro de **Filiais (Branch)**, **Pátios (Patio)** e **Motocicletas (Motorcycle)**, associando motos aos seus respectivos pátios e filiais, com busca por placa, chassi ou número do motor.
 
+Além disso, o sistema possui **controle de acesso baseado em roles**:
+- **ADMIN:** acesso completo a todas as rotas e funcionalidades, incluindo criação de operadores e visualização de todos os links rápidos no footer.
+- **OPERADOR:** acesso restrito às rotas de motocicletas (`/motorcycle` e `/motorcycle/{id}`), e ao perfil do usuário. O footer não exibe os links rápidos.
+
 ## 📌 Descrição do Projeto
 
 Este projeto tem como objetivo automatizar e otimizar a gestão das motos nos pátios da Mottu utilizando microcontroladores ESP32 conectados via Wi-Fi, sensores físicos e um sistema web responsivo. A proposta visa garantir uma operação mais ágil, segura e escalável, eliminando o controle manual e aumentando a precisão na localização e no monitoramento dos veículos.
@@ -21,6 +25,20 @@ Com centenas de motos distribuídas em mais de 100 pátios no Brasil e no Méxic
 ## 💡 Nossa Solução
 
 O **VisionHive** propõe o uso de dispositivos **ESP32** com sensores físicos e conexão Wi-Fi, fixados em cada moto. Através de uma **plataforma web integrada**, é possível acionar **alertas visuais ou sonoros remotamente**, permitindo a identificação **precisa e ágil** de qualquer moto no pátio — sem depender de busca manual.
+
+## 🪪 Login para testes como admin
+
+- Login:
+  ```adminCM```
+- Senha:
+  ```admin123```
+
+## 🪪 Login para testes como operador
+
+- Login:
+  ```operadorCM```
+- Senha:
+  ```operador123```
 
 ---
 
@@ -59,11 +77,13 @@ O **VisionHive** propõe o uso de dispositivos **ESP32** com sensores físicos e
 ## 🛠 Tecnologias Utilizadas
 
 - Java 17+
-- Spring Boot (Web, Data JPA, Validation)
+- Spring Boot (Web, Data JPA, Validation, Security)
 - Banco de Dados H2 (para desenvolvimento)
 - Lombok
 - Swagger (OpenAPI) para documentação automática
 - Maven para gerenciamento de dependências
+- Thymeleaf para frontend
+- TailwindCSS para estilos
 
 ---
 
@@ -90,6 +110,8 @@ O **VisionHive** propõe o uso de dispositivos **ESP32** com sensores físicos e
 ```json
 {
   "nome": "Pátio de Emplacamento",
+  "bairro": "Bairro",
+  "cnpj": "Digitos cnpj",
   "branchId": "COLE_AQUI_O_ID_DA_FILIAL"
 }
 ```
@@ -108,6 +130,7 @@ O **VisionHive** propõe o uso de dispositivos **ESP32** com sensores físicos e
   "chassi": "9BWZZZ377VT0042245",
   "numeracaoMotor": "MTR12345678",
   "motorcycleModels": ["MODELO_MOTO"],
+  "situacao" "Situação da moto",
   "patioId": "COLE_AQUI_O_ID_DO_PATIO"
 }
 ```
@@ -143,6 +166,20 @@ O **VisionHive** propõe o uso de dispositivos **ESP32** com sensores físicos e
   ]
 }
 ```
+---
+
+## 🔐 Controle de Acesso
+
+### ADMIN
+- Pode acessar todas as rotas: `/branch`, `/patio`, `/motorcycle`.
+- Pode criar operadores.
+- Footer exibe todos os links rápidos.
+- Botão de "Voltar" em formulários redireciona para `/`.
+
+### OPERADOR
+- Acesso restrito a `/motorcycle` e `/motorcycle/{id}`.
+- Footer não exibe links rápidos.
+- Botão de "Voltar" em formulários redireciona para `/motorcycle`.
 
 ---
 
@@ -153,12 +190,22 @@ O **VisionHive** propõe o uso de dispositivos **ESP32** com sensores físicos e
    git clone https://github.com/seu-usuario/visionhive.git
    ```
 
-2. Execute a aplicação:
+2. Entre na pasta do projeto:
+   ```bash
+   cd VisionHive-Java
+   ```
+   
+3. Execute a aplicação:
    ```bash
    ./mvnw spring-boot:run
    ```
 
-3. Acesse a documentação Swagger para testar as rotas:
+4. Acesse a aplicação via navegador web:
+   ```
+   http://localhost:8080
+   ```
+
+6. Acesse a documentação Swagger para testar as rotas:
    ```
    http://localhost:8080/swagger-ui/index.html
    ```
