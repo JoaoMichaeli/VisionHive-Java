@@ -47,38 +47,6 @@ O **VisionHive** propõe o uso de dispositivos **ESP32** com sensores físicos e
 
 ---
 
-## 🔗 Rotas Disponíveis
-
-### 🏢 Filial (Branch)
-| Verbo | Rota                  | Descrição                        |
-|-------|-----------------------|---------------------------------|
-| GET   | `/branch`         | Lista todas as filiais           |
-| GET   | `/branch/{id}`    | Detalha uma filial por ID        |
-| POST  | `/branch`         | Cadastra uma nova filial         |
-| PUT   | `/branch/{id}`    | Atualiza os dados da filial      |
-| DELETE| `/branch/{id}`    | Remove uma filial existente      |
-
-### 🅿️ Pátio (Patio)
-| Verbo | Rota                  | Descrição                        |
-|-------|-----------------------|---------------------------------|
-| GET   | `/patio`          | Lista todos os pátios            |
-| GET   | `/patio/{id}`     | Detalha um pátio por ID          |
-| POST  | `/patio`          | Cadastra um novo pátio           |
-| PUT   | `/patio/{id}`     | Atualiza os dados do pátio       |
-| DELETE| `/patio/{id}`     | Remove um pátio existente        |
-
-### 🛵 Motocicleta (Motorcycle)
-| Verbo | Rota                     | Descrição                                      |
-|-------|--------------------------|-----------------------------------------------|
-| GET   | `/motorcycle`        | Lista todas as motocicletas cadastradas       |
-| GET   | `/motorcycle/{id}`   | Detalha uma motocicleta por ID                 |
-| GET   | `/motorcycle/search` | Busca por placa, chassi ou número do motor    |
-| POST  | `/motorcycle`        | Cadastra uma nova motocicleta                  |
-| PUT   | `/motorcycle/{id}`   | Atualiza os dados da motocicleta               |
-| DELETE| `/motorcycle/{id}`   | Remove uma motocicleta existente               |
-
----
-
 ## 🛠 Tecnologias Utilizadas
 
 - Java 17+
@@ -90,87 +58,6 @@ O **VisionHive** propõe o uso de dispositivos **ESP32** com sensores físicos e
 - Thymeleaf para frontend
 - TailwindCSS para estilos
 
----
-
-## 🧪 Exemplos de Testes
-
-### 🔹 Criar Filial
-
-**POST /branch**
-
-```json
-{
-  "nome": "Filial Central",
-  "bairro": "Butantã",
-  "cnpj": "96895689000139"
-}
-```
-
----
-
-### 🔹 Criar Pátio
-
-**POST /patio**
-
-```json
-{
-  "nome": "Pátio de Emplacamento",
-  "bairro": "Bairro",
-  "cnpj": "Digitos cnpj",
-  "branchId": "COLE_AQUI_O_ID_DA_FILIAL"
-}
-```
-
-> Substitua o `branchId` pelo valor real retornado no POST de filial.
-
----
-
-### 🔹 Criar Motocicleta
-
-**POST /motorcycle**
-
-```json
-{
-  "placa": "ABC1234",
-  "chassi": "9BWZZZ377VT0042245",
-  "numeracaoMotor": "MTR12345678",
-  "motorcycleModels": ["MODELO_MOTO"],
-  "situacao" "Situação da moto",
-  "patioId": "COLE_AQUI_O_ID_DO_PATIO"
-}
-```
-
-> Substitua o `patioId` pelo valor real retornado no POST de pátio.
-> Substitua o `MODELO_MOTO` por algum modelo cadastrado, sendo eles: MottuSport, MottuE ou MottuPop.
-
----
-
-### 🔹 Buscar Motocicleta por Placa
-
-**GET /motorcycle/search?placa=ABC1234**
-
----
-
-### 🔹 Detalhar Filial com Pátios e Motocicletas
-
-**GET /branch/{id}**
-
-**Resposta esperada:**
-
-```json
-{
-  "id": 1,
-  "nome": "Filial Central",
-  "bairro": "Butantã",
-  "cnpj": "96895689000139",
-  "patios": [
-    {
-      "id": 1,
-      "nome": "Pátio de Emplacamento",
-    }
-  ]
-}
-```
 ---
 
 ## 🔐 Controle de Acesso
@@ -207,7 +94,7 @@ O **VisionHive** propõe o uso de dispositivos **ESP32** com sensores físicos e
 
 4. Acesse a aplicação via navegador web:
    ```
-   http://localhost:8080
+   http://localhost:8080/login
    ```
 
 6. Acesse a documentação Swagger para testar as rotas:
