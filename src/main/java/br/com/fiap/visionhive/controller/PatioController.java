@@ -94,4 +94,17 @@ public class PatioController {
 
         return "patio/detail";
     }
+
+    @PostMapping("/{id}/deactivate")
+    @Operation(summary = "Desativar pátio", description = "Desativa um pátio específico")
+    public String deactivate(@PathVariable Long id, RedirectAttributes redirect) {
+        try {
+            patioService.deactivatePatio(id);
+            redirect.addFlashAttribute("message", "Pátio desativado com sucesso!");
+        } catch (IllegalStateException e) {
+            redirect.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/patio";
+    }
+
 }

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login VisionHive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #000000;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mottu-green { color: #00FF88; }
+        .urban-glass {
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0,255,136,0.2);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+        }
+
+        .street-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .street-element {
+            position: absolute;
+            opacity: 0.1;
+            animation: streetFloat 25s infinite linear;
+            color: #00FF88;
+        }
+
+        .street-element:nth-child(1) { top: 10%; left: 5%; animation-delay: 0s; font-size: 3rem; }
+        .street-element:nth-child(2) { top: 70%; left: 85%; animation-delay: 8s; font-size: 2.5rem; }
+        .street-element:nth-child(3) { top: 40%; left: 15%; animation-delay: 15s; font-size: 4rem; }
+        .street-element:nth-child(4) { top: 20%; right: 10%; animation-delay: 5s; font-size: 2rem; }
+        .street-element:nth-child(5) { bottom: 30%; left: 70%; animation-delay: 12s; font-size: 3.5rem; }
+
+        @keyframes streetFloat {
+            0% { transform: translateY(0px) rotate(0deg); opacity: 0.1; }
+            25% { opacity: 0.2; }
+            50% { transform: translateY(-30px) rotate(180deg); opacity: 0.15; }
+            75% { opacity: 0.1; }
+            100% { transform: translateY(0px) rotate(360deg); opacity: 0.1; }
+        }
+
+        .mottu-button {
+            background: #00FF88;
+            color: #000000;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .mottu-button:hover {
+            background: #00CC6A;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 255, 136, 0.4);
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center h-screen">
+
+<div class="street-elements">
+    <div class="street-element"><i class="fas fa-motorcycle"></i></div>
+    <div class="street-element"><i class="fas fa-wifi"></i></div>
+    <div class="street-element"><i class="fas fa-microchip"></i></div>
+    <div class="street-element"><i class="fas fa-satellite-dish"></i></div>
+    <div class="street-element"><i class="fas fa-shipping-fast"></i></div>
+</div>
+
+<form th:action="@{/login}" method="post" class="relative z-10 bg-black/50 urban-glass p-8 rounded-2xl shadow-lg w-96">
+    <h2 class="text-3xl font-bold mb-6 text-center mottu-green">Login VisionHive</h2>
+
+    <div class="mb-4">
+        <label for="username" class="block mb-1 text-white font-semibold">Usuário</label>
+        <input type="text" id="username" name="username" class="w-full p-2 rounded border border-gray-700 bg-black/30 text-white placeholder-gray-400" placeholder="Digite seu usuário">
+    </div>
+
+    <div class="mb-6">
+        <label for="password" class="block mb-1 text-white font-semibold">Senha</label>
+        <input type="password" id="password" name="password" class="w-full p-2 rounded border border-gray-700 bg-black/30 text-white placeholder-gray-400" placeholder="Digite sua senha">
+    </div>
+
+    <button type="submit" class="w-full mottu-button px-4 py-2 rounded-lg text-lg font-semibold">Entrar</button>
+
+    <p th:if="${param.error}" class="text-red-500 mt-2 text-center">Usuário ou senha inválidos</p>
+    <p th:if="${param.logout}" class="text-green-500 mt-2 text-center">Logout realizado com sucesso</p>
+</form>
+
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Vision Hive - Perfil do Usuário</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        body { font-family: 'Inter', sans-serif; background: #000000; }
+        .mottu-green { color: #00FF88; }
+        .mottu-dark { background-color: #000000; }
+        .urban-glass { background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); border: 1px solid rgba(0,255,136,0.2); box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
+        .mottu-button { background: #00FF88; color: #000; font-weight: 600; transition: all 0.3s ease; cursor: pointer; display: inline-block; text-decoration: none; }
+        .mottu-button:hover { background: #00CC6A; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,255,136,0.4); }
+        .street-elements { position: absolute; width: 100%; height: 100%; overflow: hidden; z-index: 1; }
+        .street-element { position: absolute; opacity: 0.1; animation: streetFloat 25s infinite linear; color: #00FF88; }
+        .street-element:nth-child(1) { top: 10%; left: 5%; animation-delay: 0s; font-size: 3rem; }
+        .street-element:nth-child(2) { top: 70%; left: 85%; animation-delay: 8s; font-size: 2.5rem; }
+        .street-element:nth-child(3) { top: 40%; left: 15%; animation-delay: 15s; font-size: 4rem; }
+        .street-element:nth-child(4) { top: 20%; right: 10%; animation-delay: 5s; font-size: 2rem; }
+        .street-element:nth-child(5) { bottom: 30%; left: 70%; animation-delay: 12s; font-size: 3.5rem; }
+        @keyframes streetFloat { 0% { transform: translateY(0px) rotate(0deg); opacity: 0.1; } 25% { opacity:0.2; } 50% { transform: translateY(-30px) rotate(180deg); opacity:0.15; } 75% { opacity:0.1; } 100% { transform: translateY(0px) rotate(360deg); opacity:0.1; } }
+        @keyframes streetPulse { 0%,100% { opacity:1; transform: scale(1); } 50% { opacity:0.8; transform: scale(1.05); } }
+        .mottu-text-glow { text-shadow: 0 0 10px rgba(0,255,136,0.5); }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen mottu-dark font-sans relative overflow-x-hidden">
+
+<div class="street-elements">
+    <div class="street-element"><i class="fas fa-motorcycle"></i></div>
+    <div class="street-element"><i class="fas fa-wifi"></i></div>
+    <div class="street-element"><i class="fas fa-microchip"></i></div>
+    <div class="street-element"><i class="fas fa-satellite-dish"></i></div>
+    <div class="street-element"><i class="fas fa-shipping-fast"></i></div>
+</div>
+
+<div th:replace="fragments/header :: header"></div>
+
+<section class="relative mottu-dark text-white py-32 px-6 text-center overflow-hidden">
+    <div class="relative z-10 max-w-lg mx-auto bg-black/50 p-8 rounded-2xl urban-glass shadow-lg">
+        <h2 class="text-4xl font-bold mb-6 mottu-green mottu-text-glow">
+            <i class="fas fa-user mr-2"></i> Perfil do Usuário
+        </h2>
+
+        <div class="mb-4 text-left">
+            <label class="block font-semibold text-lg">Usuário:</label>
+            <span th:text="${user.username}" class="text-white text-xl"></span>
+        </div>
+
+        <div class="mb-4 text-left">
+            <label class="block font-semibold text-lg">Perfis:</label>
+            <span th:each="role : ${user.roles}" th:text="${role} + ' '" class="text-white text-xl"></span>
+        </div>
+
+        <div class="flex justify-center mt-6 gap-4">
+            <a th:href="@{/}" class="mottu-button px-6 py-3 rounded-xl text-lg font-semibold">Voltar à Home</a>
+            <a th:href="@{/logout}" class="mottu-button px-6 py-3 rounded-xl text-lg font-semibold">Sair</a>
+        </div>
+    </div>
+</section>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>

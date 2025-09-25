@@ -13,12 +13,8 @@ public class BranchService {
 
     private final BranchRepository branchRepository;
 
-    public List<Branch> getAllBranches() {
-        return branchRepository.findAll();
-    }
-
-    public Branch save(Branch branch) {
-        return branchRepository.save(branch);
+    public void save(Branch branch) {
+        branchRepository.save(branch);
     }
 
     public Branch findById(Long id) {
@@ -28,6 +24,17 @@ public class BranchService {
 
     public List<Branch> findAllBranches() {
         return branchRepository.findAll();
+    }
+
+    public void deactivateBranch(Long branchId) {
+        Branch branch = findById(branchId);
+
+        if (!branch.getPatios().isEmpty()) {
+            throw new IllegalStateException("Não é possível desativar uma filial com pátios vinculados.");
+        }
+
+        branch.setAtivo(false);
+        save(branch);
     }
 
 }

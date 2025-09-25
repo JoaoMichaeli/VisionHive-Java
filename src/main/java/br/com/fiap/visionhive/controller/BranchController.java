@@ -71,4 +71,17 @@ public class BranchController {
         model.addAttribute("patios", branch.getPatios());
         return "branch/detail";
     }
+
+    @PostMapping("/{id}/deactivate")
+    @Operation(summary = "Desativar filial", description = "Desativa uma filial específica")
+    public String deactivate(@PathVariable Long id, RedirectAttributes redirect) {
+        try {
+            branchService.deactivateBranch(id);
+            redirect.addFlashAttribute("message", "Filial desativada com sucesso!");
+        } catch (IllegalStateException e) {
+            redirect.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/branch";
+    }
+
 }

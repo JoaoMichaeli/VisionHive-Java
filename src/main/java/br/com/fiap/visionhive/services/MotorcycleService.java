@@ -17,8 +17,8 @@ public class MotorcycleService {
         return motorcycleRepository.findAll();
     }
 
-    public Motorcycle save(Motorcycle motorcycle) {
-        return motorcycleRepository.save(motorcycle);
+    public void save(Motorcycle motorcycle) {
+        motorcycleRepository.save(motorcycle);
     }
 
     public Motorcycle findById(Long id) {

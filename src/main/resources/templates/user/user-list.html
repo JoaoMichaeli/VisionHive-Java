@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Usuários</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="p-8 bg-gray-100">
+<div class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
+    <h2 class="text-2xl font-bold mb-4">Usuários Cadastrados</h2>
+
+    <a href="/admin/users/new" class="mb-4 inline-block bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Novo Usuário</a>
+
+    <table class="w-full table-auto border-collapse border border-gray-300">
+        <thead>
+        <tr class="bg-gray-200">
+            <th class="border px-4 py-2">ID</th>
+            <th class="border px-4 py-2">Usuário</th>
+            <th class="border px-4 py-2">Roles</th>
+            <th class="border px-4 py-2">Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}" class="hover:bg-gray-50">
+            <td class="border px-4 py-2" th:text="${user.id}"></td>
+            <td class="border px-4 py-2" th:text="${user.username}"></td>
+            <td class="border px-4 py-2" th:text="${user.roles}"></td>
+            <td class="border px-4 py-2">
+                <a th:href="@{'/admin/users/edit/' + ${user.id}}" class="text-blue-500 hover:underline mr-2">Editar</a>
+                <a th:href="@{'/admin/users/delete/' + ${user.id}}" class="text-red-500 hover:underline">Excluir</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a href="/dashboard" class="block mt-4 text-blue-500 hover:underline">Voltar ao Dashboard</a>
+</div>
+</body>
+</html>
