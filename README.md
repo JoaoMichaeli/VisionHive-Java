@@ -2,9 +2,18 @@
 
 **Vision Hive** é uma API RESTful desenvolvida para a empresa Mottu com o objetivo de facilitar o gerenciamento e localização de motocicletas nos pátios operacionais. A aplicação permite o cadastro de **Filiais (Branch)**, **Pátios (Patio)** e **Motocicletas (Motorcycle)**, associando motos aos seus respectivos pátios e filiais, com busca por placa, chassi ou número do motor.
 
+Além disso, o sistema possui **controle de acesso baseado em roles**:
+- **ADMIN:** acesso completo a todas as rotas e funcionalidades, incluindo criação de operadores e visualização de todos os links rápidos no footer.
+- **OPERADOR:** acesso restrito às rotas de motocicletas (`/motorcycle` e `/motorcycle/{id}`), e ao perfil do usuário. O footer não exibe os links rápidos.
+
 ## 📌 Descrição do Projeto
 
 Este projeto tem como objetivo automatizar e otimizar a gestão das motos nos pátios da Mottu utilizando microcontroladores ESP32 conectados via Wi-Fi, sensores físicos e um sistema web responsivo. A proposta visa garantir uma operação mais ágil, segura e escalável, eliminando o controle manual e aumentando a precisão na localização e no monitoramento dos veículos.
+
+## 🎬 DEMONSTRAÇÃO YOUTUBE
+```text
+link
+```
 
 ## 🎯 Objetivos
 
@@ -22,127 +31,47 @@ Com centenas de motos distribuídas em mais de 100 pátios no Brasil e no Méxic
 
 O **VisionHive** propõe o uso de dispositivos **ESP32** com sensores físicos e conexão Wi-Fi, fixados em cada moto. Através de uma **plataforma web integrada**, é possível acionar **alertas visuais ou sonoros remotamente**, permitindo a identificação **precisa e ágil** de qualquer moto no pátio — sem depender de busca manual.
 
----
+## 🪪 Login para testes como admin
 
-## 🔗 Rotas Disponíveis
+- Login:
+  ```adminCM```
+- Senha:
+  ```admin123```
 
-### 🏢 Filial (Branch)
-| Verbo | Rota                  | Descrição                        |
-|-------|-----------------------|---------------------------------|
-| GET   | `/branch`         | Lista todas as filiais           |
-| GET   | `/branch/{id}`    | Detalha uma filial por ID        |
-| POST  | `/branch`         | Cadastra uma nova filial         |
-| PUT   | `/branch/{id}`    | Atualiza os dados da filial      |
-| DELETE| `/branch/{id}`    | Remove uma filial existente      |
+## 🪪 Login para testes como operador
 
-### 🅿️ Pátio (Patio)
-| Verbo | Rota                  | Descrição                        |
-|-------|-----------------------|---------------------------------|
-| GET   | `/patio`          | Lista todos os pátios            |
-| GET   | `/patio/{id}`     | Detalha um pátio por ID          |
-| POST  | `/patio`          | Cadastra um novo pátio           |
-| PUT   | `/patio/{id}`     | Atualiza os dados do pátio       |
-| DELETE| `/patio/{id}`     | Remove um pátio existente        |
-
-### 🛵 Motocicleta (Motorcycle)
-| Verbo | Rota                     | Descrição                                      |
-|-------|--------------------------|-----------------------------------------------|
-| GET   | `/motorcycle`        | Lista todas as motocicletas cadastradas       |
-| GET   | `/motorcycle/{id}`   | Detalha uma motocicleta por ID                 |
-| GET   | `/motorcycle/search` | Busca por placa, chassi ou número do motor    |
-| POST  | `/motorcycle`        | Cadastra uma nova motocicleta                  |
-| PUT   | `/motorcycle/{id}`   | Atualiza os dados da motocicleta               |
-| DELETE| `/motorcycle/{id}`   | Remove uma motocicleta existente               |
+- Login:
+  ```operadorCM```
+- Senha:
+  ```operador123```
 
 ---
 
 ## 🛠 Tecnologias Utilizadas
 
 - Java 17+
-- Spring Boot (Web, Data JPA, Validation)
+- Spring Boot (Web, Data JPA, Validation, Security)
 - Banco de Dados H2 (para desenvolvimento)
 - Lombok
 - Swagger (OpenAPI) para documentação automática
 - Maven para gerenciamento de dependências
+- Thymeleaf para frontend
+- TailwindCSS para estilos
 
 ---
 
-## 🧪 Exemplos de Testes
+## 🔐 Controle de Acesso
 
-### 🔹 Criar Filial
+### ADMIN
+- Pode acessar todas as rotas: `/branch`, `/patio`, `/motorcycle`.
+- Pode criar operadores.
+- Footer exibe todos os links rápidos.
+- Botão de "Voltar" em formulários redireciona para `/`.
 
-**POST /branch**
-
-```json
-{
-  "nome": "Filial Central",
-  "bairro": "Butantã",
-  "cnpj": "96895689000139"
-}
-```
-
----
-
-### 🔹 Criar Pátio
-
-**POST /patio**
-
-```json
-{
-  "nome": "Pátio de Emplacamento",
-  "branchId": "COLE_AQUI_O_ID_DA_FILIAL"
-}
-```
-
-> Substitua o `branchId` pelo valor real retornado no POST de filial.
-
----
-
-### 🔹 Criar Motocicleta
-
-**POST /motorcycle**
-
-```json
-{
-  "placa": "ABC1234",
-  "chassi": "9BWZZZ377VT0042245",
-  "numeracaoMotor": "MTR12345678",
-  "motorcycleModels": ["MODELO_MOTO"],
-  "patioId": "COLE_AQUI_O_ID_DO_PATIO"
-}
-```
-
-> Substitua o `patioId` pelo valor real retornado no POST de pátio.
-> Substitua o `MODELO_MOTO` por algum modelo cadastrado, sendo eles: MottuSport, MottuE ou MottuPop.
-
----
-
-### 🔹 Buscar Motocicleta por Placa
-
-**GET /motorcycle/search?placa=ABC1234**
-
----
-
-### 🔹 Detalhar Filial com Pátios e Motocicletas
-
-**GET /branch/{id}**
-
-**Resposta esperada:**
-
-```json
-{
-  "id": 1,
-  "nome": "Filial Central",
-  "bairro": "Butantã",
-  "cnpj": "96895689000139",
-  "patios": [
-    {
-      "id": 1,
-      "nome": "Pátio de Emplacamento",
-    }
-  ]
-}
-```
+### OPERADOR
+- Acesso restrito a `/motorcycle` e `/motorcycle/{id}`.
+- Footer não exibe links rápidos.
+- Botão de "Voltar" em formulários redireciona para `/motorcycle`.
 
 ---
 
@@ -153,12 +82,22 @@ O **VisionHive** propõe o uso de dispositivos **ESP32** com sensores físicos e
    git clone https://github.com/seu-usuario/visionhive.git
    ```
 
-2. Execute a aplicação:
+2. Entre na pasta do projeto:
+   ```bash
+   cd VisionHive-Java
+   ```
+   
+3. Execute a aplicação:
    ```bash
    ./mvnw spring-boot:run
    ```
 
-3. Acesse a documentação Swagger para testar as rotas:
+4. Acesse a aplicação via navegador web:
+   ```
+   http://localhost:8080/login
+   ```
+
+6. Acesse a documentação Swagger para testar as rotas:
    ```
    http://localhost:8080/swagger-ui/index.html
    ```
