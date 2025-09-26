@@ -32,8 +32,8 @@ public class AdminUserController {
     }
 
     @PostMapping("/admin/create-operator")
-    @Operation(summary = "Criar operador", description = "Cria um novo usuário operador no sistema")
-    public String createOperator(
+    @Operation(summary = "Criar usuário", description = "Cria um novo usuário no sistema com a função escolhida")
+    public String createUser(
             @Valid @ModelAttribute("createUserDTO") CreateUserDTO createUserDTO,
             BindingResult bindingResult) {
 
@@ -44,7 +44,7 @@ public class AdminUserController {
         User user = User.builder()
                 .username(createUserDTO.getUsername())
                 .password(passwordEncoder.encode(createUserDTO.getPassword()))
-                .roles(Set.of(Role.ROLE_OPERADOR))
+                .roles(Set.of(createUserDTO.getRole() != null ? createUserDTO.getRole() : Role.ROLE_OPERADOR))
                 .build();
 
         userRepository.save(user);
