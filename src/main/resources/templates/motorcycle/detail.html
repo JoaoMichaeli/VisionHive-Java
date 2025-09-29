@@ -50,10 +50,12 @@
 
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             <div class="bg-gray-900/60 backdrop-blur-sm border border-green-500/20 rounded-2xl p-6 text-center hover:border-green-500/40 transition-all duration-300">
-                <div class="text-3xl font-bold text-green-400 mb-2">98%</div>
-                <div class="text-gray-400 text-sm">Bateria</div>
+                <div class="text-3xl font-bold text-green-400 mb-2">
+                    <span id="batteryPercent">0</span>%
+                </div>
+                <div class="text-gray-400 text-sm mb-2">Bateria</div>
                 <div class="w-full bg-gray-700 rounded-full h-2 mt-2">
-                    <div class="bg-gradient-to-r from-green-500 to-green-400 h-2 rounded-full" style="width: 98%"></div>
+                    <div id="batteryBar" class="bg-gradient-to-r from-green-500 to-green-400 h-2 rounded-full" style="width: 0%"></div>
                 </div>
             </div>
             <div class="bg-gray-900/60 backdrop-blur-sm border border-green-500/20 rounded-2xl p-6 text-center hover:border-green-500/40 transition-all duration-300">
@@ -64,15 +66,24 @@
                 </div>
             </div>
             <div class="bg-gray-900/60 backdrop-blur-sm border border-green-500/20 rounded-2xl p-6 text-center hover:border-green-500/40 transition-all duration-300">
-                <div class="text-3xl font-bold text-green-400 mb-2">1.2s</div>
-                <div class="text-gray-400 text-sm">Ping</div>
-                <div class="text-xs text-green-400 mt-1">Excelente</div>
+                <div class="border-green-500/20 rounded-2xl p-6 text-center hover:border-green-500/40 transition-all duration-300">
+                    <div class="flex flex-col items-center">
+                        <div class="text-3xl font-bold text-green-400 mb-2 flex items-center">
+                            <span id="pingDisplay">0.0s</span>
+                            <i id="pingIcon" class="fas fa-signal ml-2 text-green-400 animate-pulse"></i>
+                        </div>
+                        <div id="pingText" class="text-xs text-green-400 mt-1">...</div>
+                    </div>
+                </div>
             </div>
             <div class="bg-gray-900/60 backdrop-blur-sm border border-green-500/20 rounded-2xl p-6 text-center hover:border-green-500/40 transition-all duration-300">
-                <div class="text-3xl font-bold text-green-400 mb-2">24/7</div>
-                <div class="text-gray-400 text-sm">Monitoramento</div>
-                <div class="flex justify-center mt-2">
-                    <i class="fas fa-eye text-green-500 animate-pulse"></i>
+                <div class="text-4xl font-bold text-green-400 mb-2">
+                    <span id="randomDays">0</span> Dias
+                </div>
+                <div class="text-gray-400 text-sm mb-4">Tempo total de monitoramento</div>
+                <div class="flex justify-center items-center space-x-2">
+                    <i class="fas fa-eye text-green-500 animate-pulse text-xl"></i>
+                    <i class="fas fa-circle text-green-400 animate-ping text-xs"></i>
                 </div>
             </div>
         </div>
@@ -84,13 +95,13 @@
                     <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-green-500/10 z-10"></div>
 
                     <div class="absolute top-4 left-4 z-20">
-                        <i class="fas fa-wifi text-green-500 text-lg animate-pulse"></i>
+                        <i class="fas fa-wifi text-green-500 text-lg animate-bounce"></i>
                     </div>
                     <div class="absolute top-4 right-4 z-20">
                         <i class="fas fa-satellite-dish text-green-500 text-lg animate-bounce" style="animation-delay: 1s;"></i>
                     </div>
                     <div class="absolute bottom-4 left-4 z-20">
-                        <i class="fas fa-microchip text-green-500 text-lg animate-pulse" style="animation-delay: 2s;"></i>
+                        <i class="fas fa-microchip text-green-500 text-lg animate-bounce" style="animation-delay: 2s;"></i>
                     </div>
                     <div class="absolute bottom-4 right-4 z-20">
                         <i class="fas fa-broadcast-tower text-green-500 text-lg animate-bounce" style="animation-delay: 3s;"></i>
@@ -353,6 +364,70 @@
                 }
             }
         });
+    });
+</script>
+
+<script>
+    const diasAleatorios = Math.floor(Math.random() * 100) + 1;
+    document.getElementById('randomDays').innerText = diasAleatorios;
+</script>
+
+<script>
+    const batteryPercent = Math.floor(Math.random() * 81) + 20;
+    const batteryDisplay = document.getElementById('batteryPercent');
+    const batteryBar = document.getElementById('batteryBar');
+
+    let current = 0;
+    const interval = setInterval(() => {
+        if(current < batteryPercent){
+            current++;
+            batteryDisplay.innerText = current;
+            batteryBar.style.width = current + '%';
+        } else {
+            clearInterval(interval);
+        }
+    }, 10);
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const pingDisplay = document.getElementById('pingDisplay');
+        const pingText = document.getElementById('pingText');
+        const pingIcon = document.getElementById('pingIcon');
+
+        const pingValue = (Math.random() * 2.5 + 0.5).toFixed(1);
+
+        let pingQuality = '';
+        let color = '';
+        if (pingValue <= 1.0) {
+            pingQuality = 'Excelente';
+            color = '#00FF88';
+        } else if (pingValue <= 2.0) {
+            pingQuality = 'Bom';
+            color = '#FACC15';
+        } else {
+            pingQuality = 'Ruim';
+            color = '#F87171';
+        }
+
+        pingText.innerText = pingQuality;
+        pingIcon.style.color = color;
+
+        let currentPing = 0.0;
+        const steps = 20;
+        const increment = pingValue / steps;
+        let count = 0;
+
+        const pingInterval = setInterval(() => {
+            if (count < steps) {
+                currentPing += increment;
+                pingDisplay.innerText = currentPing.toFixed(1) + 's';
+                count++;
+            } else {
+                pingDisplay.innerText = pingValue + 's';
+                clearInterval(pingInterval);
+            }
+        }, 50);
     });
 </script>
 

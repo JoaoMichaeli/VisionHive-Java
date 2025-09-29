@@ -36,12 +36,13 @@
 </head>
 <body class="flex flex-col min-h-screen mottu-dark font-sans relative overflow-x-hidden">
 
-<section class="flex justify-center items-center py-32 px-6">
+<header th:replace="fragments/header :: header"></header>
+
+<section class="flex justify-center items-center py-32 px-6 flex-1">
     <div sec:authorize="hasRole('ADMIN')" class="urban-glass rounded-2xl p-10 w-full max-w-md">
         <h2 class="text-3xl font-bold mb-8 text-center text-white">Criar Operador</h2>
 
         <form th:action="@{/admin/create-operator}" th:object="${createUserDTO}" method="post" class="space-y-6">
-
             <div>
                 <label class="block mb-2 text-white font-semibold">Usuário</label>
                 <input type="text" th:field="*{username}" placeholder="Nome do operador"
@@ -71,7 +72,6 @@
             <button type="submit" class="w-full mottu-button py-3 text-lg font-semibold rounded-xl">Criar Usuário</button>
         </form>
 
-
         <a href="/admin/users" class="block mt-6 text-center text-green-400 hover:underline">Acessar lista de usuários</a>
         <a href="/profile" class="block mt-6 text-center text-green-400 hover:underline">Voltar ao perfil</a>
     </div>
@@ -80,6 +80,8 @@
         Você não tem permissão para acessar esta página.
     </div>
 </section>
+
+<footer th:replace="fragments/footer :: footer"></footer>
 
 </body>
 </html>

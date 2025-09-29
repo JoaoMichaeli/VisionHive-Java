@@ -126,38 +126,6 @@
         </h1>
         <p class="text-gray-400 text-lg">Monitoramento inteligente em tempo real</p>
     </div>
-    <div class="max-w-7xl mx-auto mb-8">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div class="glass-card rounded-xl p-6 text-center">
-                <div class="text-3xl font-bold text-white neon-text mb-2">247</div>
-                <div class="text-gray-400 text-sm">Motos Ativas</div>
-                <div class="text-green-400 text-xs mt-1">
-                    <i class="fas fa-arrow-up mr-1"></i>+12% hoje
-                </div>
-            </div>
-            <div class="glass-card rounded-xl p-6 text-center">
-                <div class="text-3xl font-bold text-white neon-text mb-2">98.7%</div>
-                <div class="text-gray-400 text-sm">Conectividade</div>
-                <div class="text-green-400 text-xs mt-1">
-                    <i class="fas fa-signal mr-1"></i>Excelente
-                </div>
-            </div>
-            <div class="glass-card rounded-xl p-6 text-center">
-                <div class="text-3xl font-bold text-white neon-text mb-2">1.8s</div>
-                <div class="text-gray-400 text-sm">Latência Média</div>
-                <div class="text-green-400 text-xs mt-1">
-                    <i class="fas fa-tachometer-alt mr-1"></i>Ótima
-                </div>
-            </div>
-            <div class="glass-card rounded-xl p-6 text-center">
-                <div class="text-3xl font-bold text-white neon-text mb-2">24/7</div>
-                <div class="text-gray-400 text-sm">Monitoramento</div>
-                <div class="text-green-400 text-xs mt-1">
-                    <i class="fas fa-eye mr-1"></i>Ativo
-                </div>
-            </div>
-        </div>
-    </div>
 
     <div class="max-w-4xl mx-auto mb-12">
         <form method="get" th:action="@{/motorcycle}" class="glass-card rounded-2xl p-6">
@@ -243,15 +211,15 @@
                     <div class="border-t border-gray-700 pt-4">
                         <div class="grid grid-cols-3 gap-2 text-center">
                             <div>
-                                <div class="text-green-400 font-bold text-sm">98%</div>
+                                <div class="batteryMini text-green-400 font-bold text-sm">0%</div>
                                 <div class="text-gray-500 text-xs">Bateria</div>
                             </div>
                             <div>
-                                <div class="text-green-400 font-bold text-sm">ONLINE</div>
+                                <div class="text-green-400 font-bold text-sm">Online</div>
                                 <div class="text-gray-500 text-xs">Status</div>
                             </div>
                             <div>
-                                <div class="text-green-400 font-bold text-sm">1.2s</div>
+                                <div class="pingMini text-green-400 font-bold text-sm">0s</div>
                                 <div class="text-gray-500 text-xs">Ping</div>
                             </div>
                         </div>
@@ -272,6 +240,40 @@
 </main>
 
 <div th:replace="fragments/footer :: footer"></div>
+
+<script>
+    document.querySelectorAll('li.glass-card').forEach(card => {
+        const batteryValue = Math.floor(Math.random() * 81) + 20;
+        const batteryDisplay = card.querySelector('.batteryMini');
+        let currentBattery = 0;
+        const batteryInterval = setInterval(() => {
+            if(currentBattery < batteryValue){
+                currentBattery++;
+                batteryDisplay.innerText = currentBattery + '%';
+            } else {
+                clearInterval(batteryInterval);
+            }
+        }, 10);
+
+        const pingValue = (Math.random() * 2.5 + 0.5).toFixed(1);
+        const pingDisplay = card.querySelector('.pingMini');
+        let currentPing = 0.0;
+        const steps = 20;
+        const increment = pingValue / steps;
+        let stepCount = 0;
+        const pingInterval = setInterval(() => {
+            if(stepCount < steps){
+                currentPing += increment;
+                pingDisplay.innerText = currentPing.toFixed(1) + 's';
+                stepCount++;
+            } else {
+                pingDisplay.innerText = pingValue + 's';
+                clearInterval(pingInterval);
+            }
+        }, 50);
+    });
+</script>
+
 
 </body>
 </html>
