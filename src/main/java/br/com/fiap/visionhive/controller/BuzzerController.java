@@ -1,11 +1,13 @@
 package br.com.fiap.visionhive.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-@Controller
+@RestController
+@RequestMapping("/api")
 public class BuzzerController {
 
     private static final String ESP32_IP = "http://192.168.1.5";

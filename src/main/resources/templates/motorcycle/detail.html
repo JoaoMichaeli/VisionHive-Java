@@ -302,7 +302,7 @@
 <script>
     async function acionarBuzzer() {
         try {
-            const response = await fetch('/acionar-buzzer');
+            const response = await fetch('/api/acionar-buzzer');
             if (response.ok) {
                 mostrarMensagem("Buzzer ativado com sucesso!");
             } else {
@@ -315,7 +315,7 @@
 
     async function pararBuzzer() {
         try {
-            const response = await fetch('/parar-buzzer');
+            const response = await fetch('/api/parar-buzzer');
             if (response.ok) {
                 mostrarMensagem("Buzzer desativado com sucesso!");
             } else {
