@@ -70,10 +70,12 @@
                class="mottu-button px-6 py-3 rounded-xl text-lg font-semibold">
                 Criar Operador
             </a>
-            <a th:href="@{/logout}"
-               class="mottu-button px-6 py-3 rounded-xl text-lg font-semibold">
-                Sair
-            </a>
+            <form th:action="@{/logout}" method="post" style="display:inline;">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <button type="submit" class="mottu-button px-6 py-3 rounded-xl text-lg font-semibold">
+                    Sair
+                </button>
+            </form>
         </div>
     </div>
 </section>

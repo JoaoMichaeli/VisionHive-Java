@@ -59,7 +59,7 @@
                 </div>
             </div>
             <div class="bg-gray-900/60 backdrop-blur-sm border border-green-500/20 rounded-2xl p-6 text-center hover:border-green-500/40 transition-all duration-300">
-                <div class="text-3xl font-bold text-green-400 mb-2">5G</div>
+                <div class="text-3xl font-bold text-green-400 mb-2">2.4G</div>
                 <div class="text-gray-400 text-sm">Conectividade</div>
                 <div class="flex justify-center mt-2">
                     <i class="fas fa-signal text-green-500 animate-pulse"></i>
@@ -109,7 +109,7 @@
 
                     <div class="relative z-15 text-center">
                         <i class="fas fa-motorcycle text-8xl text-green-500 group-hover:scale-110 transition-transform duration-300" style="filter: drop-shadow(0 0 20px #00FF88);"></i>
-                        <div class="text-green-400 text-sm mt-2 font-medium">Moto IoT</div>
+                        <div th:text="${motorcycle.placa}" class="text-white text-xl font-bold">ABC-1234</div>
                     </div>
 
                     <div class="absolute top-4 left-1/2 transform -translate-x-1/2 z-20">
@@ -250,13 +250,32 @@
     </div>
 </main>
 
-<div id="modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center hidden z-50">
-    <div class="bg-gray-900 text-green-400 rounded-2xl shadow-xl p-6 w-80 text-center border border-green-500/40">
-        <h2 class="text-xl font-bold mb-4">Localizando moto...</h2>
-        <p class="mb-6">Estamos processando sua solicitação.</p>
-        <button onclick="fecharModal()" class="bg-green-500/20 hover:bg-green-500/30 text-green-300 font-semibold py-2 px-4 rounded-lg border border-green-400/40 transition-all">
-            Fechar
-        </button>
+<div id="modal" class="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center hidden z-50 transition-opacity duration-300">
+    <div class="bg-gradient-to-br from-gray-900 to-black text-green-400 rounded-3xl shadow-2xl p-8 w-96 text-center border border-green-500/30 transform transition-all scale-95 hover:scale-100">
+
+        <h2 class="text-2xl font-extrabold mb-3 tracking-wide">Localizando moto</h2>
+
+        <div class="flex flex-col gap-3">
+            <button
+                    onclick="acionarBuzzer()"
+                    class="bg-green-500/20 hover:bg-green-500/40 text-green-300 font-semibold py-2 px-4 rounded-xl border border-green-400/40 transition-all duration-200 hover:scale-105">
+                Ativar Buzzer
+            </button>
+
+            <button
+                    onclick="pararBuzzer()"
+                    class="bg-red-500/20 hover:bg-red-500/40 text-red-300 font-semibold py-2 px-4 rounded-xl border border-red-400/40 transition-all duration-200 hover:scale-105">
+                Desativar Buzzer
+            </button>
+
+            <button
+                    onclick="fecharModal()"
+                    class="mt-4 bg-green-500/10 hover:bg-green-500/20 text-green-200 font-medium py-2 px-4 rounded-xl border border-green-400/30 transition-all duration-200">
+                Fechar
+            </button>
+        </div>
+
+        <p id="statusMsg" class="mt-5 text-sm text-gray-400"></p>
     </div>
 </div>
 
@@ -279,6 +298,41 @@
 
 
 <div th:replace="fragments/footer :: footer"></div>
+
+<script>
+    async function acionarBuzzer() {
+        try {
+            const response = await fetch('/acionar-buzzer');
+            if (response.ok) {
+                mostrarMensagem("Buzzer ativado com sucesso!");
+            } else {
+                mostrarMensagem("Erro ao ativar o buzzer.");
+            }
+        } catch (error) {
+            mostrarMensagem("Falha na comunicação com o servidor.");
+        }
+    }
+
+    async function pararBuzzer() {
+        try {
+            const response = await fetch('/parar-buzzer');
+            if (response.ok) {
+                mostrarMensagem("Buzzer desativado com sucesso!");
+            } else {
+                mostrarMensagem("Erro ao desativar o buzzer.");
+            }
+        } catch (error) {
+            mostrarMensagem("Falha na comunicação com o servidor.");
+        }
+    }
+
+    function mostrarMensagem(msg) {
+        const status = document.getElementById("statusMsg");
+        status.innerText = msg;
+        status.classList.add("animate-pulse");
+        setTimeout(() => status.classList.remove("animate-pulse"), 1000);
+    }
+</script>
 
 <script>
     function abrirModal() {

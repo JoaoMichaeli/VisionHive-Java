@@ -8,7 +8,7 @@ import org.springframework.cache.annotation.EnableCaching;
 
 @SpringBootApplication
 @OpenAPIDefinition(
-		info = @Info(title = "VisionHive API", version = "v2", description = "API do SaaS VisionHive")
+		info = @Info(title = "VisionHive API", version = "v3", description = "API do SaaS VisionHive")
 )
 @EnableCaching
 
