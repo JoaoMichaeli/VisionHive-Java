@@ -1,6 +1,6 @@
 package br.com.fiap.visionhive.controller;
 
-import br.com.fiap.visionhive.dto.CreateUserDTO;
+import br.com.fiap.visionhive.dto.User.CreateUserDTO;
 import br.com.fiap.visionhive.model.Role;
 import br.com.fiap.visionhive.model.User;
 import br.com.fiap.visionhive.repository.UserRepository;

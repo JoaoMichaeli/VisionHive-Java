@@ -1,4 +1,4 @@
-package br.com.fiap.visionhive.dto;
+package br.com.fiap.visionhive.dto.User;
 
 import br.com.fiap.visionhive.model.Role;
 import jakarta.validation.constraints.NotBlank;

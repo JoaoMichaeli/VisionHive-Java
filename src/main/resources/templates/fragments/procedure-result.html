@@ -1,0 +1,9 @@
+<div th:fragment="result" class="mt-6 p-6 bg-black/60 rounded-xl border border-mottu-green/30"
+     th:if="${result != null}">
+    <h4 class="text-xl font-bold mottu-green mb-3">Resultado da Procedure</h4>
+    <p class="text-sm text-gray-300 mb-2" th:text="${result.mensagem}"></p>
+
+    <div th:if="${result.json}" class="mt-3 p-4 bg-black/80 rounded-lg border border-mottu-green/30">
+        <pre class="text-sm text-mottu-green overflow-x-auto font-mono" th:text="${result.json}"></pre>
+    </div>
+</div>
