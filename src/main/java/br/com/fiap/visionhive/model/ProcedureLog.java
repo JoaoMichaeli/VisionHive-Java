@@ -17,15 +17,13 @@ public class ProcedureLog {
     private String id;
     private String procedureName;
     private String username;
-    private String beforeState;
-    private String afterState;   // JSON depois
+    private String State;
     private LocalDateTime timestamp;
 
-    public ProcedureLog(String procedureName, String username, String before, String after) {
+    public ProcedureLog(String procedureName, String username, String state) {
         this.procedureName = procedureName;
         this.username = username;
-        this.beforeState = before;
-        this.afterState = after;
+        this.State = state;
         this.timestamp = LocalDateTime.now();
     }
 }

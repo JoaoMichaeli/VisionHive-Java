@@ -29,10 +29,9 @@ public class MotorcycleProcedureService {
         Motorcycle moto = (Motorcycle) motorcycleRepository.findByPlaca(placa)
                 .orElseThrow(() -> new RuntimeException("Moto com placa " + placa + " não encontrada"));
 
-        String before = toJson(moto);
         String jsonResponse = procedureRepo.atualizarSituacao(moto.getId(), novaSituacao);
 
-        saveLog("atualizarSituacao", before, jsonResponse);
+        saveLog("atualizarSituacao", jsonResponse);
 
         boolean isError = jsonResponse.contains("\"erro\"");
         String mensagem = isError ? jsonResponse : "Situação atualizada com sucesso";
@@ -48,11 +47,9 @@ public class MotorcycleProcedureService {
         patioRepository.findById(patioId)
                 .orElseThrow(() -> new RuntimeException("Pátio não encontrado"));
 
-        String before = toJson(moto);
-
         String jsonResponse = procedureRepo.associarPatio(moto.getId(), patioId);
 
-        saveLog("associarPatio", before, jsonResponse);
+        saveLog("associarPatio", jsonResponse);
 
         return jsonResponse;
     }
@@ -61,17 +58,9 @@ public class MotorcycleProcedureService {
         return procedureRepo.contarPatiosPorFilial(branchId);
     }
 
-    private String toJson(Object obj) {
-        try {
-            return objectMapper.writeValueAsString(obj);
-        } catch (Exception e) {
-            return "{\"error\": \"Falha ao serializar JSON\"}";
-        }
-    }
-
-    private void saveLog(String procedureName, String before, String after) {
+    private void saveLog(String procedureName, String state) {
         String username = getCurrentUsername();
-        ProcedureLog log = new ProcedureLog(procedureName, username, before, after);
+        ProcedureLog log = new ProcedureLog(procedureName, username, state);
         logRepository.save(log);
     }
 
