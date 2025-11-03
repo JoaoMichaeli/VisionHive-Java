@@ -2,7 +2,6 @@ package br.com.fiap.visionhive.services;
 
 import br.com.fiap.visionhive.dto.Procedure.ProcedureResponse;
 import br.com.fiap.visionhive.model.Motorcycle;
-import br.com.fiap.visionhive.model.Patio;
 import br.com.fiap.visionhive.model.ProcedureLog;
 import br.com.fiap.visionhive.repository.MotorcycleProcedureRepository;
 import br.com.fiap.visionhive.repository.MotorcycleRepository;
@@ -43,7 +42,7 @@ public class MotorcycleProcedureService {
         Motorcycle moto = (Motorcycle) motorcycleRepository.findByPlaca(placa)
                 .orElseThrow(() -> new RuntimeException("Moto com placa " + placa + " não encontrada"));
 
-        Patio patio = patioRepository.findById(patioId)
+        patioRepository.findById(patioId)
                 .orElseThrow(() -> new RuntimeException("Pátio não encontrado"));
 
         String resp = procedureRepo.associarPatio(moto.getId(), patioId);
