@@ -8,10 +8,12 @@ import br.com.fiap.visionhive.model.User;
 import br.com.fiap.visionhive.repository.UserRepository;
 import br.com.fiap.visionhive.services.MotorcycleProcedureService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,18 +42,30 @@ public class ProfileController {
 
     @PostMapping("/update-situacao")
     @PreAuthorize("hasRole('ADMIN')")
-    public String updateSituacao(@ModelAttribute UpdateSituacaoForm form, Model model) {
-        ProcedureResponse resp = procedureService.atualizarSituacao(form.motoId(), form.novaSituacao());
-        model.addAttribute("result", resp);
-        System.out.println("Resposta: " + resp);
+    public String updateSituacao(@Valid @ModelAttribute UpdateSituacaoForm form,
+                                 BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            String errorMsg = result.getAllErrors().get(0).getDefaultMessage();
+            model.addAttribute("result", new ProcedureResponse(null, "Erro de validação: " + errorMsg));
+            return "fragments/procedure-result :: result";
+        }
+
+        ProcedureResponse resp = procedureService.atualizarSituacao(form.placa(), form.novaSituacao());
         model.addAttribute("result", resp);
         return "fragments/procedure-result :: result";
     }
 
     @PostMapping("/associar-patio")
     @PreAuthorize("hasRole('ADMIN')")
-    public String associarPatio(@ModelAttribute AssociarPatioForm form, Model model) {
-        String mensagem = procedureService.associarPatio(form.motoId(), form.patioId());
+    public String associarPatio(@Valid @ModelAttribute AssociarPatioForm form,
+                                BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            String errorMsg = result.getAllErrors().get(0).getDefaultMessage();
+            model.addAttribute("result", new ProcedureResponse(null, "Erro de validação: " + errorMsg));
+            return "fragments/procedure-result :: result";
+        }
+
+        String mensagem = procedureService.associarPatio(form.placa(), form.patioId());
         model.addAttribute("result", new ProcedureResponse(null, mensagem));
         return "fragments/procedure-result :: result";
     }

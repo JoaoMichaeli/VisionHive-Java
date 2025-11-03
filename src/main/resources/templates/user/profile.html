@@ -23,6 +23,11 @@
         .street-element:nth-child(5) { bottom: 30%; left: 70%; animation-delay: 12s; font-size: 3.5rem; }
         @keyframes streetFloat { 0% { transform: translateY(0px) rotate(0deg); opacity: 0.1; } 25% { opacity:0.2; } 50% { transform: translateY(-30px) rotate(180deg); opacity:0.15; } 75% { opacity:0.1; } 100% { transform: translateY(0px) rotate(360deg); opacity:0.1; } }
         .mottu-text-glow { text-shadow: 0 0 10px rgba(0,255,136,0.5); }
+
+        /* Estilos de validação */
+        .input-error { border-color: #ff4444 !important; }
+        .error-text { color: #ff4444; font-size: 0.875rem; margin-top: 0.25rem; display: block; }
+        .input-valid { border-color: #00FF88 !important; }
     </style>
 </head>
 <body class="flex flex-col min-h-screen mottu-dark font-sans relative overflow-x-hidden">
@@ -54,34 +59,15 @@
         </div>
 
         <div class="flex flex-col sm:flex-row justify-center mt-6 gap-4">
-            <a th:href="@{/}"
-               sec:authorize="hasAuthority('ROLE_ADMIN')"
-               class="mottu-button px-6 py-3 rounded-xl text-lg font-semibold">
-                Home
-            </a>
-            <a th:href="@{/motorcycle}"
-               sec:authorize="hasAuthority('ROLE_OPERADOR')"
-               class="mottu-button px-6 py-3 rounded-xl text-lg font-semibold">
-                Motos
-            </a>
-            <a th:href="@{/admin/create-operator}"
-               sec:authorize="hasAuthority('ROLE_ADMIN')"
-               class="mottu-button px-6 py-3 rounded-xl text-lg font-semibold">
-                Operador
-            </a>
+            <a th:href="@{/}" sec:authorize="hasAuthority('ROLE_ADMIN')" class="mottu-button px-6 py-3 rounded-xl text-lg font-semibold">Home</a>
+            <a th:href="@{/motorcycle}" sec:authorize="hasAuthority('ROLE_OPERADOR')" class="mottu-button px-6 py-3 rounded-xl text-lg font-semibold">Motos</a>
+            <a th:href="@{/admin/create-operator}" sec:authorize="hasAuthority('ROLE_ADMIN')" class="mottu-button px-6 py-3 rounded-xl text-lg font-semibold">Operador</a>
 
-            <button type="button"
-                    sec:authorize="hasAuthority('ROLE_ADMIN')"
-                    onclick="openReportsModal()"
-                    class="mottu-button px-6 py-3 rounded-xl text-lg font-semibold">
-                Relatórios
-            </button>
+            <button type="button" sec:authorize="hasAuthority('ROLE_ADMIN')" onclick="openReportsModal()" class="mottu-button px-6 py-3 rounded-xl text-lg font-semibold">Relatórios</button>
 
             <form th:action="@{/logout}" method="post" style="display:inline;">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                <button type="submit" class="mottu-button px-6 py-3 rounded-xl text-lg font-semibold">
-                    Sair
-                </button>
+                <button type="submit" class="mottu-button px-6 py-3 rounded-xl text-lg font-semibold">Sair</button>
             </form>
         </div>
     </div>
@@ -89,66 +75,89 @@
 
 <div th:replace="fragments/footer :: footer"></div>
 
+<!-- MODAL DE RELATÓRIOS -->
 <div id="reportsModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-black/90 urban-glass p-8 rounded-2xl max-w-4xl w-full max-h-screen overflow-y-auto border border-mottu-green/30">
 
         <div class="flex justify-between items-center mb-6">
-            <h3 class="text-3xl font-bold mottu-green mottu-text-glow">
-                Relatórios via PL/SQL
-            </h3>
-            <button onclick="closeReportsModal()" class="text-white hover:text-red-400 text-2xl">
-                <i class="fas fa-times"></i>
-            </button>
+            <h3 class="text-3xl font-bold mottu-green mottu-text-glow">Relatórios via PL/SQL</h3>
+            <button onclick="closeReportsModal()" class="text-white hover:text-red-400 text-2xl"><i class="fas fa-times"></i></button>
         </div>
 
         <div class="grid md:grid-cols-2 gap-6">
 
+            <!-- 1. Atualizar Situação -->
             <div class="p-5 bg-black/50 rounded-xl border border-mottu-green/20 space-y-4">
-                <h4 class="text-xl font-semibold mottu-green flex items-center gap-2">
-                    <i class="fas fa-sync-alt"></i> Atualizar Situação
-                </h4>
+                <h4 class="text-xl font-semibold mottu-green flex items-center gap-2"><i class="fas fa-sync-alt"></i> Atualizar Situação</h4>
                 <form th:action="@{/profile/update-situacao}" method="post" class="space-y-3">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                    <input type="number" name="motoId" placeholder="Ex: 1" required
-                           class="w-full px-4 py-3 bg-black/70 border border-mottu-green/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-mottu-green transition-colors" />
-                    <input type="text" name="novaSituacao" placeholder="Ex: Em manutenção" required
-                           class="w-full px-4 py-3 bg-black/70 border border-mottu-green/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-mottu-green transition-colors" />
+
+                    <div>
+                        <input type="text" name="placa" placeholder="Ex: BRA2E19" required maxlength="7"
+                               class="w-full px-4 py-3 bg-black/70 border border-mottu-green/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-mottu-green transition-colors uppercase"
+                               oninput="this.value = this.value.toUpperCase(); validatePlaca(this)" />
+                        <span class="error-text hidden" data-error="placa">Placa inválida. Use: AAA0A00 ou AAA0A0A</span>
+                    </div>
+
+                    <div>
+                        <input type="text" name="novaSituacao" placeholder="Ex: Em manutenção" required
+                               class="w-full px-4 py-3 bg-black/70 border border-mottu-green/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-mottu-green transition-colors"
+                               oninput="validateRequired(this)" />
+                        <span class="error-text hidden" data-error="situacao">Campo obrigatório</span>
+                    </div>
+
                     <button type="submit" class="w-full mottu-button py-3 rounded-lg font-semibold flex items-center justify-center gap-2">
                         <i class="fas fa-play"></i> Executar
                     </button>
                 </form>
             </div>
 
+            <!-- 2. Associar Pátio -->
             <div class="p-5 bg-black/50 rounded-xl border border-mottu-green/20 space-y-4">
-                <h4 class="text-xl font-semibold mottu-green flex items-center gap-2">
-                    <i class="fas fa-link"></i> Associar Pátio
-                </h4>
+                <h4 class="text-xl font-semibold mottu-green flex items-center gap-2"><i class="fas fa-link"></i> Associar Pátio</h4>
                 <form th:action="@{/profile/associar-patio}" method="post" class="space-y-3">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                    <input type="number" name="motoId" placeholder="Ex: 1" required
-                           class="w-full px-4 py-3 bg-black/70 border border-mottu-green/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-mottu-green transition-colors" />
-                    <input type="number" name="patioId" placeholder="Ex: 3" required
-                           class="w-full px-4 py-3 bg-black/70 border border-mottu-green/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-mottu-green transition-colors" />
+
+                    <div>
+                        <input type="text" name="placa" placeholder="Ex: BRA2E19" required maxlength="7"
+                               class="w-full px-4 py-3 bg-black/70 border border-mottu-green/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-mottu-green transition-colors uppercase"
+                               oninput="this.value = this.value.toUpperCase(); validatePlaca(this)" />
+                        <span class="error-text hidden" data-error="placa">Placa inválida. Use: AAA0A00 ou AAA0A0A</span>
+                    </div>
+
+                    <div>
+                        <input type="number" name="patioId" placeholder="Ex: 3" required min="1"
+                               class="w-full px-4 py-3 bg-black/70 border border-mottu-green/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-mottu-green transition-colors"
+                               oninput="validateRequired(this)" />
+                        <span class="error-text hidden" data-error="patio">Campo obrigatório</span>
+                    </div>
+
                     <button type="submit" class="w-full mottu-button py-3 rounded-lg font-semibold flex items-center justify-center gap-2">
                         <i class="fas fa-play"></i> Executar
                     </button>
                 </form>
             </div>
 
+            <!-- 3. Contar Pátios -->
             <div class="p-5 bg-black/50 rounded-xl border border-mottu-green/20 space-y-4">
-                <h4 class="text-xl font-semibold mottu-green flex items-center gap-2">
-                    <i class="fas fa-calculator"></i> Contar Pátios
-                </h4>
+                <h4 class="text-xl font-semibold mottu-green flex items-center gap-2"><i class="fas fa-calculator"></i> Contar Pátios</h4>
                 <form th:action="@{/profile/contar-patios}" method="post" class="space-y-3">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                    <input type="number" name="branchId" placeholder="Ex: 1 (Filial Paulista)" required
-                           class="w-full px-4 py-3 bg-black/70 border border-mottu-green/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-mottu-green transition-colors" />
+
+                    <div>
+                        <input type="number" name="branchId" placeholder="Ex: 1 (Filial Paulista)" required min="1"
+                               class="w-full px-4 py-3 bg-black/70 border border-mottu-green/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-mottu-green transition-colors"
+                               oninput="validateRequired(this)" />
+                        <span class="error-text hidden" data-error="branch">Campo obrigatório</span>
+                    </div>
+
                     <button type="submit" class="w-full mottu-button py-3 rounded-lg font-semibold flex items-center justify-center gap-2">
                         <i class="fas fa-play"></i> Executar
                     </button>
                 </form>
             </div>
 
+            <!-- Resultado -->
             <div id="resultContainer" class="md:col-span-2">
                 <div class="text-center text-gray-500 py-8">
                     <i class="fas fa-info-circle text-4xl mb-3"></i>
@@ -159,8 +168,7 @@
         </div>
 
         <div class="mt-6 text-center">
-            <button onclick="clearResult()"
-                    class="text-sm text-gray-400 hover:text-mottu-green underline transition-colors">
+            <button onclick="clearResult()" class="text-sm text-gray-400 hover:text-mottu-green underline transition-colors">
                 Limpar resultado
             </button>
         </div>
@@ -169,6 +177,56 @@
 
 <!-- JavaScript -->
 <script>
+    // Funções de validação
+    function validatePlaca(input) {
+        const value = input.value.trim();
+        const error = input.parentElement.querySelector('[data-error="placa"]');
+        const regex = /^[A-Z]{3}[0-9][0-9A-Z][0-9]{2}$/;
+
+        if (value === '') {
+            showError(input, error, 'Campo obrigatório');
+            return false;
+        } else if (value.length !== 7) {
+            showError(input, error, 'Placa deve ter 7 caracteres');
+            return false;
+        } else if (!regex.test(value)) {
+            showError(input, error, 'Formato inválido. Ex: BRA2E19');
+            return false;
+        } else {
+            hideError(input, error);
+            return true;
+        }
+    }
+
+    function validateRequired(input) {
+        const value = input.value.trim();
+        const error = input.parentElement.querySelector(`[data-error="${input.name === 'patioId' ? 'patio' : input.name === 'branchId' ? 'branch' : 'situacao'}"]`);
+
+        if (value === '') {
+            showError(input, error, 'Campo obrigatório');
+            return false;
+        } else {
+            hideError(input, error);
+            return true;
+        }
+    }
+
+    function showError(input, errorElement, message) {
+        input.classList.add('input-error');
+        input.classList.remove('input-valid');
+        if (errorElement) {
+            errorElement.textContent = message;
+            errorElement.classList.remove('hidden');
+        }
+    }
+
+    function hideError(input, errorElement) {
+        input.classList.remove('input-error');
+        input.classList.add('input-valid');
+        if (errorElement) errorElement.classList.add('hidden');
+    }
+
+    // Modal
     function openReportsModal() {
         const modal = document.getElementById('reportsModal');
         modal.classList.remove('hidden');
@@ -190,11 +248,25 @@
             </div>`;
     }
 
+    // AJAX
     document.addEventListener('DOMContentLoaded', function () {
         const forms = document.querySelectorAll('#reportsModal form');
         forms.forEach(form => {
             form.addEventListener('submit', function (e) {
                 e.preventDefault();
+
+                // Validação final antes do submit
+                let isValid = true;
+                const inputs = this.querySelectorAll('input[required]');
+                inputs.forEach(input => {
+                    if (input.name === 'placa') {
+                        if (!validatePlaca(input)) isValid = false;
+                    } else {
+                        if (!validateRequired(input)) isValid = false;
+                    }
+                });
+
+                if (!isValid) return;
 
                 const formData = new FormData(this);
                 const button = this.querySelector('button[type="submit"]');

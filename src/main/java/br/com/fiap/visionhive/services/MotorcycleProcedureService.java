@@ -1,6 +1,7 @@
 package br.com.fiap.visionhive.services;
 
 import br.com.fiap.visionhive.dto.Procedure.ProcedureResponse;
+import br.com.fiap.visionhive.model.Motorcycle;
 import br.com.fiap.visionhive.model.ProcedureLog;
 import br.com.fiap.visionhive.repository.MotorcycleProcedureRepository;
 import br.com.fiap.visionhive.repository.MotorcycleRepository;
@@ -24,11 +25,11 @@ public class MotorcycleProcedureService {
     private final ProcedureLogRepository logRepository;
 
     @Transactional
-    public ProcedureResponse atualizarSituacao(Long motoId, String novaSituacao) {
-        motorcycleRepository.findById(motoId)
-                .orElseThrow(() -> new RuntimeException("Moto não encontrada"));
+    public ProcedureResponse atualizarSituacao(String placa, String novaSituacao) {
+        Motorcycle moto = (Motorcycle) motorcycleRepository.findByPlaca(placa)
+                .orElseThrow(() -> new RuntimeException("Moto com placa " + placa + " não encontrada"));
 
-        ProcedureResponse resp = procedureRepo.atualizarSituacao(motoId, novaSituacao);
+        ProcedureResponse resp = procedureRepo.atualizarSituacao(moto.getId(), novaSituacao);
 
         saveLogIfJson(resp.json());
 
@@ -36,13 +37,13 @@ public class MotorcycleProcedureService {
     }
 
     @Transactional
-    public String associarPatio(Long motoId, Long patioId) {
-        motorcycleRepository.findById(motoId)
-                .orElseThrow(() -> new RuntimeException("Moto não encontrada"));
+    public String associarPatio(String placa, Long patioId) {
+        Motorcycle moto = (Motorcycle) motorcycleRepository.findByPlaca(placa)
+                .orElseThrow(() -> new RuntimeException("Moto com placa " + placa + " não encontrada"));
         patioRepository.findById(patioId)
                 .orElseThrow(() -> new RuntimeException("Pátio não encontrado"));
 
-        return procedureRepo.associarPatio(motoId, patioId);
+        return procedureRepo.associarPatio(moto.getId(), patioId);
     }
 
     public int contarPatiosPorFilial(Long branchId) {

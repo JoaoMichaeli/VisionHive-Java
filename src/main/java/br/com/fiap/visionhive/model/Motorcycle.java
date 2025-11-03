@@ -21,6 +21,10 @@ public class Motorcycle {
 
     @NotBlank(message = "A placa da moto não pode estar em branco")
     @Size(min = 7, max = 7, message = "A placa deve ter exatamente 7 caracteres")
+    @Pattern(
+            regexp = "^([A-Z]{3}[0-9][0-9A-Z][0-9]{2})$",
+            message = "Placa inválida. Use formato Mercosul: AAA0A00 ou AAA0A0A (ex: BRA2E19)"
+    )
     private String placa;
 
     @NotBlank(message = "O chassi da moto não pode estar em branco")

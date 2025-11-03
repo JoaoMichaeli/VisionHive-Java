@@ -19,24 +19,28 @@ public class MotorcycleProcedureController {
     private final MotorcycleService motorcycleService;
     private final PatioService patioService;
 
-    @GetMapping("/atualizar-situacao/{id}")
-    public String formAtualizarSituacao(@PathVariable Long id, Model model) {
-        Motorcycle moto = motorcycleService.findById(id);
+    @GetMapping("/atualizar-situacao/{placa}")
+    public String formAtualizarSituacao(@PathVariable String placa, Model model) {
+        Motorcycle moto = (Motorcycle) motorcycleService.findByPlaca(placa)
+                .orElseThrow(() -> new RuntimeException("Moto com placa " + placa + " não encontrada"));
         model.addAttribute("moto", moto);
         return "motorcycle/atualizar-situacao";
     }
 
-    @PostMapping("/atualizar-situacao/{id}")
+    @PostMapping("/atualizar-situacao/{placa}")
     public String executarAtualizarSituacao(
-            @PathVariable Long id,
+            @PathVariable String placa,
             @RequestParam String novaSituacao,
             Model model) {
 
-        ProcedureResponse resp = procedureService.atualizarSituacao(id, novaSituacao);
+        Motorcycle moto = (Motorcycle) motorcycleService.findByPlaca(placa)
+                .orElseThrow(() -> new RuntimeException("Moto com placa " + placa + " não encontrada"));
+
+        ProcedureResponse resp = procedureService.atualizarSituacao(String.valueOf(moto.getId()), novaSituacao);
 
         model.addAttribute("json", resp.json());
         model.addAttribute("mensagem", resp.mensagem());
-        model.addAttribute("motoId", id);
+        model.addAttribute("placa", placa);
 
         return "motorcycle/resultado-procedure";
     }
