@@ -2,6 +2,7 @@ package br.com.fiap.visionhive.services;
 
 import br.com.fiap.visionhive.dto.Procedure.ProcedureResponse;
 import br.com.fiap.visionhive.model.Motorcycle;
+import br.com.fiap.visionhive.model.Patio;
 import br.com.fiap.visionhive.model.ProcedureLog;
 import br.com.fiap.visionhive.repository.MotorcycleProcedureRepository;
 import br.com.fiap.visionhive.repository.MotorcycleRepository;
@@ -14,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Service
 @RequiredArgsConstructor
@@ -40,10 +42,15 @@ public class MotorcycleProcedureService {
     public String associarPatio(String placa, Long patioId) {
         Motorcycle moto = (Motorcycle) motorcycleRepository.findByPlaca(placa)
                 .orElseThrow(() -> new RuntimeException("Moto com placa " + placa + " não encontrada"));
-        patioRepository.findById(patioId)
+
+        Patio patio = patioRepository.findById(patioId)
                 .orElseThrow(() -> new RuntimeException("Pátio não encontrado"));
 
-        return procedureRepo.associarPatio(moto.getId(), patioId);
+        String resp = procedureRepo.associarPatio(moto.getId(), patioId);
+
+        saveLogIfJson(resp);
+
+        return resp;
     }
 
     public int contarPatiosPorFilial(Long branchId) {
@@ -53,14 +60,14 @@ public class MotorcycleProcedureService {
         return result;
     }
 
-    private void saveLogIfJson(String json) {
-        if (json != null && !json.trim().isEmpty()) {
+    private void saveLogIfJson(String response) {
+        if (response != null && !response.trim().isEmpty()) {
             ProcedureLog log = new ProcedureLog(
                     null,
-                    "atualizarSituacao",
+                    getProcedureName(),
                     getCurrentUsername(),
-                    json,
-                    LocalDateTime.now()
+                    response,
+                    LocalDateTime.now(ZoneId.of("America/Sao_Paulo"))
             );
             logRepository.save(log);
         }
@@ -69,6 +76,10 @@ public class MotorcycleProcedureService {
     private String getCurrentUsername() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return auth != null && auth.isAuthenticated() ? auth.getName() : "anonymous";
+    }
+
+    private String getProcedureName() {
+        return new Exception().getStackTrace()[1].getMethodName();
     }
 }
 

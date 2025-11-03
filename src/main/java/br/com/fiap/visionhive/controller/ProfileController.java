@@ -39,7 +39,6 @@ public class ProfileController {
 
     @PostMapping("/update-situacao")
     @PreAuthorize("hasRole('ADMIN')")
-    @ResponseBody
     public String updateSituacao(@Valid @ModelAttribute UpdateSituacaoForm form,
                                  BindingResult result, Model model) {
         if (result.hasErrors()) {
@@ -55,7 +54,6 @@ public class ProfileController {
 
     @PostMapping("/associar-patio")
     @PreAuthorize("hasRole('ADMIN')")
-    @ResponseBody
     public String associarPatio(@Valid @ModelAttribute AssociarPatioForm form,
                                 BindingResult result, Model model) {
         if (result.hasErrors()) {
@@ -69,7 +67,6 @@ public class ProfileController {
 
     @PostMapping("/contar-patios")
     @PreAuthorize("hasRole('ADMIN')")
-    @ResponseBody
     public String contarPatios(@ModelAttribute ContarPatiosForm form, Model model) {
         try {
             int total = procedureService.contarPatiosPorFilial(form.branchId());
