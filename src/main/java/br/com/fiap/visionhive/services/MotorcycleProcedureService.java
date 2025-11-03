@@ -7,7 +7,6 @@ import br.com.fiap.visionhive.repository.MotorcycleProcedureRepository;
 import br.com.fiap.visionhive.repository.MotorcycleRepository;
 import br.com.fiap.visionhive.repository.PatioRepository;
 import br.com.fiap.visionhive.repository.ProcedureLogRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -22,7 +21,6 @@ public class MotorcycleProcedureService {
     private final MotorcycleRepository motorcycleRepository;
     private final PatioRepository patioRepository;
     private final ProcedureLogRepository logRepository;
-    private final ObjectMapper objectMapper;
 
     @Transactional
     public ProcedureResponse atualizarSituacao(String placa, String novaSituacao) {
