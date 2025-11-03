@@ -7,14 +7,12 @@ import br.com.fiap.visionhive.repository.MotorcycleProcedureRepository;
 import br.com.fiap.visionhive.repository.MotorcycleRepository;
 import br.com.fiap.visionhive.repository.PatioRepository;
 import br.com.fiap.visionhive.repository.ProcedureLogRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 @Service
 @RequiredArgsConstructor
@@ -24,17 +22,22 @@ public class MotorcycleProcedureService {
     private final MotorcycleRepository motorcycleRepository;
     private final PatioRepository patioRepository;
     private final ProcedureLogRepository logRepository;
+    private final ObjectMapper objectMapper;
 
     @Transactional
     public ProcedureResponse atualizarSituacao(String placa, String novaSituacao) {
         Motorcycle moto = (Motorcycle) motorcycleRepository.findByPlaca(placa)
                 .orElseThrow(() -> new RuntimeException("Moto com placa " + placa + " não encontrada"));
 
-        ProcedureResponse resp = procedureRepo.atualizarSituacao(moto.getId(), novaSituacao);
+        String before = toJson(moto);
+        String jsonResponse = procedureRepo.atualizarSituacao(moto.getId(), novaSituacao);
 
-        saveLogIfJson(resp.json());
+        saveLog("atualizarSituacao", before, jsonResponse);
 
-        return resp;
+        boolean isError = jsonResponse.contains("\"erro\"");
+        String mensagem = isError ? jsonResponse : "Situação atualizada com sucesso";
+
+        return new ProcedureResponse(jsonResponse, mensagem);
     }
 
     @Transactional
@@ -45,31 +48,31 @@ public class MotorcycleProcedureService {
         patioRepository.findById(patioId)
                 .orElseThrow(() -> new RuntimeException("Pátio não encontrado"));
 
-        String resp = procedureRepo.associarPatio(moto.getId(), patioId);
+        String before = toJson(moto);
 
-        saveLogIfJson(resp);
+        String jsonResponse = procedureRepo.associarPatio(moto.getId(), patioId);
 
-        return resp;
+        saveLog("associarPatio", before, jsonResponse);
+
+        return jsonResponse;
     }
 
     public int contarPatiosPorFilial(Long branchId) {
-        System.out.println("Contando pátios para filial ID: " + branchId);
-        int result = procedureRepo.contarPatiosPorFilial(branchId);
-        System.out.println("Total de pátios: " + result);
-        return result;
+        return procedureRepo.contarPatiosPorFilial(branchId);
     }
 
-    private void saveLogIfJson(String response) {
-        if (response != null && !response.trim().isEmpty()) {
-            ProcedureLog log = new ProcedureLog(
-                    null,
-                    getProcedureName(),
-                    getCurrentUsername(),
-                    response,
-                    LocalDateTime.now(ZoneId.of("America/Sao_Paulo"))
-            );
-            logRepository.save(log);
+    private String toJson(Object obj) {
+        try {
+            return objectMapper.writeValueAsString(obj);
+        } catch (Exception e) {
+            return "{\"error\": \"Falha ao serializar JSON\"}";
         }
+    }
+
+    private void saveLog(String procedureName, String before, String after) {
+        String username = getCurrentUsername();
+        ProcedureLog log = new ProcedureLog(procedureName, username, before, after);
+        logRepository.save(log);
     }
 
     private String getCurrentUsername() {
@@ -77,8 +80,4 @@ public class MotorcycleProcedureService {
         return auth != null && auth.isAuthenticated() ? auth.getName() : "anonymous";
     }
 
-    private String getProcedureName() {
-        return new Exception().getStackTrace()[1].getMethodName();
-    }
 }
-
