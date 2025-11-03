@@ -14,10 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
@@ -42,43 +39,44 @@ public class ProfileController {
 
     @PostMapping("/update-situacao")
     @PreAuthorize("hasRole('ADMIN')")
+    @ResponseBody
     public String updateSituacao(@Valid @ModelAttribute UpdateSituacaoForm form,
                                  BindingResult result, Model model) {
         if (result.hasErrors()) {
             String errorMsg = result.getAllErrors().get(0).getDefaultMessage();
             model.addAttribute("result", new ProcedureResponse(null, "Erro de validação: " + errorMsg));
             return "fragments/procedure-result :: result";
+        } else {
+            ProcedureResponse resp = procedureService.atualizarSituacao(form.placa(), form.novaSituacao());
+            model.addAttribute("result", resp);
         }
-
-        ProcedureResponse resp = procedureService.atualizarSituacao(form.placa(), form.novaSituacao());
-        model.addAttribute("result", resp);
         return "fragments/procedure-result :: result";
     }
 
     @PostMapping("/associar-patio")
     @PreAuthorize("hasRole('ADMIN')")
+    @ResponseBody
     public String associarPatio(@Valid @ModelAttribute AssociarPatioForm form,
                                 BindingResult result, Model model) {
         if (result.hasErrors()) {
-            String errorMsg = result.getAllErrors().get(0).getDefaultMessage();
-            model.addAttribute("result", new ProcedureResponse(null, "Erro de validação: " + errorMsg));
-            return "fragments/procedure-result :: result";
+            model.addAttribute("result", new ProcedureResponse(null, "Erro: " + result.getAllErrors().get(0).getDefaultMessage()));
+        } else {
+            String mensagem = procedureService.associarPatio(form.placa(), form.patioId());
+            model.addAttribute("result", new ProcedureResponse(null, mensagem));
         }
-
-        String mensagem = procedureService.associarPatio(form.placa(), form.patioId());
-        model.addAttribute("result", new ProcedureResponse(null, mensagem));
         return "fragments/procedure-result :: result";
     }
 
     @PostMapping("/contar-patios")
     @PreAuthorize("hasRole('ADMIN')")
+    @ResponseBody
     public String contarPatios(@ModelAttribute ContarPatiosForm form, Model model) {
         try {
             int total = procedureService.contarPatiosPorFilial(form.branchId());
-            String mensagem = "Filial ID " + form.branchId() + " possui " + total + " pátio(s).";
-            model.addAttribute("result", new ProcedureResponse(null, mensagem));
+            model.addAttribute("result", new ProcedureResponse(null,
+                    "Filial ID " + form.branchId() + " possui " + total + " pátio(s)."));
         } catch (Exception e) {
-            model.addAttribute("result", new ProcedureResponse(null, "Erro ao contar pátios: " + e.getMessage()));
+            model.addAttribute("result", new ProcedureResponse(null, "Erro: " + e.getMessage()));
         }
         return "fragments/procedure-result :: result";
     }

@@ -4,7 +4,6 @@ import br.com.fiap.visionhive.dto.Procedure.ProcedureResponse;
 import br.com.fiap.visionhive.model.Motorcycle;
 import br.com.fiap.visionhive.services.MotorcycleProcedureService;
 import br.com.fiap.visionhive.services.MotorcycleService;
-import br.com.fiap.visionhive.services.PatioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +16,6 @@ public class MotorcycleProcedureController {
 
     private final MotorcycleProcedureService procedureService;
     private final MotorcycleService motorcycleService;
-    private final PatioService patioService;
 
     @GetMapping("/atualizar-situacao/{placa}")
     public String formAtualizarSituacao(@PathVariable String placa, Model model) {

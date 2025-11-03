@@ -23,11 +23,7 @@
         .street-element:nth-child(5) { bottom: 30%; left: 70%; animation-delay: 12s; font-size: 3.5rem; }
         @keyframes streetFloat { 0% { transform: translateY(0px) rotate(0deg); opacity: 0.1; } 25% { opacity:0.2; } 50% { transform: translateY(-30px) rotate(180deg); opacity:0.15; } 75% { opacity:0.1; } 100% { transform: translateY(0px) rotate(360deg); opacity:0.1; } }
         .mottu-text-glow { text-shadow: 0 0 10px rgba(0,255,136,0.5); }
-
-        /* Estilos de validação */
-        .input-error { border-color: #ff4444 !important; }
         .error-text { color: #ff4444; font-size: 0.875rem; margin-top: 0.25rem; display: block; }
-        .input-valid { border-color: #00FF88 !important; }
     </style>
 </head>
 <body class="flex flex-col min-h-screen mottu-dark font-sans relative overflow-x-hidden">
@@ -75,7 +71,6 @@
 
 <div th:replace="fragments/footer :: footer"></div>
 
-<!-- MODAL DE RELATÓRIOS -->
 <div id="reportsModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-black/90 urban-glass p-8 rounded-2xl max-w-4xl w-full max-h-screen overflow-y-auto border border-mottu-green/30">
 
@@ -86,7 +81,6 @@
 
         <div class="grid md:grid-cols-2 gap-6">
 
-            <!-- 1. Atualizar Situação -->
             <div class="p-5 bg-black/50 rounded-xl border border-mottu-green/20 space-y-4">
                 <h4 class="text-xl font-semibold mottu-green flex items-center gap-2"><i class="fas fa-sync-alt"></i> Atualizar Situação</h4>
                 <form th:action="@{/profile/update-situacao}" method="post" class="space-y-3">
@@ -112,7 +106,6 @@
                 </form>
             </div>
 
-            <!-- 2. Associar Pátio -->
             <div class="p-5 bg-black/50 rounded-xl border border-mottu-green/20 space-y-4">
                 <h4 class="text-xl font-semibold mottu-green flex items-center gap-2"><i class="fas fa-link"></i> Associar Pátio</h4>
                 <form th:action="@{/profile/associar-patio}" method="post" class="space-y-3">
@@ -138,7 +131,6 @@
                 </form>
             </div>
 
-            <!-- 3. Contar Pátios -->
             <div class="p-5 bg-black/50 rounded-xl border border-mottu-green/20 space-y-4">
                 <h4 class="text-xl font-semibold mottu-green flex items-center gap-2"><i class="fas fa-calculator"></i> Contar Pátios</h4>
                 <form th:action="@{/profile/contar-patios}" method="post" class="space-y-3">
@@ -157,7 +149,6 @@
                 </form>
             </div>
 
-            <!-- Resultado -->
             <div id="resultContainer" class="md:col-span-2">
                 <div class="text-center text-gray-500 py-8">
                     <i class="fas fa-info-circle text-4xl mb-3"></i>
@@ -175,9 +166,7 @@
     </div>
 </div>
 
-<!-- JavaScript -->
 <script>
-    // Funções de validação
     function validatePlaca(input) {
         const value = input.value.trim();
         const error = input.parentElement.querySelector('[data-error="placa"]');
@@ -226,7 +215,6 @@
         if (errorElement) errorElement.classList.add('hidden');
     }
 
-    // Modal
     function openReportsModal() {
         const modal = document.getElementById('reportsModal');
         modal.classList.remove('hidden');
@@ -248,14 +236,12 @@
             </div>`;
     }
 
-    // AJAX
     document.addEventListener('DOMContentLoaded', function () {
         const forms = document.querySelectorAll('#reportsModal form');
         forms.forEach(form => {
             form.addEventListener('submit', function (e) {
                 e.preventDefault();
 
-                // Validação final antes do submit
                 let isValid = true;
                 const inputs = this.querySelectorAll('input[required]');
                 inputs.forEach(input => {
@@ -278,19 +264,15 @@
                     method: 'POST',
                     body: formData,
                     headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'Accept': 'text/html'
+                        'X-Requested-With': 'XMLHttpRequest'
                     }
                 })
-                    .then(response => response.text())
+                    .then(response => {
+                        if (!response.ok) throw new Error('Erro na rede');
+                        return response.text();
+                    })
                     .then(html => {
                         document.getElementById('resultContainer').innerHTML = html;
-                    })
-                    .catch(err => {
-                        document.getElementById('resultContainer').innerHTML =
-                            `<div class="text-red-400 p-4 rounded-lg bg-black/50 border border-red-500">
-                            <i class="fas fa-exclamation-triangle mr-2"></i> Erro: ${err.message}
-                        </div>`;
                     })
                     .finally(() => {
                         button.innerHTML = originalText;
