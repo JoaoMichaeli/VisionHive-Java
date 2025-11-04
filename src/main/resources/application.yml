@@ -17,12 +17,6 @@ spring:
   flyway:
     enabled: false
 
-  data:
-    mongodb:
-      uri: mongodb://localhost:27017/visionhive
-      database: visionhive
-
 logging:
   level:
-    org.springframework.data.mongodb: DEBUG
     br.com.fiap: DEBUG
