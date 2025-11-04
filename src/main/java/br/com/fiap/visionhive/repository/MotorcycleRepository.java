@@ -19,4 +19,12 @@ public interface MotorcycleRepository extends JpaRepository<Motorcycle, Long>, J
         GROUP BY p.branch.id
         """)
     List<Object[]> countMotorcyclesByBranch();
+
+    @Query("""
+        SELECT m.patio.id, COUNT(m.id)
+        FROM Motorcycle m
+        WHERE m.patio IS NOT NULL
+        GROUP BY m.patio.id
+        """)
+    List<Object[]> countMotorcyclesByPatio();
 }

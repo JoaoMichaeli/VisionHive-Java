@@ -4,6 +4,7 @@ import br.com.fiap.visionhive.model.Patio;
 import br.com.fiap.visionhive.repository.MotorcycleRepository;
 import br.com.fiap.visionhive.repository.PatioRepository;
 import br.com.fiap.visionhive.services.BranchService;
+import br.com.fiap.visionhive.services.MotorcycleService;
 import br.com.fiap.visionhive.services.PatioService;
 import br.com.fiap.visionhive.specification.MotorcycleSpecification;
 import br.com.fiap.visionhive.specification.PatioSpecification;
@@ -28,6 +29,7 @@ public class PatioController {
     private final BranchService branchService;
     private final PatioRepository patioRepository;
     private final MotorcycleRepository motorcycleRepository;
+    private final MotorcycleService motorcycleService;
 
     public record PatioFilters(String nome, String branchNome) {}
 
@@ -36,6 +38,7 @@ public class PatioController {
     public String form(@RequestParam Long branchId, Model model) {
         var branch = branchService.findById(branchId);
         var patio = new Patio();
+
         patio.setBranch(branch);
 
         model.addAttribute("patio", patio);
@@ -63,7 +66,14 @@ public class PatioController {
         var filters = new PatioFilters(nome, branchNome);
         var spec = PatioSpecification.withFilters(filters);
         var patios = patioRepository.findAll(spec, pageable);
+        long totalPatios = patioService.countAllPatios();
+        var motorcycles = motorcycleService.getAllMotorcycles();
+        var motorcyclesByPatio = motorcycleService.countMotorcyclesByPatio();
+
         model.addAttribute("patios", patios);
+        model.addAttribute("motorcycleByPatio", motorcyclesByPatio);
+        model.addAttribute("totalPatios", totalPatios);
+        model.addAttribute("motorcycles", motorcycles);
         return "patio/index";
     }
 
@@ -86,9 +96,11 @@ public class PatioController {
                 .and((root, query, cb) -> cb.equal(root.get("patio").get("id"), id));
 
         var motorcycles = motorcycleRepository.findAll(spec, pageable);
+        var motorcyclesByPatio = motorcycleService.countMotorcyclesByPatio();
 
         model.addAttribute("patio", patio);
         model.addAttribute("motorcycles", motorcycles);
+        model.addAttribute("motorcycleByPatio", motorcyclesByPatio);
 
         return "patio/detail";
     }

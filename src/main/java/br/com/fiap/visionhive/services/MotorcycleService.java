@@ -29,6 +29,15 @@ public class MotorcycleService {
                 ));
     }
 
+    public Map<Long, Long> countMotorcyclesByPatio() {
+        return motorcycleRepository.countMotorcyclesByPatio()
+                .stream()
+                .collect(Collectors.toMap(
+                        result -> (Long) result[0],
+                        result -> (Long) result[1]
+                ));
+    }
+
     public void save(Motorcycle motorcycle) {
         motorcycleRepository.save(motorcycle);
     }

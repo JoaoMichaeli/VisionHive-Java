@@ -36,7 +36,7 @@ public class MotorcycleController {
             @RequestParam(required = false) String chassi,
             @RequestParam(required = false) String numeracaoMotor,
             @RequestParam(required = false) String situacao,
-            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+            @PageableDefault(size = 100, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
             Model model) {
 
         var filters = new MotorcycleFilters(placa, chassi, numeracaoMotor, situacao);

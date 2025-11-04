@@ -17,6 +17,10 @@ public class PatioService {
         return patioRepository.findAll();
     }
 
+    public long countAllPatios() {
+        return patioRepository.count();
+    }
+
     public void save(Patio patio) {
         patioRepository.save(patio);
     }
