@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${branch.nome} + ' - Detalhes da Base'">Base Detalhes - Vision Hive</title>
+    <title th:text="${branch.nome} + ' - Detalhes da Filial'">Filial Detalhes - Vision Hive</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -107,20 +107,20 @@
                     <div class="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full pulse-ring"></div>
                 </div>
                 <h2 th:text="${branch.nome}" class="text-4xl text-white font-bold">
-                    Nome da Base
+                    Nome da Filial
                 </h2>
                 <div class="flex items-center gap-2 px-3 py-1 bg-green-500/20 rounded-full border border-green-500/30">
                     <div class="status-indicator"></div>
                     <span class="mottu-green text-sm font-medium">ONLINE</span>
                 </div>
             </div>
-            <p class="mottu-green text-sm font-medium mb-2">BASE IoT CONECTADA</p>
+            <p class="mottu-green text-sm font-medium mb-2">Filial IoT CONECTADA</p>
             <p class="text-gray-400 text-xs">Sincronização em tempo real</p>
         </div>
 
         <div class="w-full h-48 bg-gray-900 flex flex-col justify-center items-center text-gray-400 font-bold text-lg rounded-xl mb-6 border border-gray-800 relative overflow-hidden">
             <i class="fas fa-camera mottu-green text-4xl mb-2"></i>
-            <span>Foto da Base</span>
+            <span>Foto da Filial</span>
             <div class="absolute inset-0 bg-gradient-to-r from-transparent via-green-500/5 to-transparent animate-pulse"></div>
             <div class="absolute top-2 right-2 flex items-center gap-1 text-xs">
                 <i class="fas fa-wifi mottu-green"></i>

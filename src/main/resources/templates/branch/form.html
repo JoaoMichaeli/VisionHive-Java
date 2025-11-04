@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastrar Base - Vision Hive</title>
+    <title>Cadastrar Filial - Vision Hive</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -125,20 +125,20 @@
                     <i class="fas fa-plus text-2xl text-black"></i>
                 </div>
                 <h2 class="text-4xl font-bold mb-2 text-white">
-                    Cadastrar <span class="mottu-green">Base</span>
+                    Cadastrar <span class="mottu-green">Filial</span>
                 </h2>
-                <p class="text-gray-300">Adicione uma nova base IoT ao sistema Vision Hive</p>
+                <p class="text-gray-300">Adicione uma nova Filial IoT ao sistema Vision Hive</p>
             </div>
 
             <form th:action="@{/branch/form}" th:object="${branch}" method="post" class="space-y-6">
                 <div>
                     <label class="flex items-center gap-2 text-white font-semibold mb-3">
                         <i class="fas fa-building mottu-green"></i>
-                        Nome da Base:
+                        Nome da Filial:
                     </label>
                     <input type="text" th:field="*{nome}"
                            class="form-field w-full px-4 py-3 rounded-xl text-white focus:outline-none"
-                           placeholder="Digite o nome da base"/>
+                           placeholder="Digite o nome da Filial"/>
                     <div th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"
                          class="text-red-400 text-sm mt-2 flex items-center gap-2">
                         <i class="fas fa-exclamation-triangle"></i>
@@ -153,7 +153,7 @@
                     </label>
                     <input type="text" th:field="*{bairro}"
                            class="form-field w-full px-4 py-3 rounded-xl text-white focus:outline-none"
-                           placeholder="Digite a localização da base"/>
+                           placeholder="Digite a localização da Filial"/>
                     <div th:if="${#fields.hasErrors('bairro')}" th:errors="*{bairro}"
                          class="text-red-400 text-sm mt-2 flex items-center gap-2">
                         <i class="fas fa-exclamation-triangle"></i>
@@ -180,7 +180,7 @@
                 <button type="submit"
                         class="mottu-button w-full font-bold py-4 rounded-xl shadow-lg transition-all duration-300 mt-8">
                     <i class="fas fa-save mr-2"></i>
-                    Cadastrar Base
+                    Cadastrar Filial
                 </button>
             </form>
 

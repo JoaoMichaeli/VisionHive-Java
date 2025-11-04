@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vision Hive - Bases IoT</title>
+    <title>Vision Hive - Filials IoT</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -122,22 +122,22 @@
     <div class="text-center mb-12">
         <h1 class="text-4xl md:text-6xl text-white font-bold mb-4">
             <i class="fas fa-building text-green-400 mr-4"></i>
-            Bases Conectadas
+            Filials Conectadas
         </h1>
-        <p class="text-gray-400 text-lg">Gerenciamento inteligente de bases e frotas</p>
+        <p class="text-gray-400 text-lg">Gerenciamento inteligente de filials e frotas</p>
     </div>
 
     <div class="max-w-7xl mx-auto mb-8">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             <div class="glass-card rounded-xl p-6 text-center">
-                <div class="text-3xl font-bold text-white neon-text mb-2" th:text="${#lists.size(branches)}">12</div>
-                <div class="text-gray-400 text-sm">Bases Ativas</div>
+                <div class="text-3xl font-bold text-white neon-text mb-2" th:text="${totalBranches}">12</div>
+                <div class="text-gray-400 text-sm">Filials Ativas</div>
                 <div class="text-green-400 text-xs mt-1">
                     <i class="fas fa-arrow-up mr-1"></i>100% Online
                 </div>
             </div>
             <div class="glass-card rounded-xl p-6 text-center">
-                <div class="text-3xl font-bold text-white neon-text mb-2">2.4K</div>
+                <div class="text-3xl font-bold text-white neon-text mb-2" th:text="${#lists.size(motorcycles)} ?: '10'" >10</div>
                 <div class="text-gray-400 text-sm">Motos Conectadas</div>
                 <div class="text-green-400 text-xs mt-1">
                     <i class="fas fa-motorcycle mr-1"></i>+12% hoje
@@ -165,7 +165,7 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="relative">
                     <i class="fas fa-building absolute left-3 top-1/2 transform -translate-y-1/2 text-green-400"></i>
-                    <input type="text" name="nome" placeholder="Nome da Base" th:value="${param.nome}"
+                    <input type="text" name="nome" placeholder="Nome da Filial" th:value="${param.nome}"
                            class="w-full pl-10 pr-4 py-3 rounded-lg bg-gray-800/50 text-white border border-gray-600 focus:outline-none focus:border-green-400 focus:ring-2 focus:ring-green-400/20 transition-all"/>
                 </div>
                 <div class="relative">
@@ -179,7 +179,7 @@
                            class="w-full pl-10 pr-4 py-3 rounded-lg bg-gray-800/50 text-white border border-gray-600 focus:outline-none focus:border-green-400 focus:ring-2 focus:ring-green-400/20 transition-all"/>
                 </div>
                 <button type="submit" class="md:col-span-3 bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-black font-bold px-6 py-3 rounded-lg neon-border transition-all duration-300 transform hover:scale-105">
-                    <i class="fas fa-search mr-2"></i>Buscar Bases
+                    <i class="fas fa-search mr-2"></i>Buscar Filials
                 </button>
             </div>
         </form>
@@ -189,7 +189,7 @@
         <a th:href="@{/branch/form}"
            class="inline-flex items-center gap-3 bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-black font-bold px-8 py-4 rounded-lg neon-border transition-all duration-300 transform hover:scale-105">
             <i class="fas fa-plus text-xl"></i>
-            Cadastrar Nova Base IoT
+            Cadastrar Nova Filial IoT
         </a>
     </div>
 
@@ -213,7 +213,7 @@
                     <a th:href="@{'/branch/' + ${branch.id}}"
                        th:text="${branch.nome}"
                        class="text-white text-xl font-bold mb-3 hover:text-green-400 transition-colors block neon-text">
-                        Nome da Base
+                        Nome da Filial
                     </a>
 
                     <div class="space-y-2 mb-4">
@@ -231,7 +231,7 @@
                     <div class="border-t border-gray-700 pt-4">
                         <div class="grid grid-cols-3 gap-2 text-center">
                             <div>
-                                <div class="text-green-400 font-bold text-sm">24</div>
+                                <div class="text-green-400 font-bold text-sm" th:text="${motorcycleByBranch[branch.id]} ?: '0'" >0</div>
                                 <div class="text-gray-500 text-xs">Motos</div>
                             </div>
                             <div>
@@ -248,7 +248,7 @@
                     <div class="mt-4 pt-4 border-t border-gray-700">
                         <a th:href="@{'/branch/' + ${branch.id}}"
                            class="w-full bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-black font-bold py-2 px-4 rounded-lg transition-all duration-300 text-center block">
-                            <i class="fas fa-eye mr-2"></i>Acessar Base
+                            <i class="fas fa-eye mr-2"></i>Acessar Filial
                         </a>
                     </div>
                 </div>

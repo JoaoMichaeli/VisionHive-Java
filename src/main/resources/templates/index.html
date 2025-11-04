@@ -175,7 +175,7 @@
                 <div class="text-5xl mottu-green mb-4">
                     <i class="fas fa-motorcycle"></i>
                 </div>
-                <h3 class="text-3xl font-bold text-white mb-2">1,247</h3>
+                <h3 class="text-3xl font-bold text-white mb-2" th:text="${#lists.size(motorcycles)} ?: '10'">10</h3>
                 <p class="text-gray-300 font-medium">Motos Monitoradas</p>
             </div>
 

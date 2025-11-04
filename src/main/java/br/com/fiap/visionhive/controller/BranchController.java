@@ -1,9 +1,8 @@
 package br.com.fiap.visionhive.controller;
 
 import br.com.fiap.visionhive.model.Branch;
-import br.com.fiap.visionhive.repository.BranchRepository;
 import br.com.fiap.visionhive.services.BranchService;
-import br.com.fiap.visionhive.specification.BranchSpecification;
+import br.com.fiap.visionhive.services.MotorcycleService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequiredArgsConstructor
 public class BranchController {
 
-    private final BranchRepository branchRepository;
+    private final MotorcycleService motorcycleService;
     private final BranchService branchService;
 
     public record BranchFilters(String nome, String bairro, String cnpj) {}
@@ -31,14 +30,22 @@ public class BranchController {
     public String index(@RequestParam(required = false) String nome,
                         @RequestParam(required = false) String bairro,
                         @RequestParam(required = false) String cnpj,
-                        @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+                        @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
                         Model model) {
 
         var filters = new BranchFilters(nome, bairro, cnpj);
-        var spec = BranchSpecification.withFilters(filters);
-        var branches = branchRepository.findAll(spec, pageable);
+        var branchesPage = branchService.findAllWithFilters(filters, pageable);
+        long totalFiltered = branchService.countWithFilters(filters);
+        long totalBranches = branchService.countAllBranches();
+        var motorcycles = motorcycleService.getAllMotorcycles();
+        var motorcyclesByBranch = motorcycleService.countMotorcyclesByBranch();
 
-        model.addAttribute("branches", branches);
+        model.addAttribute("motorcycles", motorcycles);
+        model.addAttribute("motorcycleByBranch", motorcyclesByBranch);
+        model.addAttribute("branches", branchesPage);
+        model.addAttribute("totalFiltered", totalFiltered);
+        model.addAttribute("totalBranches", totalBranches);
+
         return "branch/index";
     }
 
