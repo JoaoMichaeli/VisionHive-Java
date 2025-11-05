@@ -28,7 +28,7 @@ stages:
           - task: Docker@2
             displayName: 'Build & Push to ACR'
             inputs:
-              containerRegistry: 'acr-visionhive'
+              containerRegistry: 'visionhiveacr'
               repository: '$(IMAGE_NAME)'
               command: 'buildAndPush'
               Dockerfile: 'Dockerfile'
@@ -54,7 +54,7 @@ stages:
                   --name AllowAzureServices \
                   --start-ip-address 0.0.0.0 \
                   --end-ip-address 0.0.0.0 \
-                  --output none || echo "Regra já existe."
+                  --output none
 
                 az container create \
                   --resource-group $(AZURE_RESOURCE_GROUP) \
