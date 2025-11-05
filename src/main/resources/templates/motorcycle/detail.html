@@ -214,17 +214,41 @@
 
 <script>
     async function acionarBuzzer() {
+        const id = getMotoIdFromUrl();
+        if (!id) return mostrarMensagem("ID da moto não encontrado.");
+
         try {
-            const response = await fetch('/api/acionar-buzzer');
-            mostrarMensagem(response.ok ? "Buzzer ativado com sucesso!" : "Erro ao ativar o buzzer.");
-        } catch { mostrarMensagem("Falha na comunicação com o servidor."); }
+            const response = await fetch(`/api/acionar-buzzer/moto/${id}`);
+            const texto = await response.text();
+            mostrarMensagem(response.ok
+                ? "Buzzer ativado!"
+                : `Erro: ${texto}`
+            );
+        } catch {
+            mostrarMensagem("Falha na comunicação com o servidor.");
+        }
     }
 
     async function pararBuzzer() {
+        const id = getMotoIdFromUrl();
+        if (!id) return mostrarMensagem("ID da moto não encontrado.");
+
         try {
-            const response = await fetch('/api/parar-buzzer');
-            mostrarMensagem(response.ok ? "Buzzer desativado com sucesso!" : "Erro ao desativar o buzzer.");
-        } catch { mostrarMensagem("Falha na comunicação com o servidor."); }
+            const response = await fetch(`/api/parar-buzzer/moto/${id}`);
+            const texto = await response.text();
+            mostrarMensagem(response.ok
+                ? "Buzzer desativado!"
+                : `Erro: ${texto}`
+            );
+        } catch {
+            mostrarMensagem("Falha na comunicação com o servidor.");
+        }
+    }
+
+    function getMotoIdFromUrl() {
+        const path = window.location.pathname;
+        const match = path.match(/\/motorcycle\/(\d+)$/);
+        return match ? match[1] : null;
     }
 
     function mostrarMensagem(msg) {
