@@ -46,8 +46,8 @@ stages:
               imageName: 'openjdk:17-jre-slim'
               package: '$(Pipeline.Workspace)/drop/app.jar'
               appSettings: |
-                -AZURE_SQL_SERVER $(AZURE_SQL_SERVER)
-                -AZURE_SQL_DB $(AZURE_SQL_DB)
-                -AZURE_SQL_USER $(AZURE_SQL_USER)
-                -AZURE_SQL_PASSWORD $(AZURE_SQL_PASSWORD)
-                -WEBSITES_PORT 8080
+                AZURE_SQL_SERVER: $(AZURE_SQL_SERVER)
+                AZURE_SQL_DB: $(AZURE_SQL_DB)
+                AZURE_SQL_USER: $(AZURE_SQL_USER)
+                AZURE_SQL_PASSWORD: $(AZURE_SQL_PASSWORD)
+                WEBSITES_PORT: 8080
