@@ -27,17 +27,16 @@ stages:
               javaHomeOption: 'JDKVersion'
               jdkVersionOption: '1.17'
             displayName: 'Build com Gradle'
-
           - task: PublishPipelineArtifact@1
             inputs:
               targetPath: 'build/libs'
               artifact: 'jar-artifact'
               publishLocation: 'pipeline'
             displayName: 'Publicar JAR'
-
           - script: |
-              echo "Construindo imagem Docker..."
-              docker build -t $(WEB_APP_NAME): $(IMAGE_TAG) .
+              echo "Construindo imagem Docker: $(WEB_APP_NAME):$(IMAGE_TAG)"
+              docker build -t $(WEB_APP_NAME): $(IMAGE_TAG) -f Dockerfile .
+            workingDirectory: '$(System.DefaultWorkingDirectory)'
             displayName: 'Build Docker Image'
 
   - stage: Deploy
