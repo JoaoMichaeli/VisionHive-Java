@@ -11,10 +11,12 @@ variables:
   WEB_APP_NAME: 'visionhive'
   RESOURCE_GROUP: 'rg-visionhive'
   IMAGE_TAG: '$(Build.BuildId)'
+  ACR_NAME: 'visionhiveacr'
+  IMAGE_NAME: '$$ (ACR_NAME).azurecr.io/ $$(WEB_APP_NAME):$(IMAGE_TAG)'
 
 stages:
   - stage: Build
-    displayName: 'CI: Build & Docker'
+    displayName: 'CI: Build & Docker Push to ACR'
     jobs:
       - job: Build
         steps:
@@ -33,14 +35,25 @@ stages:
               publishLocation: 'pipeline'
             displayName: 'Publicar Artefato JAR'
 
-          - script: |
-              echo "Construindo imagem Docker: $(WEB_APP_NAME):$(IMAGE_TAG)"
-              docker build --progress=plain -t $(WEB_APP_NAME):$(IMAGE_TAG) -f Dockerfile .
-            workingDirectory: '$(System.DefaultWorkingDirectory)'
-            displayName: 'Build Docker Image'
+          - task: Docker@2
+            displayName: 'Login to ACR'
+            inputs:
+              command: login
+              containerRegistry: 'acr-connection'
+
+          - task: Docker@2
+            displayName: 'Build & Push Docker to ACR'
+            inputs:
+              command: buildAndPush
+              repository: $(WEB_APP_NAME)
+              dockerfile: 'Dockerfile'
+              containerRegistry: 'acr-connection'
+              tags: |
+                $(IMAGE_TAG)
+                latest
 
   - stage: Deploy
-    displayName: 'CD: Deploy no Web App'
+    displayName: 'CD: Deploy from ACR to Web App'
     dependsOn: Build
     condition: succeeded()
     jobs:
@@ -54,6 +67,6 @@ stages:
                   inputs:
                     azureSubscription: 'Azure subscription'
                     appName: $(WEB_APP_NAME)
-                    imageName: '$(WEB_APP_NAME):$(IMAGE_TAG)'
+                    imageName: '$(IMAGE_NAME)'
                     resourceGroupName: $(RESOURCE_GROUP)
                   displayName: 'Deploy no Azure Web App'
