@@ -44,39 +44,43 @@ stages:
       - job: DeployACI
         displayName: 'Deploy do ACI Group (Apenas App)'
         steps:
-          - task: AzureCLI@2
-            displayName: 'Criar ACI Group com Aplicativo e Conectar ao PostgreSQL PaaS'
-            inputs:
-              azureSubscription: 'azure-visionhive'
-              scriptType: 'bash'
-              scriptLocation: 'inlineScript'
-              inlineScript: |
-                echo "Obtendo credenciais do ACR..."
-                ACR_USERNAME=$(az acr credential show --name "$(ACR_NAME)" --query username -o tsv)
-                ACR_PASSWORD=$(az acr credential show --name "$(ACR_NAME)" --query "passwords[0].value" -o tsv)
-                echo "Credenciais do ACR obtidas."
-                
-                POSTGRES_HOST_FQDN=$(az postgres flexible-server show --resource-group "$(AZURE_RESOURCE_GROUP)" --name "$(POSTGRES_SERVER_NAME)" --query fullyQualifiedDomainName -o tsv)
-                
-                echo "Criando Azure Container Group com Aplicativo e conectando ao PostgreSQL PaaS..."
-                az container create \
-                  --resource-group "$(AZURE_RESOURCE_GROUP)" \
-                  --name "$(ACI_NAME)" \
-                  --image "$(ACR_FULL_NAME)/$(IMAGE_NAME):$(TAG)" \
-                  --cpu 1 \
-                  --memory 2.0 \
-                  --dns-name-label "visionhive-app" \
-                  --ports 8080 \
-                  --registry-username "$ACR_USERNAME" \
-                  --registry-password "$ACR_PASSWORD" \
-                  --os-type Linux \
-                  --environment-variables \
-                    "POSTGRES_HOST=$POSTGRES_HOST_FQDN" \
-                    "POSTGRES_PORT=5432" \
-                    "POSTGRES_DB=$(POSTGRES_DB_NAME)" \
-                    "POSTGRES_USER=$(POSTGRES_ADMIN_USER)" \
-                  --secure-environment-variables \
-                    "POSTGRES_PASSWORD=$(POSTGRES_ADMIN_PASSWORD)" \
-                  --restart-policy Always \
-                  --ip-address Public
-                echo "Azure Container Group com App criado e configurado para conectar ao PostgreSQL PaaS."
+        - task: AzureCLI@2
+          displayName: 'Criar ACI Group com Aplicativo e Conectar ao PostgreSQL PaaS'
+          inputs:
+            azureSubscription: 'azure-visionhive'
+            scriptType: 'bash'
+            scriptLocation: 'inlineScript'
+            inlineScript: |
+              echo "Obtendo credenciais do ACR..."
+              ACR_USERNAME=$(az acr credential show --name "$(ACR_NAME)" --query username -o tsv)
+              ACR_PASSWORD=$(az acr credential show --name "$(ACR_NAME)" --query "passwords[0].value" -o tsv)
+              echo "Credenciais do ACR obtidas."
+              
+              POSTGRES_HOST_FQDN=$(az postgres flexible-server show --resource-group "$(AZURE_RESOURCE_GROUP)" --name "$(POSTGRES_SERVER_NAME)" --query fullyQualifiedDomainName -o tsv)
+              
+              echo "Debug: POSTGRES_HOST_FQDN: $POSTGRES_HOST_FQDN"
+              echo "Debug: POSTGRES_DB_NAME: $(POSTGRES_DB_NAME)"
+              echo "Debug: POSTGRES_ADMIN_USER: $(POSTGRES_ADMIN_USER)"
+              echo "Debug: POSTGRES_ADMIN_PASSWORD: $(POSTGRES_ADMIN_PASSWORD)"
+
+              echo "Criando Azure Container Group com Aplicativo e conectando ao PostgreSQL PaaS..."
+              az container create \
+                --resource-group "$(AZURE_RESOURCE_GROUP)" \
+                --name "$(ACI_NAME)" \
+                --image "$(ACR_FULL_NAME)/$(IMAGE_NAME):$(TAG)" \
+                --cpu 1 \
+                --memory 2.0 \
+                --dns-name-label "visionhive-app" \
+                --ports 8080 \
+                --registry-username "$ACR_USERNAME" \
+                --registry-password "$ACR_PASSWORD" \
+                --os-type Linux \
+                --environment-variables \
+                  "POSTGRES_HOST=$POSTGRES_HOST_FQDN" \
+                  "POSTGRES_PORT=5432" \
+                  "POSTGRES_DB=$(POSTGRES_DB_NAME)" \
+                  "POSTGRES_USER=$(POSTGRES_ADMIN_USER)" \
+                  "POSTGRES_PASSWORD=$(POSTGRES_ADMIN_PASSWORD)" \
+                --restart-policy Always \
+                --ip-address Public
+              echo "Azure Container Group com App criado e configurado para conectar ao PostgreSQL PaaS."
