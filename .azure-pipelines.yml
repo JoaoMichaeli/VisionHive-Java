@@ -8,11 +8,10 @@ pool:
 
 variables:
   - group: visionhive-secrets
-    AZURE_SQL_SERVER: 'visionhive-server.database.windows.net'
-    AZURE_SQL_DB: 'visionhive-db'
 
 stages:
   - stage: Build
+    displayName: 'Build & Test'
     jobs:
       - job: Build
         steps:
@@ -22,6 +21,7 @@ stages:
               tasks: 'clean bootJar'
               publishJUnitResults: true
               testResultsFiles: '**/TEST-*.xml'
+              javaHomeOption: 'JDKVersion'
               jdkVersionOption: '1.17'
 
           - task: PublishPipelineArtifact@1
