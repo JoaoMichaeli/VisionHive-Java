@@ -16,7 +16,6 @@ stages:
     displayName: 'Build & Test'
     jobs:
       - job: Build
-        displayName: 'Gradle Build + Test'
         steps:
           - task: Gradle@3
             inputs:
@@ -26,28 +25,22 @@ stages:
               testResultsFiles: '**/TEST-*.xml'
               javaHomeOption: 'JDKVersion'
               jdkVersionOption: '1.17'
-            displayName: 'Build com Gradle'
 
           - task: PublishPipelineArtifact@1
             inputs:
               targetPath: 'build/libs/app.jar'
               artifact: 'drop'
-              publishLocation: 'pipeline'
-            displayName: 'Publicar artefato (app.jar)'
 
   - stage: Deploy
-    displayName: 'Deploy → Azure Web App (Container)'
     dependsOn: Build
     condition: succeeded()
     jobs:
       - job: Deploy
-        displayName: 'Deploy Docker JAR'
         steps:
           - download: current
             artifact: 'drop'
 
           - task: AzureWebApp@1
-            displayName: 'Deploy para Azure Web App'
             inputs:
               azureSubscription: 'azure-visionhive'
               appType: 'webAppLinux'
