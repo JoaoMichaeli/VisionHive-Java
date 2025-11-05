@@ -8,6 +8,11 @@ pool:
 
 variables:
   - group: visionhive-secrets
+    ACR_NAME: 'visionhiveacr'
+    IMAGE_NAME: 'visionhive-app'
+    TAG: '$(Build.BuildId)'
+    AZURE_RESOURCE_GROUP: 'rg-visionhive'
+    ACI_NAME: 'visionhive-aci'
 
 stages:
   - stage: Build
