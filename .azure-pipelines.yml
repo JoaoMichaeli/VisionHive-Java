@@ -30,41 +30,30 @@ stages:
           - task: PublishPipelineArtifact@1
             inputs:
               targetPath: 'build/libs'
-              artifact: 'jar'
+              artifact: 'jar-artifact'
+              publishLocation: 'pipeline'
             displayName: 'Publicar JAR'
 
           - script: |
               echo "Construindo imagem Docker..."
-              docker build -t $(WEB_APP_NAME):$(Build.BuildId) .
+              docker build -t $$ (WEB_APP_NAME): $$(IMAGE_TAG) .
             displayName: 'Build Docker Image'
 
-          - task: Docker@2
-            inputs:
-              command: 'login'
-              containerRegistry: 'azure-container-registry'
-            condition: failed()
-            displayName: 'Login ACR'
-
   - stage: Deploy
-    displayName: 'Deploy no Web App'
+    displayName: 'CD: Deploy no Web App'
     dependsOn: Build
     condition: succeeded()
     jobs:
-      - deployment: Deploy
-        environment: 'production'
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - task: AzureCLI@2
-                  inputs:
-                    azureSubscription: 'Azure subscription'
-                    scriptType: 'bash'
-                    scriptLocation: 'inlineScript'
-                    inlineScript: |
-                      az webapp config container set \
-                        --name $(WEB_APP_NAME) \
-                        --resource-group $(RESOURCE_GROUP) \
-                        --docker-custom-image-name $(WEB_APP_NAME):$(Build.BuildId) \
-                        --docker-registry-server-url https://index.docker.io
-                  displayName: 'Deploy Docker no Web App'
+    - deployment: DeployWebApp
+      environment: 'production'
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+            - task: AzureWebAppContainer@1
+              inputs:
+                azureSubscription: 'Azure subscription'
+                appName: $(WEB_APP_NAME)
+                imageName: '$$ (WEB_APP_NAME): $$(IMAGE_TAG)'
+                resourceGroupName: $(RESOURCE_GROUP)
+              displayName: 'Deploy Docker no Azure Web App'
