@@ -8,6 +8,8 @@ pool:
 
 variables:
   - group: visionhive-secrets
+  - name: TAG
+    value: '$(Build.BuildId)'
 
 stages:
   - stage: Build
