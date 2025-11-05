@@ -13,9 +13,6 @@ spring:
       ddl-auto: update
     show-sql: true
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-    properties:
-      hibernate.jdbc.lob.non_contextual_creation: true
-      hibernate.temp.use_jdbc_metadata_defaults: false
 
   flyway:
     enabled: true
