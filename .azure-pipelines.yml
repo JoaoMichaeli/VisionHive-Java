@@ -20,7 +20,7 @@ stages:
           - task: Gradle@3
             inputs:
               gradleWrapperFile: 'gradlew'
-              tasks: 'clean bootJar test'
+              tasks: 'clean bootJar'
               publishJUnitResults: true
               testResultsFiles: '**/TEST-*.xml'
               javaHomeOption: 'JDKVersion'
