@@ -8,9 +8,6 @@ pool:
 
 variables:
   - group: visionhive-secrets
-    ACR_NAME: 'visionhiveacr.azurecr.io'
-    IMAGE_NAME: 'visionhive-app'
-    TAG: '$(Build.BuildId)'
 
 stages:
   - stage: Build
