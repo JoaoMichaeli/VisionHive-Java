@@ -12,7 +12,7 @@ variables:
   RESOURCE_GROUP: 'rg-visionhive'
   IMAGE_TAG: '$(Build.BuildId)'
   ACR_NAME: 'visionhiveacr'
-  IMAGE_NAME: '$$ (ACR_NAME).azurecr.io/ $$(WEB_APP_NAME):$(IMAGE_TAG)'
+  IMAGE_NAME: '$(ACR_NAME).azurecr.io/$(WEB_APP_NAME):$(IMAGE_TAG)'
 
 stages:
   - stage: Build
