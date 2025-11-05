@@ -8,11 +8,7 @@ pool:
 
 variables:
   - group: visionhive-secrets
-    ACR_NAME: 'visionhiveacr'
-    IMAGE_NAME: 'visionhive-app'
     TAG: '$(Build.BuildId)'
-    AZURE_RESOURCE_GROUP: 'rg-visionhive'
-    ACI_NAME: 'visionhive-aci'
 
 stages:
   - stage: Build
@@ -49,24 +45,21 @@ stages:
               scriptType: 'bash'
               scriptLocation: 'inlineScript'
               inlineScript: |
-                az acr login --name visionhiveacr
-
                 az container create \
                   --resource-group $(AZURE_RESOURCE_GROUP) \
-                  --name visionhive-aci \
-                  --image $(ACR_NAME)/$(IMAGE_NAME):$(TAG) \
+                  --name $(ACI_NAME) \
+                  --image $(ACR_NAME).azurecr.io/$(IMAGE_NAME):$(TAG) \
                   --cpu 1 \
                   --memory 1.5 \
-                  --registry-login-server $(ACR_NAME) \
-                  --registry-username $(az acr credential show --name visionhiveacr --query username -o tsv) \
-                  --registry-password $(az acr credential show --name visionhiveacr --query "passwords[0].value" -o tsv) \
-                  --dns-name-label visionhive-aci \
+                  --registry-login-server $(ACR_NAME).azurecr.io \
+                  --registry-username $(az acr credential show --name $(ACR_NAME) --query username -o tsv) \
+                  --registry-password $(az acr credential show --name $(ACR_NAME) --query "passwords[0].value" -o tsv) \
+                  --dns-name-label $(ACI_NAME)-$(Build.BuildId) \
                   --ports 8080 \
                   --environment-variables \
-                    AZURE_SQL_SERVER=$(AZURE_SQL_SERVER) \
-                    AZURE_SQL_DB=$(AZURE_SQL_DB) \
-                    AZURE_SQL_USER=$(AZURE_SQL_USER) \
-                    AZURE_SQL_PASSWORD=$(AZURE_SQL_PASSWORD) \
+                    AZURE_SQL_SERVER='$(AZURE_SQL_SERVER)' \
+                    AZURE_SQL_DB='$(AZURE_SQL_DB)' \
+                    AZURE_SQL_USER='$(AZURE_SQL_USER)' \
+                    AZURE_SQL_PASSWORD='$(AZURE_SQL_PASSWORD)' \
                   --restart-policy Always \
-                  --secure-environment-variables \
-                    AZURE_SQL_PASSWORD=$(AZURE_SQL_PASSWORD)
+                  --os-type Linux
