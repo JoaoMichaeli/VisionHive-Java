@@ -1,0 +1,62 @@
+trigger:
+  branches:
+    include:
+      - master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  - group: visionhive-secrets
+    AZURE_SQL_SERVER: 'visionhive-server.database.windows.net'
+    AZURE_SQL_DB: 'visionhive-db'
+
+stages:
+  - stage: Build
+    displayName: 'Build & Test'
+    jobs:
+      - job: Build
+        displayName: 'Gradle Build + Test'
+        steps:
+          - task: Gradle@3
+            inputs:
+              gradleWrapperFile: 'gradlew'
+              tasks: 'clean bootJar'
+              publishJUnitResults: true
+              testResultsFiles: '**/TEST-*.xml'
+              javaHomeOption: 'JDKVersion'
+              jdkVersionOption: '1.17'
+            displayName: 'Build com Gradle'
+
+          - task: PublishPipelineArtifact@1
+            inputs:
+              targetPath: 'build/libs/app.jar'
+              artifact: 'drop'
+              publishLocation: 'pipeline'
+            displayName: 'Publicar artefato (app.jar)'
+
+  - stage: Deploy
+    displayName: 'Deploy → Azure Web App (Container)'
+    dependsOn: Build
+    condition: succeeded()
+    jobs:
+      - job: Deploy
+        displayName: 'Deploy Docker JAR'
+        steps:
+          - download: current
+            artifact: 'drop'
+
+          - task: AzureWebApp@1
+            displayName: 'Deploy para Azure Web App'
+            inputs:
+              azureSubscription: 'azure-visionhive'
+              appType: 'webAppLinux'
+              appName: 'visionhive-app'
+              imageName: 'openjdk:17-jre-slim'
+              package: '$(Pipeline.Workspace)/drop/app.jar'
+              appSettings: |
+                -AZURE_SQL_SERVER $(AZURE_SQL_SERVER)
+                -AZURE_SQL_DB $(AZURE_SQL_DB)
+                -AZURE_SQL_USER $(AZURE_SQL_USER)
+                -AZURE_SQL_PASSWORD $(AZURE_SQL_PASSWORD)
+                -WEBSITES_PORT 8080
