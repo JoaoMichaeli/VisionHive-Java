@@ -10,6 +10,7 @@ variables:
   -group: DB-Credentials
   WEB_APP_NAME: 'visionhive'
   RESOURCE_GROUP: 'rg-visionhive'
+  IMAGE_TAG: '$(Build.BuildId)'
 
 stages:
   - stage: Build
