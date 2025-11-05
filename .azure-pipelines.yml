@@ -67,6 +67,8 @@ stages:
                   --memory 2.0 \
                   --dns-name-label visionhive-aci \
                   --ports 8080 \
+                  --registry-username $ACR_USERNAME \
+                  --registry-password $ACR_PASSWORD \
                   --environment-variables \
                     AZURE_SQL_SERVER=$(AZURE_SQL_SERVER) \
                     AZURE_SQL_DB=$(AZURE_SQL_DB) \
