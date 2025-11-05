@@ -1,13 +1,7 @@
-FROM gradle:8.10.2-jdk17 AS builder
+FROM eclipse-temurin:17-jre
+
 WORKDIR /app
-
-COPY . .
-RUN gradle clean bootJar --no-daemon
-
-FROM eclipse-temurin:17-jdk
-WORKDIR /app
-
-COPY --from=builder /app/build/libs/*.jar app.jar
+COPY build/libs/app.jar app.jar
 
 EXPOSE 8080
 

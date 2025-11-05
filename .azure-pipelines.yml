@@ -7,80 +7,64 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  - group: visionhive-secrets
-  - name: TAG
-    value: '$(Build.BuildId)'
-  - name: ACR_FULL_NAME
-    value: '$(ACR_NAME).azurecr.io'
+  -group: DB-Credentials
+  WEB_APP_NAME: 'visionhive'
+  RESOURCE_GROUP: 'rg-visionhive'
 
 stages:
   - stage: Build
-    displayName: 'Build e Push Docker'
+    displayName: 'Build & Test & Docker'
     jobs:
-      - job: BuildAndPush
-        displayName: 'Build e Push da Imagem Docker do App'
+      - job: Build
         steps:
           - task: Gradle@3
-            displayName: 'Compilar JAR com Gradle'
             inputs:
               gradleWrapperFile: 'gradlew'
-              tasks: 'clean bootJar'
+              tasks: 'clean bootJar test'
+              publishJUnitResults: true
+              testResultsFiles: '**/TEST-*.xml'
+              javaHomeOption: 'JDKVersion'
               jdkVersionOption: '1.17'
+            displayName: 'Build com Gradle'
+
+          - task: PublishPipelineArtifact@1
+            inputs:
+              targetPath: 'build/libs'
+              artifact: 'jar'
+            displayName: 'Publicar JAR'
+
+          - script: |
+              echo "Construindo imagem Docker..."
+              docker build -t $(WEB_APP_NAME):$(Build.BuildId) .
+            displayName: 'Build Docker Image'
 
           - task: Docker@2
-            displayName: 'Construir e Publicar Imagem do App no ACR'
             inputs:
-              containerRegistry: 'acr-visionhive'
-              repository: '$(IMAGE_NAME)'
-              command: 'buildAndPush'
-              Dockerfile: 'Dockerfile'
-              tags: '$(TAG)'
+              command: 'login'
+              containerRegistry: 'azure-container-registry'
+            condition: failed()
+            displayName: 'Login ACR'
 
   - stage: Deploy
-    displayName: 'Deploy para ACI com PostgreSQL PaaS'
+    displayName: 'Deploy no Web App'
     dependsOn: Build
     condition: succeeded()
     jobs:
-      - job: DeployACI
-        displayName: 'Deploy do ACI Group (Apenas App)'
-        steps:
-        - task: AzureCLI@2
-          displayName: 'Criar ACI Group com Aplicativo e Conectar ao PostgreSQL PaaS'
-          inputs:
-            azureSubscription: 'azure-visionhive'
-            scriptType: 'bash'
-            scriptLocation: 'inlineScript'
-            inlineScript: |
-              echo "Obtendo credenciais do ACR..."
-              ACR_USERNAME=$(az acr credential show --name "$(ACR_NAME)" --query username -o tsv)
-              ACR_PASSWORD=$(az acr credential show --name "$(ACR_NAME)" --query "passwords[0].value" -o tsv)
-              echo "Credenciais do ACR obtidas."
-              
-              POSTGRES_HOST_FQDN=$(az postgres flexible-server show --resource-group "$(AZURE_RESOURCE_GROUP)" --name "$(POSTGRES_SERVER_NAME)" --query fullyQualifiedDomainName -o tsv)
-              
-              echo "Debug: POSTGRES_HOST_FQDN: $POSTGRES_HOST_FQDN"
-              echo "Debug: POSTGRES_DB_NAME: $(POSTGRES_DB_NAME)"
-              echo "Debug: POSTGRES_ADMIN_USER: $(POSTGRES_ADMIN_USER)"
-              echo "Debug: POSTGRES_ADMIN_PASSWORD: $(POSTGRES_ADMIN_PASSWORD)"
-
-              echo "Criando Azure Container Group com Aplicativo e conectando ao PostgreSQL PaaS..."
-              az container create \
-                --resource-group "$(AZURE_RESOURCE_GROUP)" \
-                --name "$(ACI_NAME)" \
-                --image "$(ACR_FULL_NAME)/$(IMAGE_NAME):$(TAG)" \
-                --cpu 1 \
-                --memory 2.0 \
-                --dns-name-label "visionhive-app" \
-                --ports 8080 \
-                --registry-username "$ACR_USERNAME" \
-                --registry-password "$ACR_PASSWORD" \
-                --os-type Linux \
-                --environment-variables \
-                  "POSTGRES_HOST=$POSTGRES_HOST_FQDN" \
-                  "POSTGRES_PORT=5432" \
-                  "POSTGRES_DB=$(POSTGRES_DB_NAME)" \
-                  "POSTGRES_USER=$(POSTGRES_ADMIN_USER)" \
-                  "POSTGRES_PASSWORD=$(POSTGRES_ADMIN_PASSWORD)" \
-                --restart-policy Always \
-                --ip-address Public
-              echo "Azure Container Group com App criado e configurado para conectar ao PostgreSQL PaaS."
+      - deployment: Deploy
+        environment: 'production'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: AzureCLI@2
+                  inputs:
+                    azureSubscription: 'Azure subscription'
+                    scriptType: 'bash'
+                    scriptLocation: 'inlineScript'
+                    inlineScript: |
+                      az webapp config container set \
+                        --name $(WEB_APP_NAME) \
+                        --resource-group $(RESOURCE_GROUP) \
+                        --docker-custom-image-name $(WEB_APP_NAME):$(Build.BuildId) \
+                        --docker-registry-server-url https://index.docker.io
+                  displayName: 'Deploy Docker no Web App'
