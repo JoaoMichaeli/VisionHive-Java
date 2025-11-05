@@ -15,9 +15,10 @@ variables:
 
 stages:
   - stage: Build
-    displayName: 'Build e Push da Imagem Docker'
+    displayName: 'Build e Push Docker'
     jobs:
       - job: BuildAndPush
+        displayName: 'Build e Push da Imagem Docker do App'
         steps:
           - task: Gradle@3
             displayName: 'Compilar JAR com Gradle'
@@ -27,7 +28,7 @@ stages:
               jdkVersionOption: '1.17'
 
           - task: Docker@2
-            displayName: 'Construir e Publicar Imagem no ACR'
+            displayName: 'Construir e Publicar Imagem do App no ACR'
             inputs:
               containerRegistry: 'acr-visionhive'
               repository: '$(IMAGE_NAME)'
@@ -36,45 +37,46 @@ stages:
               tags: '$(TAG)'
 
   - stage: Deploy
-    displayName: 'Deploy para ACI'
+    displayName: 'Deploy para ACI com PostgreSQL PaaS'
     dependsOn: Build
     condition: succeeded()
     jobs:
       - job: DeployACI
+        displayName: 'Deploy do ACI Group (Apenas App)'
         steps:
           - task: AzureCLI@2
-            displayName: 'Deploy ACI + SQL Firewall'
+            displayName: 'Criar ACI Group com Aplicativo e Conectar ao PostgreSQL PaaS'
             inputs:
               azureSubscription: 'azure-visionhive'
               scriptType: 'bash'
               scriptLocation: 'inlineScript'
               inlineScript: |
-                az sql server firewall-rule create \
-                  --resource-group $(AZURE_RESOURCE_GROUP) \
-                  --server visionhive-server \
-                  --name AllowAzureServices \
-                  --start-ip-address 0.0.0.0 \
-                  --end-ip-address 0.0.0.0 \
-                  --output none
+                echo "Obtendo credenciais do ACR..."
+                ACR_USERNAME=$(az acr credential show --name "$(ACR_NAME)" --query username -o tsv)
+                ACR_PASSWORD=$(az acr credential show --name "$(ACR_NAME)" --query "passwords[0].value" -o tsv)
+                echo "Credenciais do ACR obtidas."
                 
-                ACR_USERNAME=$(az acr credential show --name $(ACR_NAME) --query username -o tsv)
-                ACR_PASSWORD=$(az acr credential show --name $(ACR_NAME) --query "passwords[0].value" -o tsv)
-
+                POSTGRES_HOST_FQDN=$(az postgres flexible-server show --resource-group "$(AZURE_RESOURCE_GROUP)" --name "$(POSTGRES_SERVER_NAME)" --query fullyQualifiedDomainName -o tsv)
+                
+                echo "Criando Azure Container Group com Aplicativo e conectando ao PostgreSQL PaaS..."
                 az container create \
-                  --resource-group $(AZURE_RESOURCE_GROUP) \
-                  --name $(ACI_NAME) \
-                  --image $(ACR_FULL_NAME)/$(IMAGE_NAME):$(TAG) \
+                  --resource-group "$(AZURE_RESOURCE_GROUP)" \
+                  --name "$(ACI_NAME)" \
+                  --image "$(ACR_FULL_NAME)/$(IMAGE_NAME):$(TAG)" \
                   --cpu 1 \
                   --memory 2.0 \
-                  --dns-name-label visionhive-aci \
+                  --dns-name-label "visionhive-app" \
                   --ports 8080 \
-                  --registry-username $ACR_USERNAME \
-                  --registry-password $ACR_PASSWORD \
+                  --registry-username "$ACR_USERNAME" \
+                  --registry-password "$ACR_PASSWORD" \
                   --os-type Linux \
                   --environment-variables \
-                    AZURE_SQL_SERVER=$(AZURE_SQL_SERVER) \
-                    AZURE_SQL_DB=$(AZURE_SQL_DB) \
-                    AZURE_SQL_USER=$(AZURE_SQL_USER) \
+                    "POSTGRES_HOST=$POSTGRES_HOST_FQDN" \
+                    "POSTGRES_PORT=5432" \
+                    "POSTGRES_DB=$(POSTGRES_DB_NAME)" \
+                    "POSTGRES_USER=$(POSTGRES_ADMIN_USER)" \
                   --secure-environment-variables \
-                    AZURE_SQL_PASSWORD=$(AZURE_SQL_PASSWORD) \
-                  --restart-policy Always
+                    "POSTGRES_PASSWORD=$(POSTGRES_ADMIN_PASSWORD)" \
+                  --restart-policy Always \
+                  --ip-address Public
+                echo "Azure Container Group com App criado e configurado para conectar ao PostgreSQL PaaS."
