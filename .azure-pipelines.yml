@@ -8,8 +8,6 @@ pool:
 
 variables:
   - group: visionhive-secrets
-    AZURE_SQL_SERVER: 'visionhive-server.database.windows.net'
-    AZURE_SQL_DB: 'visionhive-db'
 
 stages:
   - stage: Build
