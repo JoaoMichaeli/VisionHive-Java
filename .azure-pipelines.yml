@@ -8,46 +8,63 @@ pool:
 
 variables:
   - group: visionhive-secrets
+    ACR_NAME: 'visionhiveacr.azurecr.io'
+    IMAGE_NAME: 'visionhive-app'
+    TAG: '$(Build.BuildId)'
 
 stages:
   - stage: Build
-    displayName: 'Build & Test'
+    displayName: 'Build & Push Docker'
     jobs:
-      - job: Build
+      - job: BuildAndPush
         steps:
           - task: Gradle@3
             inputs:
               gradleWrapperFile: 'gradlew'
               tasks: 'clean bootJar'
-              publishJUnitResults: true
-              testResultsFiles: '**/TEST-*.xml'
-              javaHomeOption: 'JDKVersion'
               jdkVersionOption: '1.17'
 
-          - task: PublishPipelineArtifact@1
+          - task: Docker@2
+            displayName: 'Build & Push to ACR'
             inputs:
-              targetPath: 'build/libs/app.jar'
-              artifact: 'drop'
+              containerRegistry: 'acr-visionhive'
+              repository: '$(IMAGE_NAME)'
+              command: 'buildAndPush'
+              Dockerfile: 'Dockerfile'
+              tags: '$(TAG)'
 
   - stage: Deploy
+    displayName: 'Deploy to ACI'
     dependsOn: Build
     condition: succeeded()
     jobs:
-      - job: Deploy
+      - job: DeployACI
         steps:
-          - download: current
-            artifact: 'drop'
-
-          - task: AzureWebApp@1
+          - task: AzureCLI@2
+            displayName: 'Deploy Container to ACI'
             inputs:
               azureSubscription: 'azure-visionhive'
-              appType: 'webAppLinux'
-              appName: 'visionhive-app'
-              imageName: 'openjdk:17-jre-slim'
-              package: '$(Pipeline.Workspace)/drop/app.jar'
-              appSettings: |
-                -AZURE_SQL_SERVER=$(AZURE_SQL_SERVER)
-                -AZURE_SQL_DB=$(AZURE_SQL_DB)
-                -AZURE_SQL_USER=$(AZURE_SQL_USER)
-                -AZURE_SQL_PASSWORD=$(AZURE_SQL_PASSWORD)
-                -WEBSITES_PORT=8080
+              scriptType: 'bash'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                az acr login --name visionhiveacr
+
+                az container create \
+                  --resource-group $(AZURE_RESOURCE_GROUP) \
+                  --name visionhive-aci \
+                  --image $(ACR_NAME)/$(IMAGE_NAME):$(TAG) \
+                  --cpu 1 \
+                  --memory 1.5 \
+                  --registry-login-server $(ACR_NAME) \
+                  --registry-username $(az acr credential show --name visionhiveacr --query username -o tsv) \
+                  --registry-password $(az acr credential show --name visionhiveacr --query "passwords[0].value" -o tsv) \
+                  --dns-name-label visionhive-aci \
+                  --ports 8080 \
+                  --environment-variables \
+                    AZURE_SQL_SERVER=$(AZURE_SQL_SERVER) \
+                    AZURE_SQL_DB=$(AZURE_SQL_DB) \
+                    AZURE_SQL_USER=$(AZURE_SQL_USER) \
+                    AZURE_SQL_PASSWORD=$(AZURE_SQL_PASSWORD) \
+                  --restart-policy Always \
+                  --secure-environment-variables \
+                    AZURE_SQL_PASSWORD=$(AZURE_SQL_PASSWORD)
