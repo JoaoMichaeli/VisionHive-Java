@@ -14,7 +14,7 @@ variables:
 
 stages:
   - stage: Build
-    displayName: 'Build & Test & Docker'
+    displayName: 'CI: Build & Docker'
     jobs:
       - job: Build
         steps:
@@ -22,20 +22,20 @@ stages:
             inputs:
               gradleWrapperFile: 'gradlew'
               tasks: 'clean bootJar'
-              publishJUnitResults: true
-              testResultsFiles: '**/TEST-*.xml'
               javaHomeOption: 'JDKVersion'
               jdkVersionOption: '1.17'
-            displayName: 'Build com Gradle'
+            displayName: 'Gradle: Build'
+
           - task: PublishPipelineArtifact@1
             inputs:
               targetPath: 'build/libs'
               artifact: 'jar-artifact'
               publishLocation: 'pipeline'
-            displayName: 'Publicar JAR'
+            displayName: 'Publicar Artefato JAR'
+
           - script: |
               echo "Construindo imagem Docker: $(WEB_APP_NAME):$(IMAGE_TAG)"
-              docker build -t $(WEB_APP_NAME): $(IMAGE_TAG) -f Dockerfile .
+              docker build --progress=plain -t $(WEB_APP_NAME):$(IMAGE_TAG) -f Dockerfile .
             workingDirectory: '$(System.DefaultWorkingDirectory)'
             displayName: 'Build Docker Image'
 
@@ -44,16 +44,16 @@ stages:
     dependsOn: Build
     condition: succeeded()
     jobs:
-    - deployment: DeployWebApp
-      environment: 'production'
-      strategy:
-        runOnce:
-          deploy:
-            steps:
-            - task: AzureWebAppContainer@1
-              inputs:
-                azureSubscription: 'Azure subscription'
-                appName: $(WEB_APP_NAME)
-                imageName: '$(WEB_APP_NAME): $(IMAGE_TAG)'
-                resourceGroupName: $(RESOURCE_GROUP)
-              displayName: 'Deploy Docker no Azure Web App'
+      - deployment: DeployWebApp
+        environment: 'production'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: AzureWebAppContainer@1
+                  inputs:
+                    azureSubscription: 'Azure subscription'
+                    appName: $(WEB_APP_NAME)
+                    imageName: '$(WEB_APP_NAME):$(IMAGE_TAG)'
+                    resourceGroupName: $(RESOURCE_GROUP)
+                  displayName: 'Deploy no Azure Web App'
