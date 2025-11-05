@@ -28,7 +28,7 @@ stages:
           - task: Docker@2
             displayName: 'Build & Push to ACR'
             inputs:
-              containerRegistry: 'visionhiveacr'
+              containerRegistry: 'acr-visionhive'
               repository: '$(IMAGE_NAME)'
               command: 'buildAndPush'
               Dockerfile: 'Dockerfile'
@@ -55,6 +55,9 @@ stages:
                   --start-ip-address 0.0.0.0 \
                   --end-ip-address 0.0.0.0 \
                   --output none
+                
+                ACR_USERNAME=$(az acr credential show --name $(ACR_NAME) --query username -o tsv)
+                ACR_PASSWORD=$(az acr credential show --name $(ACR_NAME) --query "passwords[0].value" -o tsv)
 
                 az container create \
                   --resource-group $(AZURE_RESOURCE_GROUP) \
