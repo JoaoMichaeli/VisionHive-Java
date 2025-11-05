@@ -15,18 +15,19 @@ variables:
 
 stages:
   - stage: Build
-    displayName: 'Build & Push Docker'
+    displayName: 'Build e Push da Imagem Docker'
     jobs:
       - job: BuildAndPush
         steps:
           - task: Gradle@3
+            displayName: 'Compilar JAR com Gradle'
             inputs:
               gradleWrapperFile: 'gradlew'
               tasks: 'clean bootJar'
               jdkVersionOption: '1.17'
 
           - task: Docker@2
-            displayName: 'Build & Push to ACR'
+            displayName: 'Construir e Publicar Imagem no ACR'
             inputs:
               containerRegistry: 'acr-visionhive'
               repository: '$(IMAGE_NAME)'
@@ -35,7 +36,7 @@ stages:
               tags: '$(TAG)'
 
   - stage: Deploy
-    displayName: 'Deploy to ACI'
+    displayName: 'Deploy para ACI'
     dependsOn: Build
     condition: succeeded()
     jobs:
@@ -69,7 +70,7 @@ stages:
                   --ports 8080 \
                   --registry-username $ACR_USERNAME \
                   --registry-password $ACR_PASSWORD \
-                  --os-type Linux
+                  --os-type Linux \
                   --environment-variables \
                     AZURE_SQL_SERVER=$(AZURE_SQL_SERVER) \
                     AZURE_SQL_DB=$(AZURE_SQL_DB) \
