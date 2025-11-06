@@ -1,6 +1,6 @@
 # 🚀 Vision Hive
 
-**Vision Hive** é uma API RESTful desenvolvida para a empresa Mottu com o objetivo de facilitar o gerenciamento e localização de motocicletas nos pátios operacionais. A aplicação permite o cadastro de **Filiais (Branch)**, **Pátios (Patio)** e **Motocicletas (Motorcycle)**, associando motos aos seus respectivos pátios e filiais, com busca por placa, chassi ou número do motor.
+**Vision Hive** é uma API RESTful desenvolvida para a empresa Mottu com o objetivo de facilitar o gerenciamento e localização de motocicletas nos pátios operacionais. A aplicação permite o cadastro de **Filiais (Branch)**, **Pátios (Patio)** e **Motocicletas (Motorcycle)**, associando motos aos seus respectivos pátios e filiais, com busca por placa, chassi ou número do motor, onde cada moto é gerenciada por um **ESP32**, composto por um buzzer e leds, mostrando exatamente onde está a motocicleta solicitada.
 
 Além disso, o sistema possui **controle de acesso baseado em roles**:
 - **ADMIN:** acesso completo a todas as rotas e funcionalidades, incluindo criação de operadores e visualização de todos os links rápidos no footer.
@@ -12,8 +12,27 @@ Este projeto tem como objetivo automatizar e otimizar a gestão das motos nos p�
 
 ## 🎬 DEMONSTRAÇÃO YOUTUBE
 ```text
-https://youtu.be/W7gPiY-aZBY
+https://youtu.be/-NiaC18WjXQ
 ```
+
+## 📡DEPLOY
+```text
+http://visionhive.brazilsouth.azurecontainer.io:8080/
+```
+
+## 🪪 Login para testes como admin
+
+- Login:
+  ```adminCM```
+- Senha:
+  ```admin123```
+
+## 🪪 Login para testes como operador
+
+- Login:
+  ```operadorCM```
+- Senha:
+  ```operador123```
 
 ## 🎯 Objetivos
 
@@ -30,20 +49,6 @@ Com centenas de motos distribuídas em mais de 100 pátios no Brasil e no Méxic
 ## 💡 Nossa Solução
 
 O **VisionHive** propõe o uso de dispositivos **ESP32** com sensores físicos e conexão Wi-Fi, fixados em cada moto. Através de uma **plataforma web integrada**, é possível acionar **alertas visuais ou sonoros remotamente**, permitindo a identificação **precisa e ágil** de qualquer moto no pátio — sem depender de busca manual.
-
-## 🪪 Login para testes como admin
-
-- Login:
-  ```adminCM```
-- Senha:
-  ```admin123```
-
-## 🪪 Login para testes como operador
-
-- Login:
-  ```operadorCM```
-- Senha:
-  ```operador123```
 
 ---
 
@@ -86,6 +91,8 @@ O **VisionHive** propõe o uso de dispositivos **ESP32** com sensores físicos e
 - Maven para gerenciamento de dependências
 - Thymeleaf para frontend
 - TailwindCSS para estilos
+- C++ (Programação do Esp32)
+- Deploy azure (pipeline)
 
 ---
 
@@ -105,6 +112,13 @@ O **VisionHive** propõe o uso de dispositivos **ESP32** com sensores físicos e
 ---
 
 ## 🚀 Como Rodar o Projeto
+
+# Deploy
+```text
+http://visionhive.brazilsouth.azurecontainer.io:8080/
+```
+
+# Local (Porém o azure irá bloquear o seu ip, então acesse o deploy)
 
 1. Clone o repositório:
    ```bash
