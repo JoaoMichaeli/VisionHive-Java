@@ -140,4 +140,3 @@ O **VisionHive** propõe o uso de dispositivos **ESP32** com sensores físicos e
 | João Victor Michaeli   | RM555678 |
 | Larissa Muniz          | RM557197 |
 | Henrique Garcia        | RM558062 |
-.
