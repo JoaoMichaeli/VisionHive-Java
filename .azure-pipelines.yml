@@ -55,17 +55,16 @@ stages:
                 az container create \
                   --resource-group rg-visionhive \
                   --name visionhive-aci \
-                  --image visionhiveacr.azurecr.io/visionhive-app:49 \
+                  --image visionhiveacr.azurecr.io/visionhive-app:$(Build.BuildId) \
                   --cpu 1 \
                   --memory 1.5 \
                   --registry-login-server visionhiveacr.azurecr.io \
-                  --registry-username visionhiveacr \
-                  --registry-password "<SUA_SENHA_ACR>" \
+                  --registry-username $(ACR_USERNAME) \
+                  --registry-password $(ACR_PASSWORD) \
                   --ports 8080 \
-                  --dns-name-label visionhive$(date +%s) \
+                  --dns-name-label visionhive$(Build.BuildId) \
                   --restart-policy OnFailure \
                   --environment-variables \
-                      SPRING_DATASOURCE_URL="jdbc:postgresql://visionhive-server.postgres.database.azure.com:5432/visionhive_db?sslmode=require" \
-                      SPRING_DATASOURCE_USERNAME="vhadmin" \
-                      SPRING_DATASOURCE_PASSWORD="Visionhive@2025"
-
+                      SPRING_DATASOURCE_URL="$(DB_URL)" \
+                      SPRING_DATASOURCE_USERNAME="$(DB_USER)" \
+                      SPRING_DATASOURCE_PASSWORD="$(DB_PASSWORD)"
