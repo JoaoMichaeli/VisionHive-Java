@@ -30,9 +30,9 @@ stages:
               Dockerfile: '**/Dockerfile'
               tags: |
                 $(Build.BuildId)
-
+                
   - stage: Deploy
-    displayName: 'CD - Deploy to Azure Container Instance (ACI)'
+    displayName: 'CD - Deploy to Web App (HTTPS automático)'
     dependsOn: Build
     condition: succeeded()
     jobs:
@@ -40,32 +40,11 @@ stages:
         pool:
           vmImage: 'ubuntu-latest'
         steps:
-          - task: AzureCLI@2
-            displayName: 'Deploy to Azure Container Instance'
+          - task: AzureWebAppContainer@1
+            displayName: 'Deploy container to Web App'
             inputs:
               azureSubscription: 'AzureConnection'
-              scriptType: 'bash'
-              scriptLocation: 'inlineScript'
-              inlineScript: |
-                az container delete \
-                  --name visionhive-aci \
-                  --resource-group rg-visionhive \
-                  --yes || true
+              appName: 'visionhive-app'
+              imageName: 'visionhiveacr.azurecr.io/visionhive-app:$(Build.BuildId)'
+              containerCommand: ''
 
-                az container create \
-                  --resource-group rg-visionhive \
-                  --name visionhive-aci \
-                  --image visionhiveacr.azurecr.io/visionhive-app:$(Build.BuildId) \
-                  --cpu 1 \
-                  --memory 1.5 \
-                  --registry-login-server visionhiveacr.azurecr.io \
-                  --registry-username $(ACR_USERNAME) \
-                  --registry-password $(ACR_PASSWORD) \
-                  --ports 8080 \
-                  --dns-name-label visionhive$(Build.BuildId) \
-                  --restart-policy OnFailure \
-                  --os-type Linux \
-                  --environment-variables \
-                      SPRING_DATASOURCE_URL="$(DB_URL)" \
-                      SPRING_DATASOURCE_USERNAME="$(DB_USER)" \
-                      SPRING_DATASOURCE_PASSWORD="$(DB_PASSWORD)"
