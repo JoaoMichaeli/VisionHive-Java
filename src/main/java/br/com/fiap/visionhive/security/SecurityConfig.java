@@ -29,6 +29,9 @@ public class SecurityConfig {
                     .securityMatcher("/api/**")
                     .csrf(AbstractHttpConfigurer::disable)
                     .authorizeHttpRequests(auth -> auth
+                            .requestMatchers("/api/comando-global-esp").permitAll()
+                            .requestMatchers("/api/esp-status-report").permitAll()
+                            .requestMatchers("/api/status").permitAll()
                             .anyRequest().hasAnyRole("ADMIN", "OPERADOR"));
             return http.build();
         }
