@@ -29,7 +29,6 @@ stages:
               command: 'buildAndPush'
               Dockerfile: '**/Dockerfile'
               tags: |
-                $(Build.BuildId)
                 latest
 
   - stage: Deploy
