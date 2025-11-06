@@ -332,38 +332,55 @@
 
 <div th:replace="~{fragments/footer :: footer}"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     async function acionarBuzzer() {
+        const id = getMotoIdFromUrl();
+        if (!id) return mostrarMensagem("ID da moto não encontrado.");
+
         try {
-            const response = await fetch('/api/acionar-buzzer');
-            if (response.ok) {
-                mostrarMensagem("Buzzer ativado com sucesso!");
-            } else {
-                mostrarMensagem("Erro ao ativar o buzzer.");
-            }
-        } catch (error) {
-            mostrarMensagem("Falha na comunicação com o servidor.");
+            const response = await fetch(`/api/acionar-buzzer/moto/${id}`);
+            const texto = await response.text();
+            mostrarMensagem(response.ok
+                ? "Buzzer ativado! (Comando enviado ao ESP)"
+                : `Erro: ${texto}`
+            );
+        } catch {
+            mostrarMensagem("Falha na comunicação com o servidor Java.");
         }
     }
 
     async function pararBuzzer() {
+        const id = getMotoIdFromUrl();
+        if (!id) return mostrarMensagem("ID da moto não encontrado.");
+
         try {
-            const response = await fetch('/api/parar-buzzer');
-            if (response.ok) {
-                mostrarMensagem("Buzzer desativado com sucesso!");
-            } else {
-                mostrarMensagem("Erro ao desativar o buzzer.");
-            }
-        } catch (error) {
-            mostrarMensagem("Falha na comunicação com o servidor.");
+            const response = await fetch(`/api/parar-buzzer/moto/${id}`);
+            const texto = await response.text();
+            mostrarMensagem(response.ok
+                ? "Buzzer desativado! (Comando enviado ao ESP)"
+                : `Erro: ${texto}`
+            );
+        } catch {
+            mostrarMensagem("Falha na comunicação com o servidor Java.");
         }
+    }
+
+    function getMotoIdFromUrl() {
+        const path = window.location.pathname;
+        const match = path.match(/\/motorcycle\/(\d+)$/);
+        return match ? match[1] : null;
     }
 
     function mostrarMensagem(msg) {
         const status = document.getElementById("statusMsg");
-        status.innerText = msg;
-        status.classList.add("animate-pulse");
-        setTimeout(() => status.classList.remove("animate-pulse"), 1000);
+        if (status) {
+            status.innerText = msg;
+            status.classList.add("animate-pulse");
+            setTimeout(() => status.classList.remove("animate-pulse"), 1000);
+        } else {
+            console.log("Mensagem: " + msg);
+        }
     }
 </script>
 
