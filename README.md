@@ -11,14 +11,14 @@ Além disso, o sistema possui **controle de acesso baseado em roles**:
 Este projeto tem como objetivo automatizar e otimizar a gestão das motos nos pátios da Mottu utilizando microcontroladores ESP32 conectados via Wi-Fi, sensores físicos e um sistema web responsivo. A proposta visa garantir uma operação mais ágil, segura e escalável, eliminando o controle manual e aumentando a precisão na localização e no monitoramento dos veículos.
 
 ## 🎬 DEMONSTRAÇÃO YOUTUBE
-```text
-https://youtu.be/-NiaC18WjXQ
-```
+
+[https://youtu.be/-NiaC18WjXQ](https://youtu.be/-NiaC18WjXQ)
+
 
 ## 📡DEPLOY
-```text
-http://visionhive.brazilsouth.azurecontainer.io:8080/
-```
+
+[http://visionhive.brazilsouth.azurecontainer.io:8080](http://visionhive.brazilsouth.azurecontainer.io:8080)
+
 
 ## 🪪 Login para testes como admin
 
