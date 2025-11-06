@@ -56,14 +56,14 @@ stages:
                 az container create \
                   --resource-group rg-visionhive \
                   --name visionhive-aci \
-                  --image visionhiveacr.azurecr.io/visionhive-app \
+                  --image visionhiveacr.azurecr.io/visionhive-app:latest \
                   --cpu 1 \
                   --memory 1.5 \
                   --registry-login-server visionhiveacr.azurecr.io \
                   --registry-username $(ACR_USERNAME) \
                   --registry-password $(ACR_PASSWORD) \
                   --ports 8080 \
-                  --dns-name-label visionhive$(Build.BuildId) \
+                  --dns-name-label visionhive \
                   --restart-policy OnFailure \
                   --os-type Linux \
                   --environment-variables \
