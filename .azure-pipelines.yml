@@ -64,6 +64,7 @@ stages:
                   --ports 8080 \
                   --dns-name-label visionhive$(Build.BuildId) \
                   --restart-policy OnFailure \
+                  --os-type Linux \
                   --environment-variables \
                       SPRING_DATASOURCE_URL="$(DB_URL)" \
                       SPRING_DATASOURCE_USERNAME="$(DB_USER)" \
