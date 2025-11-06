@@ -1,72 +1,46 @@
 trigger:
   branches:
     include:
-      - main
-
-pool:
-  vmImage: 'ubuntu-latest'
+      - master
 
 variables:
-  -group: DB-Credentials
-  WEB_APP_NAME: 'visionhive'
-  RESOURCE_GROUP: 'rg-visionhive'
-  IMAGE_TAG: '$(Build.BuildId)'
-  ACR_NAME: 'visionhiveacr'
-  IMAGE_NAME: '$(ACR_NAME).azurecr.io/$(WEB_APP_NAME):$(IMAGE_TAG)'
+  - group: DB-Credentials
 
 stages:
   - stage: Build
-    displayName: 'CI: Build & Docker Push to ACR'
+    displayName: 'CI - Build, Test and Push Image'
     jobs:
-      - job: Build
+      - job: BuildJob
+        pool:
+          vmImage: 'ubuntu-latest'
         steps:
-          - task: Gradle@3
+          - task: Gradle@2
             inputs:
               gradleWrapperFile: 'gradlew'
-              tasks: 'clean bootJar'
-              javaHomeOption: 'JDKVersion'
-              jdkVersionOption: '1.17'
-            displayName: 'Gradle: Build'
-
-          - task: PublishPipelineArtifact@1
-            inputs:
-              targetPath: 'build/libs'
-              artifact: 'jar-artifact'
-              publishLocation: 'pipeline'
-            displayName: 'Publicar Artefato JAR'
-
+              tasks: 'clean build'
+              publishJUnitResults: true
+              testResultsFiles: '**/build/test-results/test/*.xml'
           - task: Docker@2
-            displayName: 'Login to ACR'
+            displayName: Build and Push Image to ACR
             inputs:
-              command: login
-              containerRegistry: 'acr-connection'
-
-          - task: Docker@2
-            displayName: 'Build & Push Docker to ACR'
-            inputs:
-              command: buildAndPush
-              repository: $(WEB_APP_NAME)
-              dockerfile: 'Dockerfile'
-              containerRegistry: 'acr-connection'
+              containerRegistry: 'ACRConnection'
+              repository: 'visionhive-app'
+              command: 'buildAndPush'
+              Dockerfile: '**/Dockerfile'
               tags: |
-                $(IMAGE_TAG)
-                latest
-
+                $(Build.BuildId)
   - stage: Deploy
-    displayName: 'CD: Deploy from ACR to Web App'
+    displayName: 'CD - Deploy to Azure Web App'
     dependsOn: Build
     condition: succeeded()
     jobs:
-      - deployment: DeployWebApp
-        environment: 'production'
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - task: AzureWebAppContainer@1
-                  inputs:
-                    azureSubscription: 'Azure subscription'
-                    appName: $(WEB_APP_NAME)
-                    imageName: '$(IMAGE_NAME)'
-                    resourceGroupName: $(RESOURCE_GROUP)
-                  displayName: 'Deploy no Azure Web App'
+      - job: DeployJob
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - task: AzureWebAppContainer@1
+            displayName: 'Deploy Image to Web App'
+            inputs:
+              azureSubscription: 'AzureConnection'
+              appName: 'visionhive-app'
+              imageName: 'visionhiveacr.azurecr.io/visionhive-app:$(Build.BuildId)'
