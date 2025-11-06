@@ -32,7 +32,7 @@ public class BuzzerLog {
     @Column(name = "placa_moto", length = 7)
     private String placaMoto;
 
-    @Column(name = "sucesso")
+    @Column(name = "sucesso", columnDefinition = "boolean")
     private Boolean sucesso;
 
     @Column(name = "erro")

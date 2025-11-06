@@ -212,6 +212,7 @@
 
 <div th:replace="fragments/footer :: footer"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Certifique-se de incluir o Chart.js -->
 <script>
     async function acionarBuzzer() {
         const id = getMotoIdFromUrl();
@@ -221,11 +222,11 @@
             const response = await fetch(`/api/acionar-buzzer/moto/${id}`);
             const texto = await response.text();
             mostrarMensagem(response.ok
-                ? "Buzzer ativado!"
+                ? "Buzzer ativado! (Comando enviado ao ESP)"
                 : `Erro: ${texto}`
             );
         } catch {
-            mostrarMensagem("Falha na comunicação com o servidor.");
+            mostrarMensagem("Falha na comunicação com o servidor Java.");
         }
     }
 
@@ -237,11 +238,11 @@
             const response = await fetch(`/api/parar-buzzer/moto/${id}`);
             const texto = await response.text();
             mostrarMensagem(response.ok
-                ? "Buzzer desativado!"
+                ? "Buzzer desativado! (Comando enviado ao ESP)"
                 : `Erro: ${texto}`
             );
         } catch {
-            mostrarMensagem("Falha na comunicação com o servidor.");
+            mostrarMensagem("Falha na comunicação com o servidor Java.");
         }
     }
 
@@ -253,9 +254,13 @@
 
     function mostrarMensagem(msg) {
         const status = document.getElementById("statusMsg");
-        status.innerText = msg;
-        status.classList.add("animate-pulse");
-        setTimeout(() => status.classList.remove("animate-pulse"), 1000);
+        if (status) { // Verifica se o elemento existe
+            status.innerText = msg;
+            status.classList.add("animate-pulse");
+            setTimeout(() => status.classList.remove("animate-pulse"), 1000);
+        } else {
+            console.log("Mensagem: " + msg); // Fallback se statusMsg não existir na tela principal
+        }
     }
 
     function abrirModal() { document.getElementById('modal').classList.remove('hidden'); }
@@ -270,97 +275,153 @@
     });
     document.getElementById('cancel-btn').addEventListener('click', () => document.getElementById('confirm-modal').classList.add('hidden'));
     document.getElementById('confirm-btn').addEventListener('click', () => document.getElementById('confirm-modal').form.submit());
-</script>
 
-<script>
-    let chart;
+
+    // --- SEÇÃO DE ATUALIZAÇÃO DO DASHBOARD (REATIVADA E AJUSTADA) ---
+    let chart; // Sua variável do Chart.js
 
     async function updateRealData() {
         try {
-            const response = await fetch('/api/status');
+            const response = await fetch('/api/status'); // Busca o status do Java (que o ESP32 enviou)
             const data = await response.json();
 
-            const statusEl = document.getElementById('iotStatus');
-            const updateEl = document.getElementById('lastUpdate');
+            // Elementos do seu dashboard
+            const iotStatusEl = document.getElementById('iotStatus'); // Supondo um elemento como <div id="iotStatus">
+            const lastUpdateEl = document.getElementById('lastUpdate'); // Supondo <span id="lastUpdate">
 
+            // Verifica se o ESP32 está conectado (baseado na lógica do Java)
             if (!data.connected) {
-                statusEl.innerHTML = '<div class="w-2 h-2 bg-red-500 rounded-full mr-2"></div> IoT Offline';
-                updateEl.innerText = 'Última atualização: falhou';
+                if (iotStatusEl) iotStatusEl.innerHTML = '<div class="w-2 h-2 bg-red-500 rounded-full mr-2"></div> IoT Offline';
+                if (lastUpdateEl) lastUpdateEl.innerText = 'Última atualização: falhou';
+                // Limpar ou desabilitar o gráfico se offline
+                if (chart) chart.destroy(); chart = null; // Destrói o gráfico para evitar dados antigos/erros
+                document.getElementById('signalQuality').innerText = 'N/A';
+                document.getElementById('signalBar').style.width = '0%';
+                document.getElementById('pingDisplay').innerText = 'N/A';
+                document.getElementById('pingText').innerText = 'N/A';
+                document.getElementById('uptimeDisplay').innerText = 'N/A';
                 return;
             }
 
-            statusEl.innerHTML = '<div class="w-2 h-2 bg-green-500 rounded-full animate-pulse mr-2"></div> IoT Online';
-            updateEl.innerText = 'Última atualização: agora';
+            // Se conectado, atualiza o status visual
+            if (iotStatusEl) iotStatusEl.innerHTML = '<div class="w-2 h-2 bg-green-500 rounded-full animate-pulse mr-2"></div> IoT Online';
+            if (lastUpdateEl) lastUpdateEl.innerText = 'Última atualização: ' + (data.lastUpdateTimestamp ? new Date(data.lastUpdateTimestamp).toLocaleTimeString('pt-BR') : 'agora');
 
+            // Atualiza Qualidade de Sinal
             const quality = data.signalQuality || 0;
-            document.getElementById('signalQuality').innerText = quality;
-            document.getElementById('signalBar').style.width = quality + '%';
+            if (document.getElementById('signalQuality')) document.getElementById('signalQuality').innerText = quality;
+            if (document.getElementById('signalBar')) document.getElementById('signalBar').style.width = quality + '%';
 
-            const ping = (data.ping || 1.8).toFixed(1);
-            document.getElementById('pingDisplay').innerText = ping + 's';
+            // Atualiza Ping
+            const ping = (data.ping || 0.0).toFixed(1);
+            if (document.getElementById('pingDisplay')) document.getElementById('pingDisplay').innerText = ping + 's';
             const pingQuality = ping <= 1.0 ? 'Excelente' : ping <= 2.0 ? 'Bom' : 'Ruim';
             const pingColor = ping <= 1.0 ? '#00FF88' : ping <= 2.0 ? '#FACC15' : '#F87171';
-            document.getElementById('pingText').innerText = pingQuality;
-            document.getElementById('pingIcon').style.color = pingColor;
+            if (document.getElementById('pingText')) document.getElementById('pingText').innerText = pingQuality;
+            // Se você tiver um ícone, atualize a cor
+            // if (document.getElementById('pingIcon')) document.getElementById('pingIcon').style.color = pingColor;
 
+            // Atualiza Uptime
             const days = data.uptimeDays || 0;
             const hours = Math.floor((data.uptimeHours || 0) % 24);
-            document.getElementById('uptimeDisplay').innerText = days > 0 ? `${days} Dias` : `${hours}h`;
+            if (document.getElementById('uptimeDisplay')) document.getElementById('uptimeDisplay').innerText = days > 0 ? `${days} Dias` : `${hours}h`;
 
+            // Atualiza o Gráfico (se houver dados)
             updateChart(quality, data.rssi || -60);
 
+            // Atualiza o Histórico de Atividades
             updateHistory(data);
 
         } catch (error) {
             console.error('Erro ao buscar dados do ESP32:', error);
-            document.getElementById('iotStatus').innerHTML = '<div class="w-2 h-2 bg-red-500 rounded-full mr-2"></div> IoT Offline';
+            // Garante que o dashboard reflita o estado de erro
+            if (document.getElementById('iotStatus')) document.getElementById('iotStatus').innerHTML = '<div class="w-2 h-2 bg-red-500 rounded-full mr-2"></div> IoT Offline';
+            if (document.getElementById('lastUpdate')) document.getElementById('lastUpdate').innerText = 'Última atualização: falhou';
+            if (chart) chart.destroy(); chart = null;
+            document.getElementById('signalQuality').innerText = 'N/A';
+            document.getElementById('signalBar').style.width = '0%';
+            document.getElementById('pingDisplay').innerText = 'N/A';
+            document.getElementById('pingText').innerText = 'N/A';
+            document.getElementById('uptimeDisplay').innerText = 'N/A';
         }
     }
 
+    // --- Sua função updateChart (ajustada para não recriar a cada chamada se já existir) ---
     function updateChart(quality, rssi) {
         const labels = ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '24:00'];
-        const qualData = Array(7).fill(quality).map(v => Math.max(0, Math.min(100, v + (Math.random() * 20 - 10))));
-        const rssiData = Array(7).fill(rssi).map(v => v + (Math.random() * 8 - 4));
+        // Usaremos dados fictícios para o gráfico, pois não temos histórico do ESP32 no Java
+        // Você pode ajustar isso se quiser armazenar um histórico no Java.
+        const qualData = Array(7).fill(quality).map(v => Math.max(0, Math.min(100, v + (Math.random() * 10 - 5))));
+        const rssiData = Array(7).fill(rssi).map(v => v + (Math.random() * 4 - 2));
 
-        const ctx = document.getElementById('performanceChart').getContext('2d');
+        const ctx = document.getElementById('performanceChart');
+        if (!ctx) return; // Se o canvas não existe, não faz nada
+
         if (!chart) {
-            chart = new Chart(ctx, {
+            chart = new Chart(ctx.getContext('2d'), {
                 type: 'line',
                 data: { labels, datasets: [
                         { label: 'Qualidade Sinal (%)', data: qualData, borderColor: '#00FF88', backgroundColor: 'rgba(0,255,136,0.1)', tension: 0.4, fill: true },
                         { label: 'Sinal (dBm)', data: rssiData, borderColor: '#10B981', backgroundColor: 'rgba(16,185,129,0.1)', tension: 0.4, fill: true }
                     ]},
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#fff' } } }, scales: { x: { ticks: { color: '#9CA3AF' } }, y: { ticks: { color: '#9CA3AF' } } } }
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#fff'
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#9CA3AF' },
+                            grid: { color: 'rgba(255,255,255,0.1)' }
+                        },
+                        y: {
+                            ticks: { color: '#9CA3AF' },
+                            grid: { color: 'rgba(255,255,255,0.1)' }
+                        }
+                    }
+                }
             });
         } else {
+            // Atualiza os dados do gráfico existente
             chart.data.datasets[0].data = qualData;
             chart.data.datasets[1].data = rssiData;
-            chart.update('quiet');
+            chart.update('quiet'); // 'quiet' para não animar a atualização
         }
     }
 
+    // --- Sua função updateHistory (ajustada para usar os novos dados) ---
     function updateHistory(data) {
         const now = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
         const temp = data.temperature ? data.temperature.toFixed(1) + '°C' : 'N/A';
         const voltage = data.voltage ? data.voltage.toFixed(2) + 'V' : 'N/A';
 
+        // Aqui você pode criar atividades dinamicamente com base nos dados do ESP32
         const activities = [
-            { icon: 'wifi', color: 'green', text: `Sinal: ${data.rssi || 0} dBm`, time: 'Agora' },
-            { icon: 'plug', color: 'blue', text: `Alimentação: ${voltage}`, time: 'Agora' },
-            { icon: 'thermometer-half', color: 'yellow', text: `Chip: ${temp}`, time: 'Agora' }
+            { icon: 'wifi', color: 'green', text: `Sinal: ${data.rssi || 0} dBm`, time: now },
+            { icon: 'plug', color: 'blue', text: `Alimentação: ${voltage}`, time: now },
+            { icon: 'thermometer-half', color: 'yellow', text: `Chip: ${temp}`, time: now }
         ];
 
-        document.getElementById('historyContainer').innerHTML = activities.map(a => `
-            <div class="flex items-center p-4 bg-gray-800/30 rounded-xl border border-green-500/20">
-                <div class="w-3 h-3 bg-${a.color}-500 rounded-full mr-4"></div>
-                <div class="flex-1"><div class="text-white font-medium">${a.text}</div><div class="text-gray-400 text-sm">${a.time}</div></div>
-                <i class="fas fa-${a.icon} text-${a.color}-500"></i>
-            </div>
-        `).join('');
+        const historyContainer = document.getElementById('historyContainer');
+        if (historyContainer) {
+            historyContainer.innerHTML = activities.map(a => `
+                <div class="flex items-center p-4 bg-gray-800/30 rounded-xl border border-green-500/20">
+                    <div class="w-3 h-3 bg-${a.color}-500 rounded-full mr-4"></div>
+                    <div class="flex-1"><div class="text-white font-medium">${a.text}</div><div class="text-gray-400 text-sm">${a.time}</div></div>
+                    <i class="fas fa-${a.icon} text-${a.color}-500"></i>
+                </div>
+            `).join('');
+        }
     }
 
-    setInterval(updateRealData, 5000);
-    updateRealData();
+    // --- Inicia o polling do JavaScript para buscar o status do Java ---
+    setInterval(updateRealData, 5000); // Busca o status do Java a cada 5 segundos
+    updateRealData(); // Chama uma vez ao carregar a página
 </script>
 
 </body>
