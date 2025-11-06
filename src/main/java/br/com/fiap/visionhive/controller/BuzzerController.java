@@ -4,11 +4,9 @@ import br.com.fiap.visionhive.model.BuzzerLog;
 import br.com.fiap.visionhive.model.Motorcycle;
 import br.com.fiap.visionhive.repository.BuzzerLogRepository;
 import br.com.fiap.visionhive.repository.MotorcycleRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -25,8 +23,6 @@ public class BuzzerController {
     private Map<String, Object> ultimoStatusEsp32 = new ConcurrentHashMap<>();
     private LocalDateTime ultimaAtualizacaoEsp32 = null;
 
-    private final RestTemplate restTemplate = new RestTemplate();
-    private final ObjectMapper objectMapper = new ObjectMapper();
     private final BuzzerLogRepository buzzerLogRepository;
     private final MotorcycleRepository motorcycleRepository;
 
