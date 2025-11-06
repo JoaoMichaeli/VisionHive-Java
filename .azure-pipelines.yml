@@ -30,6 +30,7 @@ stages:
               Dockerfile: '**/Dockerfile'
               tags: |
                 $(Build.BuildId)
+                latest
 
   - stage: Deploy
     displayName: 'CD - Deploy to Azure Container Instance (ACI)'
@@ -55,7 +56,7 @@ stages:
                 az container create \
                   --resource-group rg-visionhive \
                   --name visionhive-aci \
-                  --image visionhiveacr.azurecr.io/visionhive-app:$(Build.BuildId) \
+                  --image visionhiveacr.azurecr.io/visionhive-app \
                   --cpu 1 \
                   --memory 1.5 \
                   --registry-login-server visionhiveacr.azurecr.io \
