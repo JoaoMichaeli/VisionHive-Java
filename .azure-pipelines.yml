@@ -32,7 +32,7 @@ stages:
                 $(Build.BuildId)
 
   - stage: Deploy
-    displayName: 'CD - Deploy to Azure Web App'
+    displayName: 'CD - Deploy to Azure Container Instance (ACI)'
     dependsOn: Build
     condition: succeeded()
     jobs:
@@ -40,9 +40,32 @@ stages:
         pool:
           vmImage: 'ubuntu-latest'
         steps:
-          - task: AzureWebAppContainer@1
-            displayName: 'Deploy Image to Web App'
+          - task: AzureCLI@2
+            displayName: 'Deploy to Azure Container Instance'
             inputs:
               azureSubscription: 'AzureConnection'
-              appName: 'visionhive-app'
-              imageName: 'visionhiveacr.azurecr.io/visionhive-app:$(Build.BuildId)'
+              scriptType: 'bash'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                az container delete \
+                  --name visionhive-aci \
+                  --resource-group rg-visionhive \
+                  --yes || true
+
+                az container create \
+                  --resource-group rg-visionhive \
+                  --name visionhive-aci \
+                  --image visionhiveacr.azurecr.io/visionhive-app:$(Build.BuildId) \
+                  --cpu 1 \
+                  --memory 1.5 \
+                  --os-type Linux \
+                  --registry-login-server visionhiveacr.azurecr.io \
+                  --registry-username visionhiveacr \
+                  --registry-password $(ACR_PASSWORD) \
+                  --ports 8080 \
+                  --dns-name-label visionhive$(Build.BuildId) \
+                  --restart-policy OnFailure \
+                  --environment-variables \
+                    SPRING_DATASOURCE_URL=$(SPRING_DATASOURCE_URL) \
+                    SPRING_DATASOURCE_USERNAME=$(SPRING_DATASOURCE_USERNAME) \
+                    SPRING_DATASOURCE_PASSWORD=$(SPRING_DATASOURCE_PASSWORD)
